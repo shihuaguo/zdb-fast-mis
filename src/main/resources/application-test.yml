@@ -4,13 +4,13 @@ spring:
         driverClassName: com.mysql.jdbc.Driver
         druid:
             first:
-                url: jdbc:mysql://localhost:3306/zdb_financial?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                url: jdbc:mysql://localhost:3306/test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: zhidaobao
-                password: QAZWSXEDC123456
+                password: zhidaobao!123456@JJZN
             second:
-                url: jdbc:mysql://localhost:3306/zdb_financial?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                url: jdbc:mysql://localhost:3306/test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: zhidaobao
-                password: QAZWSXEDC123456
+                password: zhidaobao!123456@JJZN
             initial-size: 10
             max-active: 100
             min-idle: 10
