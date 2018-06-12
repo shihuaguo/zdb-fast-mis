@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdb.modules.customer.dao.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.zdb.modules.customer.entity.Customer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
+    <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+    <result column="legal_person_id" jdbcType="VARCHAR" property="legalPersonId" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <resultMap id="ResultMapWithIc" type="com.zdb.modules.customer.entity.Customer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
+    <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+    <result column="legal_person_id" jdbcType="VARCHAR" property="legalPersonId" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    
+    <result column="customer_id" jdbcType="INTEGER" property="customerIndCom.customerId" />
+    <result column="social_redit_ode" jdbcType="VARCHAR" property="customerIndCom.socialReditOde" />
+    <result column="industry_commerce_account" jdbcType="VARCHAR" property="customerIndCom.industryCommerceAccount" />
+    <result column="industry_commerce_pwd" jdbcType="VARCHAR" property="customerIndCom.industryCommercePwd" />
+  </resultMap>
+  
+  <resultMap id="ResultMapWithTax" type="com.zdb.modules.customer.entity.Customer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
+    <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+    <result column="legal_person_id" jdbcType="VARCHAR" property="legalPersonId" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    
+    <result column="legal_person_account" jdbcType="VARCHAR" property="customerTax.legalPersonAccount" />
+    <result column="legal_person_password" jdbcType="VARCHAR" property="customerTax.legalPersonPassword" />
+    <result column="local_tax_account" jdbcType="VARCHAR" property="customerTax.localTaxAccount" />
+    <result column="local_tax_pwd" jdbcType="VARCHAR" property="customerTax.localTaxPwd" />
+    <result column="cwfzrxm" jdbcType="VARCHAR" property="customerTax.cwfzrxm" />
+    <result column="bsrxm" jdbcType="VARCHAR" property="customerTax.bsrxm" />
+    <result column="fddbrxm" jdbcType="VARCHAR" property="customerTax.fddbrxm" />
+    <result column="ticket_agent" jdbcType="VARCHAR" property="customerTax.ticketAgent" />
+  </resultMap>
+  
+  <resultMap id="ResultMapWithIcTax" type="com.zdb.modules.customer.entity.Customer">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
+    <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
+    <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
+    <result column="legal_person_id" jdbcType="VARCHAR" property="legalPersonId" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="bank_phone" jdbcType="VARCHAR" property="bankPhone" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    
+    <result column="social_redit_ode" jdbcType="VARCHAR" property="customerIndCom.socialReditOde" />
+    <result column="tax_id_number" jdbcType="VARCHAR" property="customerIndCom.taxIdNumber" />
+    <result column="register_addr" jdbcType="VARCHAR" property="customerIndCom.registerAddr" />
+    <result column="register_capital" jdbcType="VARCHAR" property="customerIndCom.registerCapital" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="customerIndCom.startDate" />
+    <result column="business_term" jdbcType="VARCHAR" property="customerIndCom.businessTerm" />
+    <result column="shareholder" jdbcType="VARCHAR" property="customerIndCom.shareholder" />
+    <result column="industry_commerce_account" jdbcType="VARCHAR" property="customerIndCom.industryCommerceAccount" />
+    <result column="industry_commerce_pwd" jdbcType="VARCHAR" property="customerIndCom.industryCommercePwd" />
+    <result column="annual_report" jdbcType="VARCHAR" property="customerIndCom.annualReport" />
+    
+    <result column="national_tax_number" jdbcType="VARCHAR" property="customerTax.nationalTaxNumber" />
+    <result column="local_tax_number" jdbcType="VARCHAR" property="customerTax.localTaxNumber" />
+    <result column="local_tax_code" jdbcType="VARCHAR" property="customerTax.localTaxCode" />
+    <result column="financial_controller" jdbcType="VARCHAR" property="customerTax.financialController" />
+    <result column="tax_agent" jdbcType="VARCHAR" property="customerTax.taxAgent" />
+    <result column="investor_info" jdbcType="VARCHAR" property="customerTax.investorInfo" />
+    <result column="national_tax_dpt" jdbcType="VARCHAR" property="customerTax.nationalTaxDpt" />
+    <result column="local_tax_dpt" jdbcType="VARCHAR" property="customerTax.localTaxDpt" />
+    <result column="legal_person_account" jdbcType="VARCHAR" property="customerTax.legalPersonAccount" />
+    <result column="legal_person_password" jdbcType="VARCHAR" property="customerTax.legalPersonPassword" />
+    <result column="local_tax_account" jdbcType="VARCHAR" property="customerTax.localTaxAccount" />
+    <result column="local_tax_pwd" jdbcType="VARCHAR" property="customerTax.localTaxPwd" />
+    <result column="bsrxm" jdbcType="VARCHAR" property="customerTax.bsrxm" />
+    <result column="bsryddh" jdbcType="VARCHAR" property="customerTax.bsryddh" />
+    <result column="bsrzjhm" jdbcType="VARCHAR" property="customerTax.bsrzjhm" />
+    <result column="cwfzrxm" jdbcType="VARCHAR" property="customerTax.cwfzrxm" />
+    <result column="cwfzryddh" jdbcType="VARCHAR" property="customerTax.cwfzryddh" />
+    <result column="cwfzrzjhm" jdbcType="VARCHAR" property="customerTax.cwfzrzjhm" />
+    <result column="fddbrxm" jdbcType="VARCHAR" property="customerTax.fddbrxm" />
+    <result column="fddbryddh" jdbcType="VARCHAR" property="customerTax.fddbryddh" />
+    <result column="fddbrzjhm" jdbcType="VARCHAR" property="customerTax.fddbrzjhm" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, customer_no, customer_name, region, tax_id_number, legal_person, legal_person_id, 
+    bank_name, bank_account, bank_phone, remark, status, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer t
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <sql id="whereClause">
+        <where>
+	        <if test="customerName != null and customerName != ''">
+	            AND customer_name like #{customerName}
+	        </if>
+	        <if test="customerNo != null and customerNo != ''">
+	            AND customer_no = #{customerNo}
+	        </if>
+	        <if test="status != null">
+	            AND status = #{status}
+	        </if>
+	        <if test="filterByUser != null and filterByUser != ''">
+	            AND t.id in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{userId})
+	        </if>
+	        <if test="c_filter != null and employee_id != null">
+	            <if test="employee_id > 0">
+		            <if test="c_filter == 1">
+		            	AND t.id in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{employee_id})
+		            </if>
+		            <if test="c_filter == 2">
+		            	AND t.id not in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{employee_id})
+		            </if>
+		        </if>
+	        </if>
+	    </where>
+  </sql>
+  
+  <select id="queryList" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer t 
+    <include refid="whereClause" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			order by id
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  <select id="queryByCustomerNo" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer t 
+    where t.customer_no = #{customerNo} and t.id != #{id}
+    <if test="status != null">
+        AND status = #{status}
+    </if>
+  </select>
+  <select id="queryTotal" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from customer t
+    <include refid="whereClause" />
+  </select>
+  
+  <select id="queryListWithIc" parameterType="map" resultMap="ResultMapWithIc">
+    select t.id, t.customer_no, t.customer_name, t.region, t.tax_id_number, t.legal_person, t.legal_person_id, 
+    t.bank_name, t.bank_account, t.bank_phone, t.remark, t.create_time, t.update_time
+    ,customer_id,social_redit_ode,industry_commerce_account,industry_commerce_pwd
+    from customer t LEFT JOIN `customer_industry_commerce` t1 ON t.`id`=t1.`customer_id`
+    <include refid="whereClause" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			order by id
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  <select id="queryTotalWithIc" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from customer t LEFT JOIN `customer_industry_commerce` t1 ON t.`id`=t1.`customer_id`
+    <include refid="whereClause" />
+  </select>
+  
+  <select id="queryListWithTax" parameterType="map" resultMap="ResultMapWithTax">
+    SELECT t.id, t.customer_no, t.customer_name, t.region, t.tax_id_number, t.legal_person, t.legal_person_id, 
+    t.bank_name, t.bank_account, t.bank_phone, t.remark, t.create_time, t.update_time
+    ,t1.`legal_person_account`,t1.`legal_person_password`
+    ,t1.`local_tax_account`,t1.`local_tax_pwd`
+    ,t1.`cwfzrxm`,t1.`bsrxm`,t1.`fddbrxm`,t1.`ticket_agent`
+    FROM customer t LEFT JOIN `customer_tax` t1 ON t.`id`=t1.`customer_id`
+    <include refid="whereClause" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			order by id
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  <select id="queryTotalWithTax" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from customer t LEFT JOIN `customer_tax` t1 ON t.`id`=t1.`customer_id`
+    <include refid="whereClause" />
+  </select>
+  
+  <select id="queryListWithIcTax" parameterType="map" resultMap="ResultMapWithIcTax">
+    SELECT t.id, t.customer_no, t.customer_name, t.region, t.tax_id_number, t.legal_person, t.legal_person_id, 
+	    t.bank_name, t.bank_account, t.bank_phone, t.remark, t.create_time, t.update_time,
+	    t1.social_redit_ode,t1.tax_id_number,t1.register_addr,t1.register_capital,t1.start_date,t1.business_term,
+	    t1.shareholder,t1.industry_commerce_account,t1.industry_commerce_pwd,t1.annual_report,
+	    t2.national_tax_number,t2.local_tax_number,t2.local_tax_code,t2.financial_controller,t2.tax_agent,
+	    t2.investor_info,t2.national_tax_dpt,t2.local_tax_dpt,
+	    t2.`legal_person_account`,t2.`legal_person_password`,
+	    t2.`local_tax_account`,t2.`local_tax_pwd`,
+	    t2.`bsrxm`,t2.bsryddh,t2.bsrzjhm,
+	    t2.`cwfzrxm`,t2.cwfzryddh,t2.cwfzrzjhm,
+	    t2.`fddbrxm`,t2.fddbryddh,t2.fddbrzjhm
+    FROM customer t 
+    LEFT JOIN customer_industry_commerce t1 ON t.id=t1.customer_id
+    LEFT JOIN `customer_tax` t2 ON t.`id`=t2.`customer_id`
+    <include refid="whereClause" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			order by id
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  
+  <select id="queryNameList" parameterType="map" resultType="String">
+    select customer_name from customer t where t.customer_name like #{term}
+    <if test="status != null">
+        AND status = #{status}
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.customer.entity.Customer">
+    insert into customer (id, customer_no, customer_name, 
+      region, tax_id_number, legal_person, 
+      legal_person_id, bank_name, bank_account, 
+      bank_phone, remark, status, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{customerNo,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, 
+      #{region,jdbcType=VARCHAR}, #{taxIdNumber,jdbcType=VARCHAR}, #{legalPerson,jdbcType=VARCHAR}, 
+      #{legalPersonId,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR}, 
+      #{bankPhone,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.zdb.modules.customer.entity.Customer">
+    insert into customer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="customerNo != null">
+        customer_no,
+      </if>
+      <if test="customerName != null">
+        customer_name,
+      </if>
+      <if test="region != null">
+        region,
+      </if>
+      <if test="taxIdNumber != null">
+        tax_id_number,
+      </if>
+      <if test="legalPerson != null">
+        legal_person,
+      </if>
+      <if test="legalPersonId != null">
+        legal_person_id,
+      </if>
+      <if test="bankName != null">
+        bank_name,
+      </if>
+      <if test="bankAccount != null">
+        bank_account,
+      </if>
+      <if test="bankPhone != null">
+        bank_phone,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="customerNo != null">
+        #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="taxIdNumber != null">
+        #{taxIdNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null">
+        #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonId != null">
+        #{legalPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null">
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null">
+        #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="bankPhone != null">
+        #{bankPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.customer.entity.Customer">
+    update customer
+    <set>
+      <if test="customerNo != null">
+        customer_no = #{customerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="region != null">
+        region = #{region,jdbcType=VARCHAR},
+      </if>
+      <if test="taxIdNumber != null">
+        tax_id_number = #{taxIdNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null">
+        legal_person = #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonId != null">
+        legal_person_id = #{legalPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null">
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null">
+        bank_account = #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="bankPhone != null">
+        bank_phone = #{bankPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.customer.entity.Customer">
+    update customer
+    set customer_no = #{customerNo,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      region = #{region,jdbcType=VARCHAR},
+      tax_id_number = #{taxIdNumber,jdbcType=VARCHAR},
+      legal_person = #{legalPerson,jdbcType=VARCHAR},
+      legal_person_id = #{legalPersonId,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_account = #{bankAccount,jdbcType=VARCHAR},
+      bank_phone = #{bankPhone,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  	<delete id="deleteBatch">
+		<!-- delete from customer where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach> -->
+		update customer t set t.status=1 where t.id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+		and t.status=0
+	</delete>
+</mapper>

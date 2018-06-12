@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>地税客户端登录</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-switch.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.min.js"></script>
+<script src="../../libs/bootstrap-switch.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../libs/validator.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js?v=20171011"></script>
+<script src="../../js/enums.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-md-2">
+				<input type="text" class="form-control" v-model="q.customerName" @keyup.enter="query" placeholder="客户名称">
+			</div>
+			<div class="form-group col-md-1">
+				<input type="text" class="form-control" v-model="q.customerNo" @keyup.enter="query" placeholder="客户编号">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+		</div>
+
+		<table id="jqGrid"></table>
+		<div id="jqGridPager"></div>
+	</div>
+</div>
+
+<script src="../../js/validation.js"></script>
+<script src="../../js/modules/tax/local_tax_login.js?v=2018031301"></script>
+</body>
+</html>

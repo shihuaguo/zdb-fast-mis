@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdb.modules.cal.dao.CalTaskItemMapper">
+  <resultMap id="BaseResultMap" type="com.zdb.modules.cal.entity.CalTaskItem">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="task_item_order" jdbcType="INTEGER" property="taskItemOrder" />
+    <result column="task_item_title" jdbcType="VARCHAR" property="taskItemTitle" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="handle_time" jdbcType="TIMESTAMP" property="handleTime" />
+    <result column="place" jdbcType="VARCHAR" property="place" />
+    <result column="employee_id" jdbcType="INTEGER" property="employeeId" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    t.id, task_id, task_item_order, task_item_title, t.status,t.start_time, t.end_time, t.handle_time, 
+    t.place, t.employee_id, t.version, t.create_time, t.update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cal_task_item t
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="queryByTaskId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />,u.username as employee_name
+    from cal_task_item t left join sys_user u on t.employee_id=u.user_id
+    where task_id = #{taskId,jdbcType=INTEGER} order by t.start_time asc
+  </select>
+  
+  <sql id="whereClause">
+        <where>
+	        <if test="employeeId != null">
+            	AND t.employee_id = #{employeeId}
+	        </if>
+	        <if test="taskId != null">
+	            AND task_id = #{taskId}
+	        </if>
+	        <if test="status != null">
+	            AND t.status = #{status}
+	        </if>
+	        <if test="start != null">
+	            AND start_time <![CDATA[ >= ]]> #{start}
+	        </if>
+	        <if test="end != null">
+	           AND (end_time <![CDATA[ <= ]]> #{end} or end_time is null)
+	        </if>
+	    </where>
+  </sql>
+  
+  <select id="queryList" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />,u.username as employee_name,ct.`task_name`
+    from cal_task_item t left join sys_user u on t.employee_id=u.user_id
+    INNER JOIN `cal_task` ct ON t.`task_id`=ct.`id`
+    <include refid="whereClause"></include>
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+		    order by t.start_time asc
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  
+  <select id="queryTotal" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from cal_task_item t
+    <include refid="whereClause" />
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cal_task_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByTaskId" parameterType="java.lang.Integer">
+    delete from cal_task_item
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.cal.entity.CalTaskItem">
+    insert into cal_task_item (id, task_id, task_item_order, 
+      task_item_title, status,start_time, end_time, 
+      handle_time, place, employee_id, 
+      version, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, #{taskItemOrder,jdbcType=INTEGER}, 
+      #{taskItemTitle,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{handleTime,jdbcType=TIMESTAMP}, #{place,jdbcType=VARCHAR}, #{employeeId,jdbcType=INTEGER}, 
+      #{version,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zdb.modules.cal.entity.CalTaskItem">
+    insert into cal_task_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="taskItemOrder != null">
+        task_item_order,
+      </if>
+      <if test="taskItemTitle != null">
+        task_item_title,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="handleTime != null">
+        handle_time,
+      </if>
+      <if test="place != null">
+        place,
+      </if>
+      <if test="employeeId != null">
+        employee_id,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="taskItemOrder != null">
+        #{taskItemOrder,jdbcType=INTEGER},
+      </if>
+      <if test="taskItemTitle != null">
+        #{taskItemTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleTime != null">
+        #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="place != null">
+        #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.cal.entity.CalTaskItem">
+    update cal_task_item
+    <set>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
+      <if test="taskItemOrder != null">
+        task_item_order = #{taskItemOrder,jdbcType=INTEGER},
+      </if>
+      <if test="taskItemTitle != null">
+        task_item_title = #{taskItemTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleTime != null">
+        handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="place != null">
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeId != null">
+        employee_id = #{employeeId,jdbcType=INTEGER},
+      </if>
+      <!-- <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if> -->
+      version = version + 1,
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+    <if test="version != null">
+        and version = #{version,jdbcType=INTEGER}
+    </if>
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.cal.entity.CalTaskItem">
+    update cal_task_item
+    set task_id = #{taskId,jdbcType=INTEGER},
+      task_item_order = #{taskItemOrder,jdbcType=INTEGER},
+      task_item_title = #{taskItemTitle,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      place = #{place,jdbcType=VARCHAR},
+      employee_id = #{employeeId,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="moveTaskItem" parameterType="map">
+    update cal_task_item
+    set start_time = DATE_ADD(start_time,INTERVAL #{days,jdbcType=INTEGER} DAY)
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdb.modules.ueditor.RichTextInfoMapper">
+  <resultMap id="BaseResultMap" type="com.zdb.modules.ueditor.RichTextInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type1" jdbcType="VARCHAR" property="type1" />
+    <result column="type2" jdbcType="VARCHAR" property="type2" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zdb.modules.ueditor.RichTextInfo">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type1, type2, create_by, update_by, version, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from rich_text_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="queryByType" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from rich_text_info
+    <where>
+    	<if test="type1 != null and type1.trim() != ''">
+    		and type1 = #{type1}
+    	</if>
+    	<if test="type2 != null and type2.trim() != ''">
+    		and type2 = #{type2}
+    	</if>
+    </where>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from rich_text_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.ueditor.RichTextInfo">
+    insert into rich_text_info (id, type1, type2, 
+      create_by, update_by, version, 
+      create_time, update_time, content
+      )
+    values (#{id,jdbcType=INTEGER}, #{type1,jdbcType=VARCHAR}, #{type2,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=INTEGER}, #{updateBy,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zdb.modules.ueditor.RichTextInfo">
+    insert into rich_text_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type1 != null">
+        type1,
+      </if>
+      <if test="type2 != null">
+        type2,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type1 != null">
+        #{type1,jdbcType=VARCHAR},
+      </if>
+      <if test="type2 != null">
+        #{type2,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.ueditor.RichTextInfo">
+    update rich_text_info
+    <set>
+      <if test="type1 != null">
+        type1 = #{type1,jdbcType=VARCHAR},
+      </if>
+      <if test="type2 != null">
+        type2 = #{type2,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <!-- <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if> -->
+      version = version + 1,
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+    <if test="version != null">
+        and version = #{version,jdbcType=INTEGER}
+    </if>
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zdb.modules.ueditor.RichTextInfo">
+    update rich_text_info
+    set type1 = #{type1,jdbcType=VARCHAR},
+      type2 = #{type2,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=INTEGER},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.ueditor.RichTextInfo">
+    update rich_text_info
+    set type1 = #{type1,jdbcType=VARCHAR},
+      type2 = #{type2,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=INTEGER},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

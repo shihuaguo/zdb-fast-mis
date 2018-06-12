@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>会计处理指南</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+</head>
+<body>
+	<div id="zdb" v-cloak>
+		<div>
+			<div class="grid-btn" v-show="hasPermission('ueditor:edit')">
+				<a id="edit-btn" class="btn btn-default" @click="edit">编辑</a>
+				<a id="cancel-btn"class="btn btn-default" @click="cancel">取消</a>
+			</div>
+		</div>
+		<div id="edit-div" class="col-md-8">
+		    <form action="#" method="post">
+		        <!-- 加载编辑器的容器 -->
+		        <script id="container" name="content" type="text/plain">
+       	 		</script>
+		    </form>
+		</div>
+		<div id="display-div" class="col-md-8">
+			<div id="display-content">
+			</div>
+		</div>
+	</div>
+    
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../js/common.js?v=2018022601"></script>
+    <!-- 配置文件 -->
+    <script src="../../plugins/ueditor/ueditor.config.js?v=20180305002"></script>
+    <!-- 编辑器源码文件 -->
+    <script src="../../plugins/ueditor/ueditor.all.min.js"></script>
+    <script src="../../plugins/ueditor/ueditor.parse.min.js"></script>
+    <!-- 实例化编辑器 -->
+    <script type="text/javascript">
+        var ue = UE.getEditor('container');
+        
+        //et.loadServerConfig();
+        //console.log("isServerConfigLoaded=" + et.isServerConfigLoaded());
+        var type1 = T.p("type1");
+        var type2 = T.p("type2");
+        console.log("type1=" + type1 + ",type2=" + type2);
+        
+        //设置ajax请求同步
+        /* $.ajaxSetup({
+			async: false
+		}); */
+        
+        var vm;
+        //初始化vue
+        function initVm(){
+        	vm = new Vue({
+            	el:'#zdb',
+            	data:{
+            		id:0,
+            		content:'',
+            		editState:0	//按钮状态 0-未进行编辑 1-编辑状态
+            	},
+            	methods: {
+            		getContent: function(){
+            			$.get(baseURL + "ueditor/query?type1="+type1+"&type2="+type2, function(r){
+            				if(r && r.code == 0){
+            					if(r.info){
+            						console.log("ueditor/query return " + r);
+	            					vm.content = r.info.content;
+	            					vm.id = r.info.id;
+	            					
+	            					$("#display-content").html(vm.content);
+	            					/* uParse('#display-content', {
+	            		        	    rootPath: '../../../static/plugins/ueditor'
+	            		        	}); */
+            					}
+            				}
+            			});
+            		},
+            		edit: function(){
+            			if(this.editState == 0){
+            				if(this.content){
+	            				ue.setContent(this.content);
+            				}
+	            			ue.setShow();
+	            			$("#display-div").hide();
+	            			$("#edit-btn").text("保存");
+	            			$("#cancel-btn").show();
+	            			this.editState = 1;
+            			}else {
+            				this.content = ue.getContent();
+            				$.post(baseURL + "ueditor/save",{id:vm.id,content:this.content,type1:type1,type2:type2},function(r){
+            					if(r && r.code == 0){
+		            				ue.setHide();
+		            				$("#display-div").show();
+		            				$("#edit-btn").text("编辑");
+		            				vm.editState = 0;
+		            				$("#cancel-btn").hide();
+		            				vm.getContent();
+            					}
+            				});
+            			}
+            		},
+            		cancel: function(){
+            			if(this.editState == 1){
+	            			//预览,隐藏编辑框
+	            			ue.setHide();
+	            			$("#display-div").show();
+	            			$("#edit-btn").text("编辑");
+            				vm.editState = 0;
+            				$("#cancel-btn").hide();
+            			}
+            		}
+            	}
+            });
+        }
+        
+        $(function(){
+        	//默认不显示
+        	ue.ready(function() {
+			    //ue.setContent('<p>new text</p>', true);
+            	ue.setHide();
+            	console.log("ue.ready,hide it");
+			});
+        	initVm();
+        	//默认进行内容展示
+        	vm.getContent();
+        	$("#cancel-btn").hide();
+        })
+        
+    </script>
+</body>
+
+</html>

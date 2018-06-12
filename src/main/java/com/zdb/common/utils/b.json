@@ -1,0 +1,139 @@
+{
+	"taxML": {
+		"body": {
+			"taxML": {
+				"bgcxswdjb": {
+					"bgcxDJSwdjbxxVO": {
+						"bzfs": "地税独立办证",
+						"cyrs": "0",
+						"djzclx": "单位纳税人税务登记",
+						"dwxz": "企业",
+						"fgbhy": "",
+						"fhymx": "",
+						"gdgrs": "0",
+						"ggrs": "0",
+						"gykglx": "",
+						"hhrs": "0",
+						"hsfs": "独立核算自负盈亏",
+						"jyfw": "汽车零配件零售、汽车零配件批发；计算机、软件及辅助设备零售；办公设备批发；电气设备批发；电子产品批发；计算机、软件及辅助设备批发；商品批发贸易（许可审批类商品除外）；技术进出口；货物进出口（专营专控商品除外）；企业管理咨询服务；贸易咨询服务；",
+						"kyslrq": "2015-02-27",
+						"kzztdjlxDm": "1110",
+						"lsswdjyxqq": "",
+						"lsswdjyxqz": "",
+						"nsrmc": "广州途邦汽车用品有限公司",
+						"nsrsbh": "91440106063324985Q",
+						"pzsljg": "广州市工商行政管理局天河分局",
+						"pzsljglx": "工商部门",
+						"pzslzmhwjh": "",
+						"scjydlxdh": "87658889",
+						"scjydz": "广州市天河区渔沙坦旺岗西和街新二巷9号之一202（仅限办公用途）",
+						"scjyqxq": "2013-03-15",
+						"scjyqxz": "9999-12-31",
+						"scjyzyzbm": "510600",
+						"slr": "",
+						"sykjzd": "小企业会计准则",
+						"wjrs": "0",
+						"wzwz": "",
+						"zcdlxdh": "87658889",
+						"zcdyzbm": "510600",
+						"zcdz": "广州市天河区渔沙坦旺岗西和街新二巷9号之一202（仅限办公用途）",
+						"zgbhy": "汽车零配件批发",
+						"zhymx": "汽车零配件批发",
+						"zzhm": "440106000744492",
+						"zzjgdm": "063324985",
+						"zzmc": "企业法人营业执照(公司)"
+					},
+					"djztxx": {
+						"bsrdzxx": "",
+						"bsrgddh": "13928888180",
+						"bsrsfzjzl": "居民身份证",
+						"bsrxm": "毛广霞",
+						"bsryddh": "18620981317",
+						"bsrzjhm": "430482199108016387",
+						"cwfzrdzxx": "",
+						"cwfzrgddh": "13928888180",
+						"cwfzrsfzjzl": "居民身份证",
+						"cwfzrxm": "",
+						"cwfzryddh": "",
+						"cwfzrzjhm": "",
+						"fddbrdzxx": "",
+						"fddbrgddh": "",
+						"fddbrsfzjzl": "居民身份证",
+						"fddbrxm": "黄喜循",
+						"fddbryddh": "18122396306",
+						"fddbrzjhm": "441381198811172417"
+					},
+					"qtxx": {
+						"blr": "张玉云",
+						"dszgswj": "广州市天河区地方税务局",
+						"dszgsws": "广州市天河区地方税务局员村税务所",
+						"gdghlx": "国地共管",
+						"hzrq": "",
+						"hzswjg": "",
+						"lrrq": "2013-03-18 14:38:47",
+						"lsgx": "其他",
+						"nsrscjx": "车陂街道",
+						"zgswj": ""
+					},
+					"swdlrxx": {
+						"swdlrdzxx": "",
+						"swdlrlxdh": "",
+						"swdlrmc": "",
+						"swdlrnsrsbh": ""
+					},
+					"tzxxlist": {
+						"tzxx": {
+							"dz": "广州市天河区龙洞北路313号自编大院内四巷9号一楼",
+							"fpbl": "0.5",
+							"gj": "中华人民共和国",
+							"tzbl": "1.0",
+							"tzfjjxz": "内资个人",
+							"tzfmc": "黄喜循",
+							"zjhm": "441381198811172417",
+							"zjzl": "居民身份证"
+						}
+					},
+					"tzze": {
+						"tzbz": "人民币元",
+						"tzje": "500000.0"
+					},
+					"yzxx": {
+						"yzdzyx": "",
+						"yzgddh": "",
+						"yzgj": "中华人民共和国",
+						"yzhjszd": "",
+						"yzsfzjhm": "441381198811172417",
+						"yzsfzjzl": "居民身份证",
+						"yzxm": "黄喜循",
+						"yzyddh": "18122396306"
+					},
+					"zcxx": {
+						"zcbz": "人民币元",
+						"zcbzje": "1000000.0"
+					},
+					"zfjgqk": {
+						"zjgqk": {
+							"zfjglx": "非总分机构",
+							"zjgfddbrxm": "",
+							"zjgjyfw": "",
+							"zjglxdh": "",
+							"zjgmc": "",
+							"zjgnsrsbh": "",
+							"zjgyzbm": "",
+							"zjgzcdz": ""
+						}
+					}
+				}
+			}
+		},
+		"head": {
+			"bizRtnMsg": {
+				"code": "00",
+				"message": ""
+			},
+			"gid": "311085A116185FEFE053C2000A0A5B63",
+			"tid": " ",
+			"version": ""
+		}
+	}
+}

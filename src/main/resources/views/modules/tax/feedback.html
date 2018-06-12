@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>信息反馈</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-switch.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css?v=20171114">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../libs/bootstrap-switch.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../libs/validator.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js?v=20180308001"></script>
+<script src="../../js/enums.js?v=2018030101"></script>
+<style>
+  .ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* 防止水平滚动条 */
+    overflow-x: hidden;
+  }
+  .text_box {
+    /* width: 400px;  */
+    min-height: 120px; 
+    max-height: 300px;
+    _height: 120px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    padding: 3px; 
+    outline: 0; 
+    border: 1px solid #a0b3d6; 
+    font-size: 12px; 
+    word-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: auto;
+    _overflow-y: visible;
+}
+  </style>
+</head>
+<body>
+<div id="zdb" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-md-2">
+				<input type="text" class="form-control" v-model="q.feedbackInfo" @keyup.enter="query" placeholder="信息反馈">
+			</div>
+			<div class="form-group col-md-1">
+				<select v-model="q.type1" class="form-control">  
+				  	<option v-for="type in feedbackType1List" v-bind:value="type.value">  
+    					{{ type.label }}
+  					</option>
+				</select>
+			</div>
+			<a v-if="hasPermission('taxic:feedback:list')" class="btn btn-default" @click="query">查询</a>
+			<a v-if="hasPermission('taxic:feedback:save')" id="addBtn" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('taxic:feedback:update')" id="updateBtn" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('taxic:feedback:delete')" id="deleteBtn" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal" style="width: 80%;">
+			<div class="form-group">
+			   	<div for="feedback_time" class="col-md-2 control-label">时间</div>
+			   	<!-- <div class="input-group date form_datetime col-sm-5" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="feedback_time">
+                    <input id="feedbackTime" class="form-control" size="16" type="text" value="" v-model="vo.feedbackTime" readonly>
+					<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+				</div> -->
+				<div class="col-md-4">
+					<input type="text" v-model="vo.feedbackTime" readonly></input>
+				</div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-md-2 control-label">事项类别</div>
+			   	<div class="col-md-4">
+					<select v-model="vo.type1" class="form-control">  
+					  	<option v-for="type in feedbackType1List" v-bind:value="type.value">  
+    						{{ type.label }}
+  						</option>  
+					</select>  
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-md-2 control-label">反馈信息</div>
+			   	<div class="col-md-4">
+			      <div type="text" class="text_box" id="feedbackInfo" v-model="vo.feedbackInfo" contenteditable="true"></div>
+			    </div>
+			   	<div class="col-md-4">
+			      <div style="color: red;">反馈信息：办理工商税务等事项时遇到特别情况，如办事流程、窗口、办事要求表格等情况发生改变，需要对改信息进行反馈</div>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-md-2 control-label">事项小结</div>
+			   	<div class="col-md-4">
+			      <div type="text" class="text_box" id="workSummary" v-model="vo.workSummary" contenteditable="true"></div>
+			    </div>
+			    <div class="col-md-4">
+			    	<div style="color: red;">事项小结：通过办事过程中，解决问题的过程中，<p style="font-size: large;">总结自己在该事项中的收获等</p></div>
+			    </div>
+			</div>
+			
+			<div class="form-group rows">
+				<div class="col-md-2 control-label"></div> 
+				<div class="col-md-4">
+					<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+					&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="../../js/validation.js"></script>
+<script src="../../js/modules/tax/feedback.js?v=20180308001"></script>
+<script type="text/javascript">
+    /* $('.form_datetime').datetimepicker({
+        language:  'zh-CN',
+        autoclose: 1,
+        minView:1,
+        dateFormat: 'yyyy-mm-dd hh:ii:ss',
+        weekStart: 1
+    }).on('hide', function(ev){
+    	var value = $("#feedbackTime").val();
+    	vm.vo.feedbackTime = value;
+    }); */
+</script>
+</body>
+</html>

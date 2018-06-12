@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdb.modules.cal.dao.CalTaskMapper">
+  <resultMap id="BaseResultMap" type="com.zdb.modules.cal.entity.CalTask">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="task_type" jdbcType="TINYINT" property="taskType" />
+    <result column="task_no" jdbcType="VARCHAR" property="taskNo" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="task_class" jdbcType="TINYINT" property="taskClass" />
+    <result column="task_sub_class" jdbcType="INTEGER" property="taskSubClass" />
+    <result column="task_class_detail" jdbcType="VARCHAR" property="taskClassDetail" />
+    <result column="expected_time" jdbcType="TIMESTAMP" property="expectedTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="progress" jdbcType="TINYINT" property="progress" />
+    <result column="rank" jdbcType="BIGINT" property="rank" />
+    <result column="employee_id" jdbcType="INTEGER" property="employeeId" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    
+    <result column="username" jdbcType="VARCHAR" property="employeeName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, task_type, task_no, task_name, customer_id, customer_name, task_class, task_sub_class, task_class_detail,
+    expected_time, t.status, progress, employee_id, version, t.create_time as create_time, t.update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cal_task t
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <sql id="whereClause">
+        <where>
+	        <if test="taskName != null and taskName != ''">
+	            AND task_name like #{taskName}
+	        </if>
+	        <if test="status != null">
+	            AND t.status = #{status}
+	        </if>
+	        <if test="employeeId != null and employeeId != ''">
+	            AND t.employee_id = #{employeeId}
+	        </if>
+	    </where>
+  </sql>
+  
+  <select id="queryList" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />,u.username
+    from cal_task t left join sys_user u on t.employee_id=u.user_id
+    <include refid="whereClause" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			<if test="status != null and status == 1">
+	            order by t.rank desc,t.update_time desc
+	        </if>
+	        <if test="status != null and status == 0">
+				order by t.rank desc,id desc
+	        </if>
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  <select id="queryTotal" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from cal_task t
+    <include refid="whereClause" />
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cal_task
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.cal.entity.CalTask">
+    insert into cal_task (id, task_type, task_no, 
+      task_name, customer_id, customer_name, 
+      task_class, task_sub_class, expected_time, 
+      status, progress, employee_id, 
+      version, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{taskType,jdbcType=TINYINT}, #{taskNo,jdbcType=VARCHAR}, 
+      #{taskName,jdbcType=VARCHAR}, #{customerId,jdbcType=INTEGER}, #{customerName,jdbcType=VARCHAR}, 
+      #{taskClass,jdbcType=TINYINT}, #{taskSubClass,jdbcType=INTEGER}, #{expectedTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{progress,jdbcType=TINYINT}, #{employeeId,jdbcType=INTEGER}, 
+      #{version,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zdb.modules.cal.entity.CalTask">
+    insert into cal_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taskType != null">
+        task_type,
+      </if>
+      <if test="taskNo != null">
+        task_no,
+      </if>
+      <if test="taskName != null">
+        task_name,
+      </if>
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="customerName != null">
+        customer_name,
+      </if>
+      <if test="taskClass != null">
+        task_class,
+      </if>
+      <if test="taskSubClass != null">
+        task_sub_class,
+      </if>
+      <if test="taskClassDetail != null">
+        task_class_detail,
+      </if>
+      <if test="expectedTime != null">
+        expected_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="progress != null">
+        progress,
+      </if>
+      <if test="employeeId != null">
+        employee_id,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=TINYINT},
+      </if>
+      <if test="taskNo != null">
+        #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="customerName != null">
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskClass != null">
+        #{taskClass,jdbcType=TINYINT},
+      </if>
+      <if test="taskSubClass != null">
+        #{taskSubClass,jdbcType=INTEGER},
+      </if>
+      <if test="taskClassDetail != null">
+        #{taskClassDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="expectedTime != null">
+        #{expectedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="progress != null">
+        #{progress,jdbcType=TINYINT},
+      </if>
+      <if test="employeeId != null">
+        #{employeeId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.cal.entity.CalTask">
+    update cal_task
+    <set>
+      <if test="taskType != null">
+        task_type = #{taskType,jdbcType=TINYINT},
+      </if>
+      <if test="taskNo != null">
+        task_no = #{taskNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null">
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="customerName != null">
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskClass != null">
+        task_class = #{taskClass,jdbcType=TINYINT},
+      </if>
+      <if test="taskSubClass != null">
+        task_sub_class = #{taskSubClass,jdbcType=INTEGER},
+      </if>
+      <if test="taskClassDetail != null">
+      	task_class_detail = #{taskClassDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="expectedTime != null">
+        expected_time = #{expectedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="progress != null">
+        progress = #{progress,jdbcType=TINYINT},
+      </if>
+      <if test="employeeId != null">
+        employee_id = #{employeeId,jdbcType=INTEGER},
+      </if>
+      <if test="rank != null">
+        rank = #{rank,jdbcType=BIGINT},
+      </if>
+      <!-- <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if> -->
+      version = version + 1,
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER} 
+    <if test="version != null">
+        and version = #{version,jdbcType=INTEGER}
+    </if>
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.cal.entity.CalTask">
+    update cal_task
+    set task_type = #{taskType,jdbcType=TINYINT},
+      task_no = #{taskNo,jdbcType=VARCHAR},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      customer_id = #{customerId,jdbcType=INTEGER},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      task_class = #{taskClass,jdbcType=TINYINT},
+      task_sub_class = #{taskSubClass,jdbcType=INTEGER},
+      expected_time = #{expectedTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      progress = #{progress,jdbcType=TINYINT},
+      employee_id = #{employeeId,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <delete id="deleteBatch">
+		delete from cal_task where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+		;
+		delete from cal_task_item where task_id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

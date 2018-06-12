@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>客户信息</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-switch.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.multiselect.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.min.js"></script>
+<script src="../../libs/bootstrap-switch.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../libs/validator.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../plugins/jqgrid/ui.multiselect.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js?v=20180201001"></script>
+<script src="../../js/enums.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-md-2">
+				<input type="text" class="form-control" v-model="q.customerName" @keyup.enter="query" placeholder="客户名称">
+			</div>
+			<div class="form-group col-md-1">
+				<input type="text" class="form-control" v-model="q.customerNo" @keyup.enter="query" placeholder="客户编号">
+			</div>
+			<a v-if="hasPermission('customer:list')" class="btn btn-default" @click="query">查询</a>
+			<a v-if="hasPermission('customer:save') && status==0" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('customer:update') && status==0" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('customer:delete') && status==0" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			
+			<a v-if="hasPermission('customer:save') && status==0" class="btn btn-default" @click="exportExcel"><i class="fa fa-save"></i>&nbsp;导出</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="container-fluid">
+    	<div class="row">
+    		<div class="col-md-6">
+    			<div class="panel panel-default">
+	    			<div class="panel-heading">工商登记信息</div>
+					<form class="form-horizontal">
+						<div v-if="hasPermission('customer:save') && status==0" class="form-group">
+						   	<div class="col-sm-3 control-label">验证码</div>
+						   	<div class="col-sm-3">
+						      <img id="validImg" src="#" />
+						    </div>
+						    <div class="col-sm-3">
+						      <input type="text" class="form-control" id="validCode" placeholder="请输入验证码"/>
+						    </div>
+						    <input type="button" class="btn btn-primary" @click="syncIc" value="同步"/>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">编号</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customer.customerNo" placeholder="编号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">客户名称</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customer.customerName" placeholder="客户名称"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">社会信用代码</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.socialReditOde" placeholder="社会信用代码"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">工商注册号</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.taxIdNumber" placeholder="工商注册号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">法人</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customer.legalPerson" placeholder="法人"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">法人身份证号</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customer.legalPersonId" placeholder="法人身份证号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">注册地址</div>
+						   	<div class="col-sm-10">
+						      <textarea class="form-control" v-model="customerIc.registerAddr" placeholder="注册地址"></textarea>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">注册资本</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.registerCapital" placeholder="注册资本"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">成立日期</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.startDate" placeholder="成立日期"/>
+						    </div>
+						    <!-- <div id="startDateDiv" class="input-group date form_datetime col-sm-10" data-date-format="yyyy-mm-dd" data-link-field="start_date">
+			                    <input id="startDate" class="form-control" size="16" type="text" value="" v-model="customerIc.startDate" readonly>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+							</div> -->
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">营业期限</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.businessTerm" placeholder="营业期限"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">股东信息</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.shareholder" placeholder="股东信息"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">工商登陆账号</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.industryCommerceAccount" placeholder="工商登陆账号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">工商登陆密码</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.industryCommercePwd" placeholder="工商登陆密码"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">年度报告情况</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.annualReport" placeholder="年度报告情况"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">开户银行</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customer.bankName" placeholder="开户银行"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">银行账号</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customer.bankAccount" placeholder="银行账号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">回单打印密码</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerIc.printReceiptPassword" placeholder="回单打印密码"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">银行电话</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customer.bankPhone" placeholder="银行电话"/>
+						    </div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label"></div> 
+							<input v-if="hasPermission('customer:save') && status==0" type="button" class="btn btn-primary" @click="saveOrUpdateIc" value="确定"/>
+							&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+						</div>
+					</form>
+    			</div>
+    		</div>
+			<div class="col-md-6">
+	    		<div class="panel panel-default">
+					<div class="panel-heading">税务登记信息</div>
+					<form class="form-horizontal">
+						<div v-if="hasPermission('customer:save') && status==0" class="form-group">
+						   	<div class="col-sm-3 control-label">验证码</div>
+						   	<div class="col-sm-3">
+						      <img id="validImg1" src="#" style="width:100px;"/>
+						    </div>
+						    <div class="col-sm-3">
+						      <input type="text" class="form-control" id="validCode1" placeholder="请输入验证码"/>
+						    </div>
+						    <input type="button" class="btn btn-primary" @click="syncTax" value="同步"/>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">编号</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customer.customerNo" placeholder="编号" readonly="readonly"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">客户名称</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customer.customerName" placeholder="客户名称" readonly="readonly"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">国税税号</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.nationalTaxNumber" placeholder="国税税号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">地税税号</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.localTaxNumber" placeholder="地税税号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">地税纳税人编码</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.localTaxCode" placeholder="地税纳税人编码"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">法人</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.fddbrxm" placeholder="法人"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">法人电话</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.fddbryddh" placeholder="法人电话"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">法人证件号码</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.fddbrzjhm" placeholder="法人电话"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">财务负责人</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.cwfzrxm"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">财务负责人电话</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.cwfzryddh"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">财务负责人证件号码</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.cwfzrzjhm"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">办税员</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.bsrxm"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">办税员电话</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.bsryddh" />
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">办税员证件号码</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.bsrzjhm"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">购票员</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.ticketAgent" placeholder="购票员"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">投资方信息</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.investorInfo" placeholder="投资方信息"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">主管国税</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.nationalTaxDpt" placeholder="主管国税"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">主管地税</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.localTaxDpt" placeholder="主管地税"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">法人实名账号</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.legalPersonAccount" placeholder="法人实名账号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">法人账号密码</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.legalPersonPassword" placeholder="法人账号密码"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">地税登陆账号</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.localTaxAccount" placeholder="地税登陆账号"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">地税登陆账号密码</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.localTaxPwd" placeholder="地税登陆账号密码"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">原国税一号窗密码</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.oldNationalTaxPwd" placeholder="原国税一号窗密码"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-3 control-label">备注</div>
+						   	<div class="col-sm-9">
+						      <input type="text" class="form-control" v-model="customerTax.remark" placeholder="备注"/>
+						    </div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label"></div> 
+							<input v-if="hasPermission('customer:save') && status==0" type="button" class="btn btn-primary" @click="saveOrUpdateTax" value="确定"/>
+							&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+						</div>
+					</form>
+	    		</div>
+			</div>
+    	</div>
+    </div>
+</div>
+
+<script src="../../js/validation.js"></script>
+<script src="../../js/modules/customer/customer.js?v=20180131002"></script>
+<script type="text/javascript">
+	//工商局的验证码url
+	var baseURLOfIc = baseURL + "customer/validCode/indAndCom?random=";
+	var baseURLOfTax = baseURL + "customer/validCode/tax?random=";
+	$(document).ready(function() {
+		$("#validImg").on({
+			click:function(){
+				var r = Math.random();
+				//var url = 'http://gsxt.gzaic.gov.cn/aiccips/GZpublicity/getCode.html?random=' + r;
+				$('#validImg').attr('src', baseURLOfIc+r);  
+			}
+		});
+		$("#validImg1").on({
+			click:function(){
+				var r = Math.random();
+				$('#validImg1').attr('src', baseURLOfTax+r);  
+			}
+		});
+		//$("#validImg").click();
+	});
+</script>
+</body>
+</html>

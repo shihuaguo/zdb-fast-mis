@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdb.modules.customer.dao.CustomerTaxMapper">
+  <resultMap id="BaseResultMap" type="com.zdb.modules.customer.entity.CustomerTax">
+    <id column="customer_id" jdbcType="INTEGER" property="customerId" />
+    <result column="national_tax_number" jdbcType="VARCHAR" property="nationalTaxNumber" />
+    <result column="local_tax_number" jdbcType="VARCHAR" property="localTaxNumber" />
+    <result column="local_tax_code" jdbcType="VARCHAR" property="localTaxCode" />
+    <result column="financial_controller" jdbcType="VARCHAR" property="financialController" />
+    <result column="tax_agent" jdbcType="VARCHAR" property="taxAgent" />
+    <result column="ticket_agent" jdbcType="VARCHAR" property="ticketAgent" />
+    <result column="investor_info" jdbcType="VARCHAR" property="investorInfo" />
+    <result column="national_tax_dpt" jdbcType="VARCHAR" property="nationalTaxDpt" />
+    <result column="local_tax_dpt" jdbcType="VARCHAR" property="localTaxDpt" />
+    <result column="legal_person_account" jdbcType="VARCHAR" property="legalPersonAccount" />
+    <result column="legal_person_password" jdbcType="VARCHAR" property="legalPersonPassword" />
+    <result column="local_tax_account" jdbcType="VARCHAR" property="localTaxAccount" />
+    <result column="local_tax_pwd" jdbcType="VARCHAR" property="localTaxPwd" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="old_national_tax_pwd" jdbcType="VARCHAR" property="oldNationalTaxPwd" />
+    <result column="remark1" jdbcType="VARCHAR" property="remark1" />
+    <result column="bsrxm" jdbcType="VARCHAR" property="bsrxm" />
+    <result column="bsryddh" jdbcType="VARCHAR" property="bsryddh" />
+    <result column="bsrzjhm" jdbcType="VARCHAR" property="bsrzjhm" />
+    <result column="cwfzrxm" jdbcType="VARCHAR" property="cwfzrxm" />
+    <result column="cwfzryddh" jdbcType="VARCHAR" property="cwfzryddh" />
+    <result column="cwfzrzjhm" jdbcType="VARCHAR" property="cwfzrzjhm" />
+    <result column="fddbrxm" jdbcType="VARCHAR" property="fddbrxm" />
+    <result column="fddbryddh" jdbcType="VARCHAR" property="fddbryddh" />
+    <result column="fddbrzjhm" jdbcType="VARCHAR" property="fddbrzjhm" />
+    <result column="check_login_state" jdbcType="VARCHAR" property="checkLoginState" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    customer_id, national_tax_number, local_tax_number, local_tax_code, financial_controller, 
+    tax_agent, ticket_agent, investor_info, national_tax_dpt, local_tax_dpt, legal_person_account, 
+    legal_person_password, local_tax_account, local_tax_pwd, remark, old_national_tax_pwd, 
+    remark1, bsrxm, bsryddh, bsrzjhm, cwfzrxm, cwfzryddh, cwfzrzjhm, fddbrxm, fddbryddh, 
+    fddbrzjhm, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer_tax
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from customer_tax
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.customer.entity.CustomerTax">
+    insert into customer_tax (customer_id, national_tax_number, local_tax_number, 
+      local_tax_code, financial_controller, tax_agent, 
+      ticket_agent, investor_info, national_tax_dpt, 
+      local_tax_dpt, legal_person_account, legal_person_password, 
+      local_tax_account, local_tax_pwd, remark, 
+      old_national_tax_pwd, remark1, bsrxm, 
+      bsryddh, bsrzjhm, cwfzrxm, 
+      cwfzryddh, cwfzrzjhm, fddbrxm, 
+      fddbryddh, fddbrzjhm, create_time, 
+      update_time)
+    values (#{customerId,jdbcType=INTEGER}, #{nationalTaxNumber,jdbcType=VARCHAR}, #{localTaxNumber,jdbcType=VARCHAR}, 
+      #{localTaxCode,jdbcType=VARCHAR}, #{financialController,jdbcType=VARCHAR}, #{taxAgent,jdbcType=VARCHAR}, 
+      #{ticketAgent,jdbcType=VARCHAR}, #{investorInfo,jdbcType=VARCHAR}, #{nationalTaxDpt,jdbcType=VARCHAR}, 
+      #{localTaxDpt,jdbcType=VARCHAR}, #{legalPersonAccount,jdbcType=VARCHAR}, #{legalPersonPassword,jdbcType=VARCHAR}, 
+      #{localTaxAccount,jdbcType=VARCHAR}, #{localTaxPwd,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{oldNationalTaxPwd,jdbcType=VARCHAR}, #{remark1,jdbcType=VARCHAR}, #{bsrxm,jdbcType=VARCHAR}, 
+      #{bsryddh,jdbcType=VARCHAR}, #{bsrzjhm,jdbcType=VARCHAR}, #{cwfzrxm,jdbcType=VARCHAR}, 
+      #{cwfzryddh,jdbcType=VARCHAR}, #{cwfzrzjhm,jdbcType=VARCHAR}, #{fddbrxm,jdbcType=VARCHAR}, 
+      #{fddbryddh,jdbcType=VARCHAR}, #{fddbrzjhm,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zdb.modules.customer.entity.CustomerTax">
+    insert into customer_tax
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        customer_id,
+      </if>
+      <if test="nationalTaxNumber != null">
+        national_tax_number,
+      </if>
+      <if test="localTaxNumber != null">
+        local_tax_number,
+      </if>
+      <if test="localTaxCode != null">
+        local_tax_code,
+      </if>
+      <if test="financialController != null">
+        financial_controller,
+      </if>
+      <if test="taxAgent != null">
+        tax_agent,
+      </if>
+      <if test="ticketAgent != null">
+        ticket_agent,
+      </if>
+      <if test="investorInfo != null">
+        investor_info,
+      </if>
+      <if test="nationalTaxDpt != null">
+        national_tax_dpt,
+      </if>
+      <if test="localTaxDpt != null">
+        local_tax_dpt,
+      </if>
+      <if test="legalPersonAccount != null">
+        legal_person_account,
+      </if>
+      <if test="legalPersonPassword != null">
+        legal_person_password,
+      </if>
+      <if test="localTaxAccount != null">
+        local_tax_account,
+      </if>
+      <if test="localTaxPwd != null">
+        local_tax_pwd,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="oldNationalTaxPwd != null">
+        old_national_tax_pwd,
+      </if>
+      <if test="remark1 != null">
+        remark1,
+      </if>
+      <if test="bsrxm != null">
+        bsrxm,
+      </if>
+      <if test="bsryddh != null">
+        bsryddh,
+      </if>
+      <if test="bsrzjhm != null">
+        bsrzjhm,
+      </if>
+      <if test="cwfzrxm != null">
+        cwfzrxm,
+      </if>
+      <if test="cwfzryddh != null">
+        cwfzryddh,
+      </if>
+      <if test="cwfzrzjhm != null">
+        cwfzrzjhm,
+      </if>
+      <if test="fddbrxm != null">
+        fddbrxm,
+      </if>
+      <if test="fddbryddh != null">
+        fddbryddh,
+      </if>
+      <if test="fddbrzjhm != null">
+        fddbrzjhm,
+      </if>
+      <if test="checkLoginState != null">
+        check_login_state,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        #{customerId,jdbcType=INTEGER},
+      </if>
+      <if test="nationalTaxNumber != null">
+        #{nationalTaxNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxNumber != null">
+        #{localTaxNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxCode != null">
+        #{localTaxCode,jdbcType=VARCHAR},
+      </if>
+      <if test="financialController != null">
+        #{financialController,jdbcType=VARCHAR},
+      </if>
+      <if test="taxAgent != null">
+        #{taxAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketAgent != null">
+        #{ticketAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="investorInfo != null">
+        #{investorInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalTaxDpt != null">
+        #{nationalTaxDpt,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxDpt != null">
+        #{localTaxDpt,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonAccount != null">
+        #{legalPersonAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonPassword != null">
+        #{legalPersonPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxAccount != null">
+        #{localTaxAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxPwd != null">
+        #{localTaxPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="oldNationalTaxPwd != null">
+        #{oldNationalTaxPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null">
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="bsrxm != null">
+        #{bsrxm,jdbcType=VARCHAR},
+      </if>
+      <if test="bsryddh != null">
+        #{bsryddh,jdbcType=VARCHAR},
+      </if>
+      <if test="bsrzjhm != null">
+        #{bsrzjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="cwfzrxm != null">
+        #{cwfzrxm,jdbcType=VARCHAR},
+      </if>
+      <if test="cwfzryddh != null">
+        #{cwfzryddh,jdbcType=VARCHAR},
+      </if>
+      <if test="cwfzrzjhm != null">
+        #{cwfzrzjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="fddbrxm != null">
+        #{fddbrxm,jdbcType=VARCHAR},
+      </if>
+      <if test="fddbryddh != null">
+        #{fddbryddh,jdbcType=VARCHAR},
+      </if>
+      <if test="fddbrzjhm != null">
+        #{fddbrzjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="checkLoginState != null">
+        #{checkLoginState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.customer.entity.CustomerTax">
+    update customer_tax
+    <set>
+      <if test="nationalTaxNumber != null">
+        national_tax_number = #{nationalTaxNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxNumber != null">
+        local_tax_number = #{localTaxNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxCode != null">
+        local_tax_code = #{localTaxCode,jdbcType=VARCHAR},
+      </if>
+      <if test="financialController != null">
+        financial_controller = #{financialController,jdbcType=VARCHAR},
+      </if>
+      <if test="taxAgent != null">
+        tax_agent = #{taxAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketAgent != null">
+        ticket_agent = #{ticketAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="investorInfo != null">
+        investor_info = #{investorInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalTaxDpt != null">
+        national_tax_dpt = #{nationalTaxDpt,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxDpt != null">
+        local_tax_dpt = #{localTaxDpt,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonAccount != null">
+        legal_person_account = #{legalPersonAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPersonPassword != null">
+        legal_person_password = #{legalPersonPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxAccount != null">
+        local_tax_account = #{localTaxAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="localTaxPwd != null">
+        local_tax_pwd = #{localTaxPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="oldNationalTaxPwd != null">
+        old_national_tax_pwd = #{oldNationalTaxPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null">
+        remark1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="bsrxm != null">
+        bsrxm = #{bsrxm,jdbcType=VARCHAR},
+      </if>
+      <if test="bsryddh != null">
+        bsryddh = #{bsryddh,jdbcType=VARCHAR},
+      </if>
+      <if test="bsrzjhm != null">
+        bsrzjhm = #{bsrzjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="cwfzrxm != null">
+        cwfzrxm = #{cwfzrxm,jdbcType=VARCHAR},
+      </if>
+      <if test="cwfzryddh != null">
+        cwfzryddh = #{cwfzryddh,jdbcType=VARCHAR},
+      </if>
+      <if test="cwfzrzjhm != null">
+        cwfzrzjhm = #{cwfzrzjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="fddbrxm != null">
+        fddbrxm = #{fddbrxm,jdbcType=VARCHAR},
+      </if>
+      <if test="fddbryddh != null">
+        fddbryddh = #{fddbryddh,jdbcType=VARCHAR},
+      </if>
+      <if test="fddbrzjhm != null">
+        fddbrzjhm = #{fddbrzjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="checkLoginState != null">
+        check_login_state = #{checkLoginState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.customer.entity.CustomerTax">
+    update customer_tax
+    set national_tax_number = #{nationalTaxNumber,jdbcType=VARCHAR},
+      local_tax_number = #{localTaxNumber,jdbcType=VARCHAR},
+      local_tax_code = #{localTaxCode,jdbcType=VARCHAR},
+      financial_controller = #{financialController,jdbcType=VARCHAR},
+      tax_agent = #{taxAgent,jdbcType=VARCHAR},
+      ticket_agent = #{ticketAgent,jdbcType=VARCHAR},
+      investor_info = #{investorInfo,jdbcType=VARCHAR},
+      national_tax_dpt = #{nationalTaxDpt,jdbcType=VARCHAR},
+      local_tax_dpt = #{localTaxDpt,jdbcType=VARCHAR},
+      legal_person_account = #{legalPersonAccount,jdbcType=VARCHAR},
+      legal_person_password = #{legalPersonPassword,jdbcType=VARCHAR},
+      local_tax_account = #{localTaxAccount,jdbcType=VARCHAR},
+      local_tax_pwd = #{localTaxPwd,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      old_national_tax_pwd = #{oldNationalTaxPwd,jdbcType=VARCHAR},
+      remark1 = #{remark1,jdbcType=VARCHAR},
+      bsrxm = #{bsrxm,jdbcType=VARCHAR},
+      bsryddh = #{bsryddh,jdbcType=VARCHAR},
+      bsrzjhm = #{bsrzjhm,jdbcType=VARCHAR},
+      cwfzrxm = #{cwfzrxm,jdbcType=VARCHAR},
+      cwfzryddh = #{cwfzryddh,jdbcType=VARCHAR},
+      cwfzrzjhm = #{cwfzrzjhm,jdbcType=VARCHAR},
+      fddbrxm = #{fddbrxm,jdbcType=VARCHAR},
+      fddbryddh = #{fddbryddh,jdbcType=VARCHAR},
+      fddbrzjhm = #{fddbrzjhm,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where customer_id = #{customerId,jdbcType=INTEGER}
+  </update>
+  
+  <sql id="whereClause">
+        <where>
+	        <if test="customerName != null and customerName != ''">
+	            AND customer_name like #{customerName}
+	        </if>
+	    </where>
+  </sql>
+  
+  <select id="queryList" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer t 
+    <include refid="whereClause" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			order by id
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  <select id="queryTotal" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from customer
+    <include refid="whereClause" />
+  </select>
+  
+  <delete id="deleteBatch">
+		delete from customer where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="queryCheckLoginStateByPrimaryKey" resultType="java.lang.String">
+    	select check_login_state from customer_tax t where t.customer_id=#{customerId}
+  </select>
+</mapper>

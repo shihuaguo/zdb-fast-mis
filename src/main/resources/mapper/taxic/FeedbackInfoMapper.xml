@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdb.modules.taxic.dao.FeedbackInfoMapper">
+  <resultMap id="BaseResultMap" type="com.zdb.modules.taxic.entity.FeedbackInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type1" jdbcType="VARCHAR" property="type1" />
+    <result column="type2" jdbcType="VARCHAR" property="type2" />
+    <result column="feedback_info" jdbcType="VARCHAR" property="feedbackInfo" />
+    <result column="work_summary" jdbcType="VARCHAR" property="workSummary" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="feedback_time" jdbcType="TIMESTAMP" property="feedbackTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    
+    <result column="username" jdbcType="VARCHAR" property="username" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    t.id, type1, type2, feedback_info, work_summary, t.create_by, t.update_by, t.version, t.feedback_time, t.create_time, 
+    t.update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from feedback_info t
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <sql id="whereClause">
+        <where>
+	        <if test="type1 != null and type1 != ''">
+	            AND type1 = #{type1}
+	        </if>
+	        <if test="feedbackInfo != null and feedbackInfo != ''">
+	            AND t.feedback_info like #{feedbackInfo}
+	        </if>
+	        <if test="createBy != null">
+	            AND t.create_by = #{createBy}
+	        </if>
+	    </where>
+  </sql>
+  
+  <select id="queryList" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />,u.username
+    from feedback_info t left join sys_user u on t.create_by=u.user_id
+    <include refid="whereClause" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+			order by t.id desc
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  <select id="queryTotal" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from feedback_info t
+    <include refid="whereClause" />
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from feedback_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.taxic.entity.FeedbackInfo">
+    insert into feedback_info (id, type1, type2, 
+      feedback_info, work_summary, create_by, 
+      update_by, version, feedback_time, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{type1,jdbcType=VARCHAR}, #{type2,jdbcType=VARCHAR}, 
+      #{feedbackInfo,jdbcType=VARCHAR}, #{workSummary,jdbcType=VARCHAR}, #{createBy,jdbcType=INTEGER}, 
+      #{updateBy,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, #{feedbackTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zdb.modules.taxic.entity.FeedbackInfo">
+    insert into feedback_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type1 != null">
+        type1,
+      </if>
+      <if test="type2 != null">
+        type2,
+      </if>
+      <if test="feedbackInfo != null">
+        feedback_info,
+      </if>
+      <if test="workSummary != null">
+        work_summary,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="feedbackTime != null">
+        feedback_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type1 != null">
+        #{type1,jdbcType=VARCHAR},
+      </if>
+      <if test="type2 != null">
+        #{type2,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackInfo != null">
+        #{feedbackInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="workSummary != null">
+        #{workSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="feedbackTime != null">
+        #{feedbackTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.taxic.entity.FeedbackInfo">
+    update feedback_info
+    <set>
+      <if test="type1 != null">
+        type1 = #{type1,jdbcType=VARCHAR},
+      </if>
+      <if test="type2 != null">
+        type2 = #{type2,jdbcType=VARCHAR},
+      </if>
+      <if test="feedbackInfo != null">
+        feedback_info = #{feedbackInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="workSummary != null">
+        work_summary = #{workSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <!-- <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if> -->
+      version = version + 1,
+      <if test="feedbackTime != null">
+        feedback_time = #{feedbackTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+    <if test="version != null">
+        and version = #{version,jdbcType=INTEGER}
+    </if>
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.taxic.entity.FeedbackInfo">
+    update feedback_info
+    set type1 = #{type1,jdbcType=VARCHAR},
+      type2 = #{type2,jdbcType=VARCHAR},
+      feedback_info = #{feedbackInfo,jdbcType=VARCHAR},
+      work_summary = #{workSummary,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=INTEGER},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      feedback_time = #{feedbackTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <delete id="deleteBatch">
+		delete from feedback_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

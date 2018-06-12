@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdb.modules.cal.dao.CalTaskVerifyMapper">
+  <resultMap id="BaseResultMap" type="com.zdb.modules.cal.entity.CalTaskVerify">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="task_item_id" jdbcType="INTEGER" property="taskItemId" />
+    <result column="target_status" jdbcType="TINYINT" property="targetStatus" />
+    <result column="verify_status" jdbcType="TINYINT" property="verifyStatus" />
+    <result column="apply_user" jdbcType="INTEGER" property="applyUser" />
+    <result column="verify_user" jdbcType="INTEGER" property="verifyUser" />
+    <result column="apply_remark" jdbcType="VARCHAR" property="applyRemark" />
+    <result column="verify_remark" jdbcType="VARCHAR" property="verifyRemark" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    
+    <result column="task_item_title" jdbcType="VARCHAR" property="taskItemTitle" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="username1" jdbcType="VARCHAR" property="username1" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, task_item_id, target_status, verify_status, apply_user, verify_user, apply_remark, 
+    verify_remark, version, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cal_task_verify
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <sql id="whereClause">
+      <where>
+       <if test="taskItemId != null">
+           AND t.task_item_id = #{taskItemId}
+       </if>
+       <if test="targetStatus != null">
+           AND t.target_status = #{targetStatus}
+       </if>
+       <if test="verifyStatus != null">
+           AND t.verify_status = #{verifyStatus}
+       </if>
+       <if test="applyUser != null">
+           AND t.apply_user = #{applyUser}
+       </if>
+   </where>
+  </sql>
+  
+  <select id="queryList" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+		from cal_task_verify t
+    <include refid="whereClause" />
+  </select>
+  
+  <sql id="whereClause1">
+      <where>
+       <if test="taskItemTitle != null and taskItemTitle != ''">
+           AND ti.task_item_title like #{taskItemTitle}
+       </if>
+       <if test="verifyStatus != null and verifyStatus != ''">
+           AND tv.verify_status = #{verifyStatus}
+       </if>
+   </where>
+  </sql>
+  
+  <select id="queryPage" parameterType="map" resultMap="BaseResultMap">
+    SELECT 
+    	tv.*,ti.`task_item_title`,t.`task_name`,su.`username`,su1.`username` AS username1
+    	FROM `cal_task_verify` tv LEFT JOIN `cal_task_item` ti ON tv.`task_item_id`=ti.`id`
+		LEFT JOIN `cal_task` t ON ti.`task_id`=t.`id`
+		LEFT JOIN `sys_user` su ON tv.`apply_user`=su.`user_id`
+		LEFT JOIN `sys_user` su1 ON tv.`verify_user`=su1.`user_id`
+    <include refid="whereClause1" />
+    <choose>
+		<when test="sidx != null and sidx.trim() != ''">
+			order by ${sidx} ${order}
+		</when>
+		<otherwise>
+		</otherwise>
+	</choose>
+	<if test="offset != null and limit != null">
+		limit #{offset}, #{limit}
+	</if>
+  </select>
+  
+  <select id="queryTotal" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from `cal_task_verify` tv LEFT JOIN `cal_task_item` ti ON tv.`task_item_id`=ti.`id`
+    <include refid="whereClause1" />
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cal_task_verify
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.cal.entity.CalTaskVerify">
+    insert into cal_task_verify (id, task_item_id, target_status, 
+      verify_status, apply_user, verify_user, 
+      apply_remark, verify_remark, version, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{taskItemId,jdbcType=INTEGER}, #{targetStatus,jdbcType=TINYINT}, 
+      #{verifyStatus,jdbcType=TINYINT}, #{applyUser,jdbcType=INTEGER}, #{verifyUser,jdbcType=INTEGER}, 
+      #{applyRemark,jdbcType=VARCHAR}, #{verifyRemark,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zdb.modules.cal.entity.CalTaskVerify">
+    insert into cal_task_verify
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taskItemId != null">
+        task_item_id,
+      </if>
+      <if test="targetStatus != null">
+        target_status,
+      </if>
+      <if test="verifyStatus != null">
+        verify_status,
+      </if>
+      <if test="applyUser != null">
+        apply_user,
+      </if>
+      <if test="verifyUser != null">
+        verify_user,
+      </if>
+      <if test="applyRemark != null">
+        apply_remark,
+      </if>
+      <if test="verifyRemark != null">
+        verify_remark,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="taskItemId != null">
+        #{taskItemId,jdbcType=INTEGER},
+      </if>
+      <if test="targetStatus != null">
+        #{targetStatus,jdbcType=TINYINT},
+      </if>
+      <if test="verifyStatus != null">
+        #{verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="applyUser != null">
+        #{applyUser,jdbcType=INTEGER},
+      </if>
+      <if test="verifyUser != null">
+        #{verifyUser,jdbcType=INTEGER},
+      </if>
+      <if test="applyRemark != null">
+        #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyRemark != null">
+        #{verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.cal.entity.CalTaskVerify">
+    update cal_task_verify
+    <set>
+      <if test="taskItemId != null">
+        task_item_id = #{taskItemId,jdbcType=INTEGER},
+      </if>
+      <if test="targetStatus != null">
+        target_status = #{targetStatus,jdbcType=TINYINT},
+      </if>
+      <if test="verifyStatus != null">
+        verify_status = #{verifyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="applyUser != null">
+        apply_user = #{applyUser,jdbcType=INTEGER},
+      </if>
+      <if test="verifyUser != null">
+        verify_user = #{verifyUser,jdbcType=INTEGER},
+      </if>
+      <if test="applyRemark != null">
+        apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="verifyRemark != null">
+        verify_remark = #{verifyRemark,jdbcType=VARCHAR},
+      </if>
+      <!-- <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if> -->
+      version = version + 1,
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+    <if test="version != null">
+        and version = #{version,jdbcType=INTEGER}
+    </if>
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.cal.entity.CalTaskVerify">
+    update cal_task_verify
+    set task_item_id = #{taskItemId,jdbcType=INTEGER},
+      target_status = #{targetStatus,jdbcType=TINYINT},
+      verify_status = #{verifyStatus,jdbcType=TINYINT},
+      apply_user = #{applyUser,jdbcType=INTEGER},
+      verify_user = #{verifyUser,jdbcType=INTEGER},
+      apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      verify_remark = #{verifyRemark,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

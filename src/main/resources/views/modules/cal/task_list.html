@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>新建任务</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-switch.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css?v=20171114">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../libs/bootstrap-switch.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../libs/validator.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js"></script>
+<script src="../../js/enums.js"></script>
+<style>
+  .ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* 防止水平滚动条 */
+    overflow-x: hidden;
+  }
+  </style>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control" v-model="q.taskName" @keyup.enter="query" placeholder="任务名称">
+			</div>
+			<a v-if="hasPermission('cal:task:list')" class="btn btn-default" @click="query">查询</a>
+			<a v-if="hasPermission('cal:task:save')" id="addBtn" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('cal:task:update')" id="updateBtn" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('cal:task:delete')" id="deleteBtn" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			
+			<a v-if="hasPermission('cal:task:save')" id="topBtn" class="btn btn-default" @click="top"><i class="fa fa-arrow-up"></i>&nbsp;置顶</a>
+			<a v-if="hasPermission('cal:task:save')" class="btn btn-default" @click="exportTask"><i class="fa fa-download"></i>&nbsp;导出任务</a>
+			<a v-if="hasPermission('cal:task:save')" class="btn btn-default" @click="exportTaskItem"><i class="fa fa-download"></i>&nbsp;导出事项</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">任务名称</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="task.taskName" placeholder="任务名称"/>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">工商/税务</div>
+			   	<div class="col-sm-10">
+					<select v-model="task.taskType" class="form-control" @change="getTaskClassList(task.taskType)">  
+					  	<option v-for="taskType in taskTypeList" v-bind:value="taskType.value">  
+    						{{ taskType.label }}  
+  						</option>  
+					</select>  
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">任务类型</div>
+			   	<div class="col-sm-10">
+					<select v-model="task.taskClass" class="form-control" @change="getTaskSubClassList(task.taskClass)">  
+					  	<option v-for="taskClass in taskClassList" v-bind:value="taskClass.value">  
+    						{{ taskClass.label }}  
+  						</option>  
+					</select>  
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">明细类型</div>
+			   	<div class="col-sm-10" v-show="task.taskType == 2 && task.taskClass != 25">
+					<select v-model="task.taskSubClass" class="form-control">  
+					  	<option v-for="taskSubClass in taskSubClassList" v-bind:value="taskSubClass.value">  
+    						{{ taskSubClass.label }}  
+  						</option>  
+					</select>  
+			    </div>
+			    <div class="col-sm-10" v-show="task.taskType == 9 || task.taskType == 1 || task.taskClass == 25">
+			    	<input type="text" class="form-control" v-model="task.taskClassDetail" placeholder="明细"/>
+			    </div>
+			</div>
+			<!-- <div class="form-group">
+			   	<div class="col-sm-2 control-label">编号</div>
+			   	<div class="col-sm-10">
+			      <input type="text" class="form-control" v-model="task.taskNo" placeholder="编号"/>
+			    </div>
+			</div> -->
+			<div class="form-group">
+			   	<div class="col-sm-2 control-label">客户</div>
+			   	<div class="col-sm-10">
+			      <textarea type="text" class="form-control" id="customerName" v-model="task.customerName" placeholder="客户"></textarea>
+			    </div>
+			</div>
+			<div class="form-group">
+			   	<div for="expected_time" class="col-sm-2 control-label">预计办理时间</div>
+			   	<div class="input-group date form_datetime col-sm-5" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-field="expected_time">
+                    <input id="expectedTime" class="form-control" size="16" type="text" value="" v-model="task.expectedTime" readonly>
+					<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">办理员工</div> 
+				<div class="col-sm-10">
+					<select v-model="task.employeeId" class="form-control">  
+					  	<option v-for="user in userList" v-bind:value="user.userId">  
+    						{{ user.username }}  
+  						</option>  
+					</select>  
+			    </div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="../../js/validation.js"></script>
+<script src="../../js/modules/cal/cal_task.js?v=20180131002"></script>
+<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        language:  'zh-CN',
+        autoclose: 1,
+        minView:1,
+        dateFormat: 'yyyy-mm-dd hh:ii:ss',
+        weekStart: 1
+        /*todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1 */
+    }).on('hide', function(ev){
+    	var value = $("#expectedTime").val();
+    	vm.task.expectedTime = value;
+    });
+</script>
+</body>
+</html>

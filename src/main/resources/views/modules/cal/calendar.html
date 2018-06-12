@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>日程总览</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<!-- <link rel="stylesheet" href="../../css/all-skins.min.css"> -->
+<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../css/jquery.qtip.min.css">
+<link rel='stylesheet' href='../../css/fullcalendar/fullcalendar.3.5.1.css' />
+<!-- <link rel='stylesheet' href='../../css/fullcalendar/fullcalendar.min.css' />
+<link rel='stylesheet' href='../../css/fullcalendar/fullcalendar.print.min.css' /> -->
+<style>
+  .ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1000;
+  }
+</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper" id="rrapp" v-cloak>
+		<div class="container-fluid">
+ 			<div class="row">
+				<div id="calendar" class="col-md-12"></div>
+			</div>
+		</div>
+		<!-- 点击事件时修改事件信息 -->
+		<div id="eventLayer" style="display: none;">
+			<form class="form-horizontal" style="width:100%">
+				<div class="form-group">
+					<div class="form-group">
+					   	<div class="col-sm-2 control-label">所属任务</div>
+					   	<!-- <div class="col-sm-6">
+					      	<select v-model="taskItem.taskId" class="form-control">  
+							  	<option v-for="task in tasks" v-bind:value="task.id">  
+    								{{ task.taskName }}  
+  								</option>  
+							</select>
+					    </div> -->
+					    <div class="col-sm-6">
+					      <input type="text" id="taskName" class="form-control" v-model="taskItem.taskName" placeholder="任务"/>
+					    </div>
+					    <!-- <div v-show="!isSave" class="col-sm-6">
+					      <input type="text" class="form-control" v-model="taskItem.taskName" readonly="readonly"/>
+					    </div> -->
+					    <div v-show="isSave" class="col-sm-2">
+					    	<input type="button" class="fc-button fc-state-default fc-corner-left fc-corner-right" onclick="createTask();" value="新建任务" />
+					    </div>
+					</div>
+					<div class="form-group">
+					   	<div class="col-sm-2 control-label">任务时间</div>
+					    <div class="col-sm-6">
+							<input type="text" class="form-control" v-model="taskItem.startTime"  id="datetimepicker" >
+					    </div>
+					</div>
+					<div class="form-group">
+					   	<div class="col-sm-2 control-label">具体事项</div>
+					   	<div class="col-sm-6">
+					      <input type="text" class="form-control" v-model="taskItem.taskItemTitle" placeholder="任务事项"/>
+					    </div>
+					</div>
+					<div class="form-group">
+					   	<div class="col-sm-2 control-label">地点</div>
+					   	<div class="col-sm-6">
+					      <input type="text" class="form-control" v-model="taskItem.place" placeholder="地点"/>
+					    </div>
+					</div>
+					<div class="form-group">
+					   	<div class="col-sm-2 control-label">办理员工</div>
+					   	<div class="col-sm-6">
+					      <input type="text" id="employeeName" class="form-control" v-model="taskItem.employeeName" placeholder="办理员工"/>
+					    </div>
+					</div>
+					<div v-show="!isSave" class="form-group">
+					   	<div class="col-sm-2 control-label">状态</div>
+					   	<div class="col-sm-6">
+					      <input type="radio" name="status" v-model="taskItem.status" value="0">未完成</input>
+					      <input type="radio" name="status" v-model="taskItem.status" value="1">已完成</input>
+					    </div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+<script src="../../libs/fullcalendar/moment.min.js"></script>
+<script src="../../libs/jquery.min.3.2.1.js"></script>
+<script src="../../libs/fullcalendar/fullcalendar.min.js"></script>
+<script src="../../libs/fullcalendar/zh-cn.js"></script>
+<script src="../../libs/jquery.qtip.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../libs/validator.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js?v=2017112201"></script>
+<script src="../../js/modules/cal/cal.js?v=2010012902"></script>
+</body>
+</html>

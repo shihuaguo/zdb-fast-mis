@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>税务快速登录</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="../../css/bootstrap-switch.min.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="../../css/main.css">
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/bootstrap-datetimepicker.min.js"></script>
+<script src="../../libs/bootstrap-switch.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../libs/validator.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="../../js/common.js?v=20171011"></script>
+<script src="../../js/enums.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-md-2">
+				<input type="text" class="form-control" v-model="q.customerName" @keyup.enter="query" placeholder="客户名称">
+			</div>
+			<div class="form-group col-md-1">
+				<input type="text" class="form-control" v-model="q.customerNo" @keyup.enter="query" placeholder="客户编号">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+		</div>
+	    <!--登陆表单 -->
+	    <form id="upLoginForm" style="display:none;"
+	          action="http://www.etax-gd.gov.cn/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1502697830856"
+	          method="post">
+	        <input name="lt" type="hidden" value="LT-546681-BFExfWhQEJjMWfIdx2Tw-gddzswj">
+	        <input name="execution" type="hidden"
+	               value="e01c22c7-e97c-4998-98c5-201b4ba51417_ZXlKaGJHY2lPaUpJVXpVeE1pSjkuYW1RcmFIUTJOMUFyVmpJME1UaG9Vek5IZVVoS1pESlBVRTlFZFRsdlZsSldlRm8zU0VOSlJURXZTR0oyWjBGeE5uaEVZVlprT1hsWlRFSlNjbHBJYWxrMFVYaHFRa3AzYTNWU0wyWlNhazVaU1VrNVNsQkRXWFo0YWpOWFVYTXdaM2RQYmxCaFYxWnhORzFtY214cVltbE9jMGxUZFdrMlpVUTBjMVpLTDA1YVNHZG5RUzlEYWk5a05IcGpWVEZ5YURWcGRHaG5PRGRsVkhGVU5qSllURVV5ZHpBeU0wSXliMmM1YzFGbVpsbG5PWEJrTnpCSUx6WlBNMnhUWW5oWmNGaHpSMGRDYkc1UFFWaEZabGhzWVRnMWNHRlJiR3hpYlVGTVRsaHJZMWhYTlM4eVdVOVNRbmRaZWs1WFNXeFJhbE01ZW14U1NIVTBTRWt6V0VNMVdIUjBWaTl0WnpOSlRrWkRhbHBDWkhORE5VUllhUzkyTVN0d1dVZEZXRWgySzBsMWIxUktPRzlQYW5oRFMwTnNNMmw1Y1ZoRmVqSjFOWEl2UkRsU1YwSk9USFpuUVUxamVqSTFaRmxuVlN0SWVFWndTWE0yVFZCRlV6SkdLMVJGUlVoeGVGSk9XQ3R0U25SeGVreFVOMnN4VUdnckszQjBkbW93UlhsMWJHNDBkVVpOZEZkTWVrRkpVamxwVUZKWlVtMU5UMFZGY25sU2RVUkRXRmw0V2tOU2VFTnFNazV0U2tWS1RTdFBZUzhyVUdGck9FbzRMMjF3UTBaSGVXaFZPRUZVYWk5RVVFbHRhWFZ1TVdRcldtOW9VREZ6Ums1VU1EZDBTMlY0TUdSbkx6SkpjREZEYUdsbFZWbFViemt3WlV0MVkxWlJTamt2VFU1T1dEZ3dMMVZwVGxkck16TkxTekJ3VlZNMkszUXpXRzlXT0RGaWFIVjRWM2hHU2pCQ1RUTXhOVU5uYlcxc1pVSjRNVkZET1ZwNEt5dElUVUV6V0VoTVpubHNhWEJvZEcwNVRrTXJZMjkxYVc0elNFODBaRFUwTXk4emNXSk9NbXhEYVNzdk5XUmhibUZPT1RsV1NYcENNMEZWUzNKaGRWVTNXRVJNTW5OcGRERndVbEV5Y0hoNE5URjZWR3RzTkVGYVZFVmtkRWhDTDJSa1RXeERlRlpxVXpOaWFXUnBUWFUyVUVWamNHWm9MMnBYU0dOalVHZDVNVWgwVVM5MGIxSkViV0pUY0ZCaGF6WnhjblEzVURSNFRFa3JkWGxwWTJWNlZWTnNNMUJzUjBoRFIxUXJiVTg0YlhSUlFsZDRVRTVZTDNWd1EwZE5LMUZaYUdGdmNHdzROMWt6TW5CRVJGbDRXREZDVDNkS0syeEhXVVJJTm1wc1JWWkxkVGw2ZVhCSWJFeDZkR2tyY1VkbU0xbzRaa1l3ZERKTFdraDZjelZuTkdGaGREWnRjalZhZW1rMk9HMUdWRFZQVEhoWVZFZFNjRmxVVkZVM1RTOXRRMFV2Y1d4RmFFbHlXRk5tWWpGS1ptazRjRTFKTDBGaGRreFFlV2R2Vm1SWE5sZDJWa0ZHZVZSTWJuaFhaVXd5YjFBNFZsQjJXWEZDWVVSU1NGTTFSVEZ4WTFvMGNIVllkR0V3ZDJrNFEyRlpUMnBsWjBNNVFYWjZjMVpVYnpOcFJtUkhSM1ZUYmpNemRXVm5RMjFCTWs5QlpXcG1jR3R5VUhOTVZ6azNPRmQ2YzNKWWJrNXFhMjVZWWs4M1owcFJOWFZ3WTBSMmJsa3ZiM1o1ZDA1Mk1VeFBhbWxuYkdscUszVlhTQ3RQZVRsRGRrWTFXV1ZZWjJKU05EUlZSbEl6WTFSeWVrdzBjazlXVnpkUVVqWmxaM0puYlRCVGJpOHJSbWN3YkRKMlpFUXZUemRKVkRJclpGZHlNbVF4U0ZGeFlUWkRjRGhGVjFvclFXMTBTa05KVm0wM1Iwd3JZVGREVUZvMWVUaHVXRkJrWjJaT1MzZExObk5HZW01T1RISXlXVWgwYjJKV04zZE1UelEyWW5STmRGQTJNbkYzVldGeFYwdEtXRVV4YVRWdFZUUXJTRXhRVURSSlpVMHdaRlp3VTNGd2VsTnljelpoVW5sMFFUaGplbFJuUjJoTWRXMWxWRXhqZUZVNVMwcE5ZMk5LVUVrek5WVlpjWGRYUkUxWWVsRTRVRUpsYTA1aVQxZDFaVk5MZFc5S1pqUlBTR014ZGxWbGJFNVhVMk5pUTFKNWNWVlpiRmxLY1VkaE0xaFRkSGRCWjNCa1dETkJSR3B4TTJjNFVXZzNPWEZCZDFSQmJFVlZTalpEWlhKTE4xUnRXVUYxV0RjMlQwZFlVMUpIUzBjeGNWUlBWV2hqZVRWelR6WkRPRWx6TDAwclZXTXhTbFJhVVhOblRXZHdNRnBWTUZsSmJIaFdjSFkwTW01RVYxRnpjMGgyTTFsc1dtcFFiVE4xZWtKNFlYcHhjQzlGUjBOeE9GcHJkbW9yVjJSUWF6TXdiMmRrY21kMVkwOWlkMVpoU0ZCd2VtNWtVbEJhTTFnelpXOXJZVzlrYXpSdGJFcFVSSFl5Tm1aWlkxZEJRMlZGTUZwd1puUnViVlF4VVUxRVozaENRVVo2VGxOVWVVMU9hMlZYVnl0ak9EZDFOVXRUVUU5TFpFWk1SbFl2VVdnMWFHd3dlbWRTWTFWTVluRTBTRXRtYTBGd09IZHBVRFUyU1hCalJYaFdSMUprZFVSbGQySlhLemRCTlUxeFNrTllPVzhyU0ZGbFRXNTBZVGt4YkVaQlEyTTFNWEpsVVdsWFNuZHdWR0U0VTFOTGMwcEpTVU5vZERoclVUbDJSbGgxYlROV1dEQnZaVlZyUzFkMlZFZFZZbWczYkhWUVRISjZWU3R1UjJGNmQxZHFNbFpaVjJWSlFsbG9NVUpDV0d0NVkydFVObmxzTlV0WFZrcENjRXBJUzFGMWJHdDJaVmxGUzFveVoySnhkRVV4U0V4b1ZtSk9ibUZ0YldoeGIzSktlRlJKUzJJM1RuZGpZMEpCUVN0bWJEZDJNaXRUWjIxRE9UVlZiV3RQWVVwclMzQkJkMUZZYTJ4bGRXVlROa3B6T0hsdmEwWlNTSGgwWTBWV1JsbDNaV05zYVhwVldUTkViVE5MVGpKblNtNUtXRFV5ZDNwNlJuaFZOVEpTWW5OaVMzZHdiWEp3YkZjNFUyRnlVVFpaY21RME9YQkxlU3RXWkhoUWVtSTBTRkk1UzNoTWF6UlZaV3N2WlROSmJEZEhLMFpvUkZBelYyWm9iVkZ2WVVnME1rOU1lRW92Ym1Wck16bGhjRTlhWjBkalpIWjBSalVyY1hGa2MwTm5kV0ozYVU1SFpUTlVXa3hLUW10RmJWbzFSbTVDU2xCMVZUaG5jakF2VVZZMGJXMDNNbFlyWkRGQ1RFSXlOaXMyU1RGS2JVOW9hM1ZrY0VsT1JXRk1ZbnBVYWxsVWFrdHJVbEp1ZEc5ek0zTlZVM2szWjBaNFQyaFlaRmxKYmxORWNXUXpVMmhyV1VKNFJuUnZValJhUVdseFNtVkNOWFpMY1VReGIyTlZTemxFZVVwcGJGSmtNaXRtV1dRMmNGWm9UV1JQZHprd2NtWmpSa2xEYzFvMFdGVkNVbVZDVERSNFN6UlNOMFpKYjNKb1RFVnJZakJGUVVOcVFXTjZkRXh2ZFhSWmVIQkVieXRwYzFReFVWSlJUVU00TTJGalRqYzNRM2RuTUhkcFEwa3lZazEyVGtKbVpYb3ZRV3BFUkd3MFkxaHpRbVl2UzJoeFRHRnZSVVY0ZVhNclJGazVVa1Y0UVU5NVVGRkthRkZWVEVOR1NFOTJlV3AzZVVaWGRVdFdUMk5RTmpaak4yTlNRek5NTVRKS09VSXdXSE5IUzJsT2FXTlFZMm93ZVhGWGREQjRaSFZtTkdOdWFFc3dlRzU1TjBONFJWTlFZemwyTUVNeE5rczFSMUYxVlhkQ2ExQlRUMll4VTFKSlUxZENPWEJVUW1wYVIyNWtlRGR4UjB4MmFHeFphVmN3YkhkVGVEVnZRMXBRVGpVMFRGaFhTVmhwYldSc2VEVlBjRkpoYTJGS05HNWFiaThyWnpkdlQzVXdWVUpHU1hCSE1tSXdNVkJoV1VWM2NuUmhlVGx4SzFSVVJtcFBPV3BGV0hKblUwOVNZVUZzYVVwME56bEpRbnB6VURsb09USjJRM1YwY1RsbloyMTVXVU5DVWpkWlFWTkZha3BsY0N0Uk1FaDBlbk50WVhsaFZFOXdaVU5EVm1Ocll6QkhNVmN5U1hGMGFGQnlOSGRXVVdRd2RrMVRiM1Z4U0dKbmNreHNibTVIVW5sUVJHdEpiWFJIVUhkRmEycFlWVXQxYVVwcWJHdEhZbEZ3Y2tJeFpXdHdNa1JLWWtGbmEwSXhNbE5TTkRWMFJsQmFRek5DSzJocVdrODNka05TY21SVGNqTm9ZU3RXUTJKa1ZGTTFUQ3MwT1dKTE0zbDVibGhEZVc1MFdXdHBLMlJHVGtFd1l6TmxVQ3ROVGxab1JVVnlZa1EwUm5CS04yMTFSSFEyUzFWYWJWSlNUekJpTVN0d01raHRXSEZCTkRCWE5USXdWbnBsY0ZKbFFVUTJhMlkyWVdsdVFuTjBXbHBuV1hSV2FtNTBSRXd4TlROTVoyOXNUbm92VjNKWVJuQlNUVGhvWVZSWk4xSTRVV2x4U1ZBNFBRLjJ0ay1ZMXROSXJOZ2toNHRVVlVoSHh5RzNrSkJVMmkwd09uVEV2bEJxQlg3b3ZpNDBtQVk2N3RyM1BkMFBVSjlLYkk5OXBTdTNNZDBhdmVFdXdNVDVn">
+	        <input name="_eventId" type="hidden" value="submit">
+	
+	        <input name="_llqmc" type="hidden" value="IE">
+	        <input name="_llqbb" type="hidden" value="11.0">
+	        <input name="_czxt" type="hidden" value="Windows">
+	        <input name="_czxtbb" type="hidden" value="Windows 7">
+	        <input name="_llqxx" type="hidden"
+	               value="mozilla/5.0 (windows nt 6.1; wow64; trident/7.0; slcc2; .net clr 2.0.50727; .net clr 3.5.30729; .net clr 3.0.30729; .net4.0c; rv:11.0) like gecko">
+	
+	        <input name="authencationHandler" type="hidden" value="UsernamePasswordAuthencationHandler">
+	
+	        <ul>
+	            <li><input id="userName" style="display: none;" name="userName" type="text" class="txt bg1"
+	                       placeholder="用户名" value=""></li>
+	            <li><input id="passWord" style="display: none;" name="passWord" type="password" class="txt bg2"
+	                       placeholder="密码" value=""></li>
+	            <li><input id="captchCode" style="display: none;" name="captchCode" class="txt bg2" placeholder="验证码"
+	                       value=""></li>
+	            <li id="sjlyLi" style="display: none;">
+	                <div>
+	                    <input name="sjly" type="radio" value="0" checked="checked" style="display: none;">
+	                    <input name="sjly" type="radio" value="2" style="margin-right: 5px;">国税
+	                    <input name="sjly" type="radio" value="4" style="margin-left: 20px;margin-right: 5px;">地税
+	                </div>
+	            </li>
+	        </ul>
+	
+	    </form>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+</div>
+
+<script src="../../js/validation.js"></script>
+<script src="../../js/modules/tax/tax_fast_login.js?v=2017112802"></script>
+<script type="text/javascript">
+</script>
+</body>
+</html>
