@@ -1,0 +1,44 @@
+*.class
+bin/
+
+# sonar
+.sonar/
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+target/
+.settings/
+.externalToolBuilders/
+.classpath
+
+*.iml
+*/*.iml
+.idea/
+*.log
+*/*/*.log
+
+*tmp
+*~
+
+/bin
+/target
+/overlays
+*.project
+/.project
+/nb-configuration.xml
+
+*/*/*/*/rebel.xml
+
+**/*.rar
+**/*_now
+**/*_now*
+
+**/*.zip
