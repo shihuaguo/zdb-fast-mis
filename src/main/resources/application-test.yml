@@ -4,11 +4,11 @@ spring:
         driverClassName: com.mysql.jdbc.Driver
         druid:
             first:
-                url: jdbc:mysql://localhost:3306/test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                url: jdbc:mysql://localhost:3306/zdb-financial?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: zhidaobao
                 password: zhidaobao!123456@JJZN
             second:
-                url: jdbc:mysql://localhost:3306/test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                url: jdbc:mysql://localhost:3306/zdb-financial?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: zhidaobao
                 password: zhidaobao!123456@JJZN
             initial-size: 10
