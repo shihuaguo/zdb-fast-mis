@@ -45,8 +45,8 @@ $(function () {
 			}},
 			{ label: '地税登陆账号', name: 'validCode',width: 60,sortable:false, formatter: function(value, options, row){
 					var arr = [
-	                    "<button onclick=\"localTaxLogin('",row.customerTax ? row.customerTax.localTaxAccount:'',"','",
-	                    		row.customerTax ? row.customerTax.localTaxPwd:'',
+	                    "<button onclick=\"localTaxLogin('",row.customerTax ? row.customerTax.legalPersonAccount:'',"','",
+	                    		row.customerTax ? row.customerTax.legalPersonPassword:'',
 	                    "');\" ",
 	                    "type='button'>登录</button>"
 					];
