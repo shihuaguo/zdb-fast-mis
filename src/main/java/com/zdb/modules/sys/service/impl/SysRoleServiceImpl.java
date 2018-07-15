@@ -1,14 +1,5 @@
 package com.zdb.modules.sys.service.impl;
 
-import com.zdb.modules.sys.dao.SysRoleDao;
-import com.zdb.modules.sys.entity.SysRoleEntity;
-import com.zdb.modules.sys.service.SysRoleMenuService;
-import com.zdb.modules.sys.service.SysRoleService;
-import com.zdb.modules.sys.service.SysUserRoleService;
-import com.zdb.modules.sys.service.SysUserService;
-import com.zdb.common.utils.Constant;
-import com.zdb.common.exception.RRException;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +7,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.zdb.common.exception.RRException;
+import com.zdb.common.utils.Constant;
+import com.zdb.modules.sys.dao.SysRoleDao;
+import com.zdb.modules.sys.entity.SysRoleEntity;
+import com.zdb.modules.sys.service.SysRoleMenuService;
+import com.zdb.modules.sys.service.SysRoleService;
+import com.zdb.modules.sys.service.SysUserService;
 
 
 
@@ -32,8 +31,8 @@ public class SysRoleServiceImpl implements SysRoleService {
 	private SysRoleDao sysRoleDao;
 	@Autowired
 	private SysRoleMenuService sysRoleMenuService;
-	@Autowired
-	private SysUserRoleService sysUserRoleService;
+//	@Autowired
+//	private SysUserRoleService sysUserRoleService;
 	@Autowired
 	private SysUserService sysUserService;
 

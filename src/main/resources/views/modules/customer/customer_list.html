@@ -185,6 +185,38 @@
 						</div>
 					</form>
     			</div>
+    			
+    			<div class="panel panel-default">
+	    			<div class="panel-heading">商事主体信息</div>
+					<form class="form-horizontal">
+						<div v-if="hasPermission('customer:save') && status==0" class="form-group">
+						   	<div class="col-sm-3 control-label">验证码</div>
+						   	<div class="col-sm-3">
+						      <img id="validImg2" src="#" />
+						    </div>
+						    <div class="col-sm-3">
+						      <input type="text" class="form-control" id="validCode2" placeholder="请输入验证码"/>
+						    </div>
+						    <input type="button" class="btn btn-primary" @click="syncCri" value="同步"/>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">状态</div>
+						   	<div class="col-sm-10">
+						      <input type="text" class="form-control" v-model="customerCri.status" placeholder="状态"/>
+						    </div>
+						</div>
+						<div class="form-group">
+						   	<div class="col-sm-2 control-label">异常信息</div>
+						   	<div class="col-sm-10" id="AbnormalList">
+						    </div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label"></div> 
+							<input v-if="hasPermission('customer:save') && status==0" type="button" class="btn btn-primary" @click="saveOrUpdateCri" value="确定"/>
+							&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+						</div>
+					</form>
+				</div>
     		</div>
 			<div class="col-md-6">
 	    		<div class="panel panel-default">
@@ -357,16 +389,18 @@
 </div>
 
 <script src="../../js/validation.js"></script>
-<script src="../../js/modules/customer/customer.js?v=20180131002"></script>
+<script src="../../js/modules/customer/customer.js?v=20180715"></script>
 <script type="text/javascript">
 	//工商局的验证码url
 	var baseURLOfIc = baseURL + "customer/validCode/indAndCom?random=";
 	var baseURLOfTax = baseURL + "customer/validCode/tax?random=";
-	$(document).ready(function() {
+	var baseURLOfCri = baseURL + "customer/validCode/cri?random=";
+	//商事主体信息查询平台的guid
+	var cri_guid = '';
+	$(function() {
 		$("#validImg").on({
 			click:function(){
 				var r = Math.random();
-				//var url = 'http://gsxt.gzaic.gov.cn/aiccips/GZpublicity/getCode.html?random=' + r;
 				$('#validImg').attr('src', baseURLOfIc+r);  
 			}
 		});
@@ -376,7 +410,17 @@
 				$('#validImg1').attr('src', baseURLOfTax+r);  
 			}
 		});
-		//$("#validImg").click();
+		$("#validImg2").on({
+			click:function(){
+				var rand = Math.random();
+				$.get(baseURLOfCri, {}, function(r){
+					if(r && r.code == 0){
+						$('#validImg2').attr('src', r.url);  
+						cri_guid = r.guid;
+					}
+				});
+			}
+		});
 	});
 </script>
 </body>

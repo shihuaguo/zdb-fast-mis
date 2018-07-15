@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.zdb.common.annotation.SysLog;
 import com.zdb.common.utils.Constant;
+import com.zdb.common.utils.CriUtil;
 import com.zdb.common.utils.DateUtils;
 import com.zdb.common.utils.EtaxUtil;
 import com.zdb.common.utils.GZpublicityUtil;
@@ -364,15 +365,26 @@ public class CustomerController extends AbstractController {
 	public R syncTaxInfo(String customerId, String legalPersonAccount, String legalPersonPassword, String customerName, String validCode) {
 		logger.info("收到同步税务信息请求, customerId={},legalPersonAccount={}, legalPersonPassword={}, customerName={}, valideCode={}", 
 				customerId, legalPersonAccount, legalPersonPassword, customerName, validCode);
-		R r = EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode, kd);
-		if("0".equals(r.get("code").toString())) {
-//			CustomerTax ct = new CustomerTax();
-//			ct.setCustomerId(Integer.parseInt(customerId));
-//			customerTaxService.update(ct);
-			return r;
-		}else {
-			return r;
-		}
+		return EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode, kd);
+	}
+	
+	///////////////////////////////////////////商事信息/////////////////////////////////////
+	@RequestMapping(value = "/validCode/cri", method = RequestMethod.GET)
+	public R getCriValidCode(HttpServletResponse res, String random) {
+		logger.info("请求商事主体信息平台验证码图片, random={}", random);
+		return CriUtil.getValidateCodeUrl(kd);
+	}
+	
+	/**
+	 * 从商事主体信息平台同步信息
+	 * @return
+	 */
+	@RequiresPermissions("customer:update")
+	@RequestMapping("/sync/cri")
+	public R syncCri(String socialReditOde, String validCode, String guid) {
+		logger.info("收到同步商事主体信息请求, socialReditOde={},validCode={}, guid={}", 
+				socialReditOde, validCode, guid);
+		return CriUtil.syncCri(socialReditOde, validCode, guid, kd);
 	}
 	
 }

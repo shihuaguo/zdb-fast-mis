@@ -49,10 +49,6 @@ $(function () {
             order: "order"
         },
         ondblClickRow: function (rowid, iRow, iCol, e) {
-        	//console.log(rowid);
-        	//console.log(iRow);
-        	//console.log(iCol);
-        	//console.log(e);
         	$("#jqGrid").jqGrid("setSelection",rowid);
         	//this.setSelection(rowid);
         	vm.update();
@@ -88,6 +84,7 @@ var vm = new Vue({
 		customer:{},			//客户信息
 		customerIc:{},			//工商登记信息
 		customerTax:{},			//工商登记信息
+		customerCri:{},			//商事主体信息
 		customerList:{},
 		status:0
 	},
@@ -192,6 +189,28 @@ var vm = new Vue({
 				}
 			});
 		},
+		saveOrUpdateCri: function () {
+            if(vm.validator()){
+                return ;
+            }
+			var url = vm.customer.id == null ? "customer/saveCri" : "customer/update";
+			vm.customer.customerCri = vm.customerCri;
+			$.ajax({
+				type: "POST",
+			    url: baseURL + url,
+                contentType: "application/json",
+			    data: JSON.stringify(vm.customer),
+			    success: function(r){
+			    	if(r.code === 0){
+						alert('操作成功', function(){
+							//vm.reload();
+						});
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
+		},
 		getCustomer: function(id){
 			$.get(baseURL + "customer/getById/"+id, function(r){
 				vm.customer = r.customer;
@@ -207,6 +226,7 @@ var vm = new Vue({
 		//获取工商登记信息验证码
 		getValidCodeOfIc: function(){
 			$("#validImg").click();
+			$("#validImg2").click();
 		},
 		getValidCodeOfTax: function(){
 			$("#validImg1").click();
@@ -325,6 +345,43 @@ var vm = new Vue({
 					alert("同步出现错误");
 				}
 			})
+		},
+		syncCri: function(){
+			var validCode = $("#validCode2").val();
+			if($.trim(validCode) == ""){
+				alert("请输入验证码");
+				return;
+			}
+			if($.trim(vm.customerIc.socialReditOde) == ""){
+				alert("请输入社会信用代码");
+				return;
+			}
+			//查询工商登记信息的地址
+			var urlCri = baseURL + "customer/sync/cri?socialReditOde=" + vm.customerIc.socialReditOde 
+						+ "&validCode=" + validCode + "&guid=" + cri_guid;
+			var index = onloading();
+			$.ajax({
+                url:urlCri,
+                //data:$("#checkForm").serialize(),
+                dataType:'json',
+                success:function(r){
+                	removeload(index);
+                    if(r.code == 0){
+                    	//var customerId = vm.customer.id;
+                    	vm.customerCri = $.extend({}, vm.customerCri, r.customerCri);
+                    	if(r.customerCri.AbnormalList){
+                    		$("#AbnormalList").html(r.customerCri.AbnormalList);
+                    	}
+                    	alert("同步成功");
+                    }else{
+                        alert(r.msg? r.msg : "未知错误");
+                    }
+                },
+                error:function(){
+                	removeload(index);
+                    alert("同步出现错误");
+                }
+            })
 		},
 		getUserList: function(){
 			$.get(baseURL + "sys/user/listAll", function(r){

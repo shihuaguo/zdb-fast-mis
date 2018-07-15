@@ -25,6 +25,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -42,8 +43,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.alibaba.druid.support.logging.Log;
 
 /**
  * The <code>ExcelUtil</code> 与 {@link ExcelCell}搭配使用
@@ -183,13 +182,15 @@ public class ExcelUtil {
             workbook.write(out);
         } catch (IOException e) {
             LG.error(e.toString(), e);
+        } finally {
+        	IOUtils.closeQuietly(workbook);
         }
     }
 
     public static void exportExcel(String[][] datalist, OutputStream out) {
+    	HSSFWorkbook workbook = new HSSFWorkbook();
         try {
             // 声明一个工作薄
-            HSSFWorkbook workbook = new HSSFWorkbook();
             // 生成一个表格
             HSSFSheet sheet = workbook.createSheet();
 
@@ -216,6 +217,8 @@ public class ExcelUtil {
             workbook.write(out);
         } catch (IOException e) {
             LG.error(e.toString(), e);
+        } finally {
+        	IOUtils.closeQuietly(workbook);
         }
     }
 
@@ -725,7 +728,7 @@ public class ExcelUtil {
 
             if (props != null) {
                 for (String prop : props) {
-                    sortCols.add(new BeanComparator(prop, typeComp));
+                    sortCols.add(new BeanComparator<>(prop, typeComp));
                 }
             }
             if (sortCols.size() > 0) {
