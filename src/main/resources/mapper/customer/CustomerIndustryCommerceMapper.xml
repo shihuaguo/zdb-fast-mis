@@ -16,6 +16,8 @@
     <result column="industry_commerce_pwd" jdbcType="VARCHAR" property="industryCommercePwd" />
     <result column="annual_report" jdbcType="VARCHAR" property="annualReport" />
     <result column="print_receipt_password" jdbcType="VARCHAR" property="printReceiptPassword" />
+    <result column="business_status" jdbcType="VARCHAR" property="businessStatus" />
+    <result column="abnormal_list" jdbcType="VARCHAR" property="abnormalList" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -23,7 +25,7 @@
   <sql id="Base_Column_List">
     customer_id, social_redit_ode, tax_id_number, legal_person, legal_person_id, register_addr, 
     register_capital, start_date, business_term, shareholder, industry_commerce_account, industry_commerce_pwd, 
-    annual_report, print_receipt_password, remark, create_time, update_time
+    annual_report, print_receipt_password, business_status, abnormal_list, remark, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -94,6 +96,12 @@
       <if test="printReceiptPassword != null">
         print_receipt_password,
       </if>
+      <if test="businessStatus != null">
+        business_status,
+      </if>
+      <if test="abnormalList != null">
+        abnormal_list,
+      </if>
       <if test="remark != null">
         remark,
       </if>
@@ -141,6 +149,12 @@
       <if test="printReceiptPassword != null">
         #{printReceiptPassword,jdbcType=VARCHAR},
       </if>
+      <if test="businessStatus != null">
+        #{businessStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="abnormalList != null">
+        #{abnormalList,jdbcType=VARCHAR},
+      </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
@@ -187,6 +201,12 @@
       </if>
       <if test="printReceiptPassword != null">
         print_receipt_password = #{printReceiptPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="businessStatus != null">
+        business_status = #{businessStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="abnormalList != null">
+        abnormal_list = #{abnormalList,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},

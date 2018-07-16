@@ -44,6 +44,12 @@ public class CustomerIndustryCommerce implements Exportable{
 
     @ExcelCell(index=10,cname="年度报告情况")
     private String annualReport;
+    
+    @ExcelCell(index=11,cname="状态")
+    private String businessStatus;
+    
+    @ExcelCell(index=12,cname="异常信息")
+    private String abnormalList;
 
     private String printReceiptPassword;
 
@@ -165,7 +171,23 @@ public class CustomerIndustryCommerce implements Exportable{
         this.printReceiptPassword = printReceiptPassword == null ? null : printReceiptPassword.trim();
     }
 
-    public String getRemark() {
+    public String getBusinessStatus() {
+		return businessStatus;
+	}
+
+	public void setBusinessStatus(String businessStatus) {
+		this.businessStatus = businessStatus;
+	}
+
+	public String getAbnormalList() {
+		return abnormalList;
+	}
+
+	public void setAbnormalList(String abnormalList) {
+		this.abnormalList = abnormalList;
+	}
+
+	public String getRemark() {
         return remark;
     }
 

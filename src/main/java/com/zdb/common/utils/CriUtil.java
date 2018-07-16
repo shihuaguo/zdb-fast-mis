@@ -128,7 +128,7 @@ public class CriUtil {
 										String status = StringUtils.trim(tn.getText());
 										logger.info("text node ={}", status);
 										Map<String, Object> customerCri = new HashMap<>();
-										customerCri.put("status", status);
+										customerCri.put("businessStatus", status);
 										R r = R.ok().put("customerCri", customerCri);
 										
 										//查询企业的异常信息

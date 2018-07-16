@@ -38,6 +38,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     	FILTER_IGNORE_URL.put("/financial/ueditor/save", "");
     	FILTER_IGNORE_URL.put("/financial/taxic/feedback/update", "");
     	FILTER_IGNORE_URL.put("/financial/taxic/feedback/save", "");
+    	FILTER_IGNORE_URL.put("/financial/customer/updateCri", "");
     }
     
     //忽略的url部分,只要url包含该部分即忽略

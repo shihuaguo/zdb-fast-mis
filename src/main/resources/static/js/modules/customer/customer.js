@@ -98,11 +98,13 @@ var vm = new Vue({
 			vm.customer = {};
 			vm.customerIc = {};
 			vm.customerTax = {};
+			vm.customerCri = {};
 			vm.customerList = {};
 			this.getValidCodeOfIc();
 			this.getValidCodeOfTax();
 			vm.isSyncIc = false;
 			vm.isSyncTax = false;
+			$("#AbnormalList").html('');
 		},
 		update: function () {
 			var id = getSelectedRow();
@@ -190,16 +192,17 @@ var vm = new Vue({
 			});
 		},
 		saveOrUpdateCri: function () {
-            if(vm.validator()){
+            if(!vm.customer.id){
+            	alert("请先保存工商或税局信息")
                 return ;
             }
-			var url = vm.customer.id == null ? "customer/saveCri" : "customer/update";
-			vm.customer.customerCri = vm.customerCri;
+			var url = "customer/updateCri";
+			vm.customerCri.customerId = vm.customer.id;
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
-                contentType: "application/json",
-			    data: JSON.stringify(vm.customer),
+                contentType: "application/x-www-form-urlencoded",
+			    data: vm.customerCri,
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(){
@@ -216,10 +219,17 @@ var vm = new Vue({
 				vm.customer = r.customer;
 				if(r.customerIc){
 					vm.customerIc = r.customerIc;
+					vm.customerCri = {};
+					vm.customerCri.businessStatus = r.customerIc.businessStatus;
+					if(r.customerIc.abnormalList){
+						vm.customerCri.abnormalList = r.customerIc.abnormalList;
+						$("#AbnormalList").html(r.customerIc.abnormalList);
+					}else {
+						$("#AbnormalList").html('');
+					}
 				}
 				if(r.customerTax){
 					vm.customerTax = r.customerTax;
-					//vm.bindingGsDs(vm.customerTax.gs,vm.customerTax.ds);
 				}
 			});
 		},
@@ -254,8 +264,6 @@ var vm = new Vue({
                     if(r.code == 0){
                     	var customerId = vm.customer.id;
                     	vm.customer = $.extend({}, vm.customer, removeNull(r.customer));
-                    	//vm.customer.customerName = r.customer.customerName;
-                    	//vm.customer.legalPerson = r.customer.legalPerson;
                     	vm.customerIc = $.extend({}, vm.customerIc, removeNull(r.customerIc));
                     	vm.customer.id = customerId;
                     	vm.isSyncIc = true;
@@ -268,7 +276,6 @@ var vm = new Vue({
                     		}
                     	}
                     	alert("同步成功");
-                    	//console.log(r.data);
                     }else{
                         alert(r.msg? r.msg : "未知错误");
                     }
@@ -362,12 +369,10 @@ var vm = new Vue({
 			var index = onloading();
 			$.ajax({
                 url:urlCri,
-                //data:$("#checkForm").serialize(),
                 dataType:'json',
                 success:function(r){
                 	removeload(index);
                     if(r.code == 0){
-                    	//var customerId = vm.customer.id;
                     	vm.customerCri = $.extend({}, vm.customerCri, r.customerCri);
                     	if(r.customerCri.AbnormalList){
                     		$("#AbnormalList").html(r.customerCri.AbnormalList);

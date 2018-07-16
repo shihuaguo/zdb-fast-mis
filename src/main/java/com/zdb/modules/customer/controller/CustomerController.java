@@ -96,7 +96,9 @@ public class CustomerController extends AbstractController {
 			params.put("userId", userId);
 		}
 		//查询列表数据
-		logger.info("查询客户列表,参数={}", params);
+		if(logger.isInfoEnabled()) {
+			logger.info("查询客户列表,参数={}", params);
+		}
 		fuzzlyQuery(params);
 		Query query = new Query(params);
 		List<Customer> customerList = customerService.queryListWithTax(query);
@@ -121,7 +123,9 @@ public class CustomerController extends AbstractController {
 			params.put("userId", userId);
 		}
 		//查询列表数据
-		logger.info("导出客户列表,参数={}", params);
+		if(logger.isInfoEnabled()) {
+			logger.info("导出客户列表,参数={}", params);
+		}
 		fuzzlyQuery(params);
 		Query query = new Query(params);
 		List<Customer> customerList = customerService.queryListWithIcTax(query);
@@ -135,7 +139,9 @@ public class CustomerController extends AbstractController {
 	@RequiresPermissions("customer:list")
 	public R queryCheckLoginState(Integer customerId){
 		//查询列表数据
-		logger.info("获取客户的check_login_state,参数={}", customerId);
+		if(logger.isInfoEnabled()) {
+			logger.info("获取客户的check_login_state,参数={}", customerId);
+		}
 		String checkLoginState = customerService.queryCheckLoginStateByPrimaryKey(customerId);
 		
 		return R.ok().put("data", checkLoginState);
@@ -147,20 +153,15 @@ public class CustomerController extends AbstractController {
 	@RequestMapping("/namelist")
 	@RequiresPermissions("customer:list")
 	public Object nameList(@RequestParam Map<String, Object> params){
-		logger.info("查询客户名称列表,参数={}", params);
+		if(logger.isInfoEnabled()) {
+			logger.info("查询客户名称列表,参数={}", params);
+		}
 		//查询列表数据
-		//fuzzlyQuery(params);
 		String term = params.get("term").toString();
 		if(term != null) {
 			params.put("term", "%" + term + "%");
 		}
-		//Query query = new Query(params);
 		List<String> customerList = customerService.queryNameList(params);
-		//int total = customerService.queryTotal(query);
-		
-		//PageUtils pageUtil = new PageUtils(customerList, total, query.getLimit(), query.getPage());
-		
-		//return R.ok().put("list", customerList);
 		return customerList;
 	}
 	
@@ -176,7 +177,9 @@ public class CustomerController extends AbstractController {
 			params.put("filterByUser", "1");
 			params.put("userId", userId);
 		}
-		logger.info("查询客户工商信息列表,参数={}", params);
+		if(logger.isInfoEnabled()) {
+			logger.info("查询客户工商信息列表,参数={}", params);
+		}
 		//查询列表数据
 		fuzzlyQuery(params);
 		//过滤掉已删除客户
@@ -202,7 +205,9 @@ public class CustomerController extends AbstractController {
 			params.put("filterByUser", "1");
 			params.put("userId", userId);
 		}
-		logger.info("查询客户税务信息列表,参数={}", params);
+		if(logger.isInfoEnabled()) {
+			logger.info("查询客户税务信息列表,参数={}", params);
+		}
 		//查询列表数据
 		fuzzlyQuery(params);
 		//过滤掉已删除客户
@@ -223,7 +228,9 @@ public class CustomerController extends AbstractController {
 	@RequestMapping("/saveIc")
 	@RequiresPermissions("customer:save")
 	public R saveIc(@RequestBody Customer customer){
-		logger.info("保存客户工商登记信息,参数={}", JSON.toJSONString(customer));
+		if(logger.isInfoEnabled()) {
+			logger.info("保存客户工商登记信息,参数={}", JSON.toJSONString(customer));
+		}
 		ValidatorUtils.validateEntity(customer, AddGroup.class);
 		//检查编号是否存在
 		if(StringUtils.isNotBlank(customer.getCustomerNo())) {
@@ -247,7 +254,9 @@ public class CustomerController extends AbstractController {
 	@RequestMapping("/saveTax")
 	@RequiresPermissions("customer:save")
 	public R saveTax(@RequestBody Customer customer){
-		logger.info("保存客户税务登记信息,参数={}", JSON.toJSONString(customer));
+		if(logger.isInfoEnabled()) {
+			logger.info("保存客户税务登记信息,参数={}", JSON.toJSONString(customer));
+		}
 		ValidatorUtils.validateEntity(customer, AddGroup.class);
 		customerService.save(customer);
 		return R.ok();
@@ -385,6 +394,24 @@ public class CustomerController extends AbstractController {
 		logger.info("收到同步商事主体信息请求, socialReditOde={},validCode={}, guid={}", 
 				socialReditOde, validCode, guid);
 		return CriUtil.syncCri(socialReditOde, validCode, guid, kd);
+	}
+	
+	/**
+	 * 保存商事主体信息
+	 */
+	@SysLog("保存商事主体信息")
+	@RequestMapping("/updateCri")
+	@RequiresPermissions("customer:update")
+	public R saveCri(String businessStatus, String AbnormalList, Integer customerId){
+		if(logger.isInfoEnabled()) {
+			logger.info("保存商事主体信息,businessStatus={},AbnormalList={},customerId={}", businessStatus, AbnormalList, customerId);
+		}
+		CustomerIndustryCommerce ic = new CustomerIndustryCommerce();
+		ic.setCustomerId(customerId);
+		ic.setBusinessStatus(businessStatus);
+		ic.setAbnormalList(AbnormalList);
+		customerIcService.update(ic);
+		return R.ok();
 	}
 	
 }
