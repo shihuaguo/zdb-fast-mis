@@ -186,17 +186,22 @@ public class EtaxUtil {
 	 * @param nsrsbh 纳税人识别号
 	 * @return
 	 */
-	public static Map<String, Object> buildFetchParams(String gdlxbz, String nsrsbh){
+	public static Map<String, Object> buildFetchParams(String gdlxbz, String nsrsbh, String sid){
 		Map<String, Object> params = new HashMap<>();
 		Map<String, String> head = new LinkedHashMap<>();
 		head.put("gid", "311085A116185FEFE053C2000A0A5B63");
-		head.put("sid", "yhscx.swdjcx.nsrjcxx");
+//		head.put("sid", "yhscx.swdjcx.nsrjcxx");
+		head.put("sid", sid);
 		head.put("tid", "+");
 		head.put("version", "");
 		
 		Map<String, String> body = new LinkedHashMap<>();
-		body.put("gdlxbz", gdlxbz);
-		body.put("nsrsbh", nsrsbh);
+		if(StringUtils.isNotBlank(gdlxbz)) {
+			body.put("gdlxbz", gdlxbz);
+		}
+		if(StringUtils.isNotBlank(nsrsbh)) {
+			body.put("nsrsbh", nsrsbh);
+		}
 		
 		Map<String, Object> taxML = new LinkedHashMap<>();
 		taxML.put("head", head);
@@ -205,19 +210,15 @@ public class EtaxUtil {
 		Map<String, Object> bw = new HashMap<>();
 		bw.put("taxML", taxML);
 		
-//		params.put("t", System.currentTimeMillis());
-//		params.put("bw", bw);
 		params = bw;
 		return params;
 	}
 	
-	public static String buildFetchUrl(String gdlxbz, String nsrsbh) throws UnsupportedEncodingException {
+	public static String buildFetchUrl(String gdlxbz, String nsrsbh, String sid) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
 		sb.append(URL_fetch).append("?t=").append(System.currentTimeMillis());
 		//构建bw信息
-		//String bw = "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.nsrjcxx\",\"tid\":\" \",\"version\":\"\"},\"body\":{,\"gdlxbz\":\"GS\"}}}";
-		//sb.append("&bw=").append(bw);
-		Map<String, Object> bwMap = buildFetchParams(gdlxbz, nsrsbh);
+		Map<String, Object> bwMap = buildFetchParams(gdlxbz, nsrsbh, sid);
 		String bw = JSON.toJSONString(bwMap);
 		//对特殊字符进行urlencoder
 		bw = bw.replaceAll("\\{", URLEncoder.encode("{", "utf-8"));
@@ -237,18 +238,21 @@ public class EtaxUtil {
 	public static R fetchNationalTaxInfo(HttpClientUtilKA kd, String checkLoginRes, String gsnsrsbh){
 		Map<String, String> params = new HashMap<>();
 		params.put("t", String.valueOf(System.currentTimeMillis()));
-		params.put("bw", "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.nsrjcxx\",\"tid\":\" \",\"version\":\"\"},\"body\":{,\"gdlxbz\":\"GS\"}}}");
+		//params.put("bw", "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.nsrjcxx\",\"tid\":\" \",\"version\":\"\"},\"body\":{,\"gdlxbz\":\"GS\"}}}");
+		
+		//存款账户账号报告查询
+		params.put("bw", "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.ckzhzhbg\",\"tid\":\" \",\"version\":\"\"},\"body\":{}}}");
 		String url;
 		try {
 			//抓取国税信息
 			//url = URL_fetch+"?t="+System.currentTimeMillis()+"&bw=%7B%22taxML%22:%7B%22head%22:%7B%22gid%22:%22311085A116185FEFE053C2000A0A5B63%22,%22sid%22:%22yhscx.swdjcx.nsrjcxx%22,%22tid%22:%22+%22,%22version%22:%22%22%7D,%22body%22:%7B,%22gdlxbz%22:%22GS%22%7D%7D%7D";
-			url = buildFetchUrl("GS", gsnsrsbh);
+			url = buildFetchUrl("GS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
 			String gsres = kd.doGet(url, null);
 			logger.info("抓取国税信息，返回结果={}", gsres);
 			
 			//抓取地税信息
 			//url = URL_fetch+"?t="+System.currentTimeMillis()+"&bw=%7B%22taxML%22:%7B%22head%22:%7B%22gid%22:%22311085A116185FEFE053C2000A0A5B63%22,%22sid%22:%22yhscx.swdjcx.nsrjcxx%22,%22tid%22:%22+%22,%22version%22:%22%22%7D,%22body%22:%7B,%22gdlxbz%22:%22DS%22%7D%7D%7D";
-			url = buildFetchUrl("DS", gsnsrsbh);
+			url = buildFetchUrl("DS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
 			String dsres = kd.doGet(url, null);
 			logger.info("抓取地税信息，返回结果={}", dsres);
 			
@@ -256,7 +260,12 @@ public class EtaxUtil {
 			url = URL_queryGpycx;
 			String gpyxx = kd.doPostJson(url, "{\"start\": 0, \"limit\": 10}");
 			logger.info("抓取购票员信息，返回结果={}", gpyxx);
-			R r = parseGsDs(gsres, dsres, gpyxx, checkLoginRes);
+			
+			//存款账户账号报告
+			url = buildFetchUrl(null, null, "yhscx.swdjcx.ckzhzhbg");
+			String ckzhzhbg = kd.doGet(url, null);
+			logger.info("抓取存款账户账号报告，返回结果={}", ckzhzhbg);
+			R r = parseGsDs(gsres, dsres, gpyxx, checkLoginRes, ckzhzhbg);
 			return r;
 		} catch (Exception e) {
 			logger.error("", e);
@@ -265,7 +274,7 @@ public class EtaxUtil {
 	}
 	
 	//解析国税和地税的返回结果
-	public static R parseGsDs(String gsres, String dsres, String gpyxx, String checkLoginRes) {
+	public static R parseGsDs(String gsres, String dsres, String gpyxx, String checkLoginRes, String ckzhzhbg) {
 		CustomerTax customerTax = new CustomerTax();
 		try {
 			//国税信息
@@ -309,6 +318,10 @@ public class EtaxUtil {
 				}
 				customerTax.setTicketAgent(StringUtils.join(gprList, ","));
 			}
+			
+			//存款账户账号报告
+			JSONObject ckzhzh = JSONObject.parseObject(ckzhzhbg);
+			
 			return R.ok().put("customerTax", customerTax);
 		} catch (Exception e) {
 			logger.error("解析国税地税信息出错", e);
@@ -325,7 +338,7 @@ public class EtaxUtil {
 		System.out.println("decodedUrl=" + decodedUrl);
 		
 		System.out.println(URLEncoder.encode("bw:{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.nsrjcxx\",\"tid\":\" \",\"version\":\"\"},\"body\":{,\"gdlxbz\":\"GS\",\"nsrsbh\":\"44010057995059X\"}}}", "utf-8"));
-		System.out.println(buildFetchParams("GS", "44010057995059X"));
-		System.out.println(buildFetchUrl("GS", "44010057995059X"));
+		System.out.println(buildFetchParams("GS", "44010057995059X", "yhscx.swdjcx.nsrjcxx"));
+		System.out.println(buildFetchUrl("GS", "44010057995059X", "yhscx.swdjcx.nsrjcxx"));
 	}
 }
