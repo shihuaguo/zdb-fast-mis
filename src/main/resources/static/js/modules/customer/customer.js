@@ -322,8 +322,8 @@ var vm = new Vue({
 				success:function(r){
 					removeload(index);
 					if(r.code == 0){
-						var ct = {};
-						ct.bsrxm 	= r.customerTax.bsrxm;
+						var ct = $.extend({}, vm.customerTax, removeNull(r.customerTax));
+						/*ct.bsrxm 	= r.customerTax.bsrxm;
 						ct.bsryddh 	= r.customerTax.bsryddh;
 						ct.bsrzjhm 	= r.customerTax.bsrzjhm;
 						ct.cwfzrxm 	= r.customerTax.cwfzrxm;
@@ -337,11 +337,25 @@ var vm = new Vue({
 						ct.nationalTaxDpt = r.customerTax.nationalTaxDpt;
 						ct.localTaxDpt = r.customerTax.localTaxDpt;
 						ct.ticketAgent = r.customerTax.ticketAgent;
+						ct.ckzhzh = r.customerTax.ckzhzh;
+						ct.checkLoginState = r.customerTax.checkLoginState;*/
 						if(ct.ticketAgent == null || ct.ticketAgent == ''){
 							ct.ticketAgent = '无';
 						}
-						ct.checkLoginState = r.customerTax.checkLoginState;
-						vm.customerTax = $.extend({}, vm.customerTax, ct);
+						//vm.customerTax = $.extend({}, vm.customerTax, ct);
+						vm.customerTax = ct;
+						//处理开户银行和账号
+						if(ct.ckzhzh){
+							var ckzhzh = eval('(' + ct.ckzhzh + ')');
+							//console.log(ckzhzh);
+							var khyh = '', zh = '';
+							for(var i = 0; i < ckzhzh.length; i++){
+								khyh = khyh + ckzhzh[i].gdslx + ":" + ckzhzh[i].khyh + ",";
+								zh = zh + ckzhzh[i].gdslx + ":" + ckzhzh[i].zh+ ",";
+							}
+							vm.customer.bankName = khyh;
+							vm.customer.bankAccount = zh;
+						}
 						vm.isSyncTax = true;
 						//法人身份证号同步至工商信息的法人身份证号
 						vm.customer.legalPersonId = ct.fddbrzjhm;

@@ -29,6 +29,7 @@
     <result column="fddbryddh" jdbcType="VARCHAR" property="fddbryddh" />
     <result column="fddbrzjhm" jdbcType="VARCHAR" property="fddbrzjhm" />
     <result column="check_login_state" jdbcType="VARCHAR" property="checkLoginState" />
+    <result column="ckzhzh" jdbcType="VARCHAR" property="ckzhzh" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -37,7 +38,7 @@
     tax_agent, ticket_agent, investor_info, national_tax_dpt, local_tax_dpt, legal_person_account, 
     legal_person_password, local_tax_account, local_tax_pwd, remark, old_national_tax_pwd, 
     remark1, bsrxm, bsryddh, bsrzjhm, cwfzrxm, cwfzryddh, cwfzrzjhm, fddbrxm, fddbryddh, 
-    fddbrzjhm, create_time, update_time
+    fddbrzjhm, ckzhzh, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -155,6 +156,9 @@
       <if test="checkLoginState != null">
         check_login_state,
       </if>
+      <if test="ckzhzh != null">
+        ckzhzh,
+      </if>
       <if test="createTime != null">
         create_time,
       </if>
@@ -244,6 +248,9 @@
       <if test="checkLoginState != null">
         #{checkLoginState,jdbcType=VARCHAR},
       </if>
+      <if test="ckzhzh != null">
+        #{ckzhzh,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -332,6 +339,9 @@
       </if>
       <if test="checkLoginState != null">
         check_login_state = #{checkLoginState,jdbcType=VARCHAR},
+      </if>
+      <if test="ckzhzh != null">
+        ckzhzh = #{ckzhzh,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},

@@ -323,9 +323,10 @@ public class EtaxUtil {
 			JSONObject ckzhzh = JSONObject.parseObject(ckzhzhbg);
 			taxML = ckzhzh.getJSONObject("taxML").getJSONObject("body").getJSONObject("taxML");
 			JSONArray ckzhzhbgGridlb = taxML.getJSONObject("ckzhzhbgGrid").getJSONArray("ckzhzhbgGridlb");
-			if(logger.isInfoEnabled()) {
-				logger.info("存款账户账号报告={}", ckzhzhbgGridlb.toString());
-			}
+//			if(logger.isInfoEnabled()) {
+//				logger.info("存款账户账号报告={}", ckzhzhbgGridlb.toString());
+//			}
+			customerTax.setCkzhzh(ckzhzhbgGridlb.toJSONString());
 			
 			return R.ok().put("customerTax", customerTax);
 		} catch (Exception e) {

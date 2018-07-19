@@ -82,6 +82,8 @@ public class CustomerTax implements Exportable{
     private String fddbrzjhm;
     
     private String checkLoginState;
+    
+    private String ckzhzh;
 
     private Date createTime;
 
@@ -301,6 +303,14 @@ public class CustomerTax implements Exportable{
 
 	public void setCheckLoginState(String checkLoginState) {
 		this.checkLoginState = checkLoginState;
+	}
+
+	public String getCkzhzh() {
+		return ckzhzh;
+	}
+
+	public void setCkzhzh(String ckzhzh) {
+		this.ckzhzh = ckzhzh;
 	}
 
 	public Date getCreateTime() {
