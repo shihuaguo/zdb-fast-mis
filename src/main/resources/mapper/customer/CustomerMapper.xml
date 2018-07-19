@@ -89,6 +89,8 @@
     <result column="industry_commerce_account" jdbcType="VARCHAR" property="customerIndCom.industryCommerceAccount" />
     <result column="industry_commerce_pwd" jdbcType="VARCHAR" property="customerIndCom.industryCommercePwd" />
     <result column="annual_report" jdbcType="VARCHAR" property="customerIndCom.annualReport" />
+    <result column="business_status" jdbcType="VARCHAR" property="customerIndCom.businessStatus" />
+    <result column="abnormal_list" jdbcType="VARCHAR" property="customerIndCom.abnormalList" />
     
     <result column="national_tax_number" jdbcType="VARCHAR" property="customerTax.nationalTaxNumber" />
     <result column="local_tax_number" jdbcType="VARCHAR" property="customerTax.localTaxNumber" />
@@ -235,6 +237,7 @@
 	    t.bank_name, t.bank_account, t.bank_phone, t.remark, t.create_time, t.update_time,
 	    t1.social_redit_ode,t1.tax_id_number,t1.register_addr,t1.register_capital,t1.start_date,t1.business_term,
 	    t1.shareholder,t1.industry_commerce_account,t1.industry_commerce_pwd,t1.annual_report,
+	    t1.abnormal_list,
 	    t2.national_tax_number,t2.local_tax_number,t2.local_tax_code,t2.financial_controller,t2.tax_agent,
 	    t2.investor_info,t2.national_tax_dpt,t2.local_tax_dpt,
 	    t2.`legal_person_account`,t2.`legal_person_password`,

@@ -15,6 +15,9 @@ $(function () {
 				return "<div class='table-cell'>" + value + "</div>";
 			}},
 			{ label: '区域', name: 'region',index: "region",  width: 30,sortable:false},
+			{ label: '异常信息', name: 'customerIndCom.abnormalList',width: 40,sortable:false,formatter: function(value, options, row){
+				return value ? (value.indexOf('暂无信息') > -1 ? "暂无信息" : "<span style='color:red;'>异常信息</span>") : "-";
+			}},
 			{ label: '统一代码', name: 'taxIdNumber', index: "tax_id_number", width: 40,sortable:false,formatter: function(value, options, row){
 				//return "<div class='table-cell'>" + value + "</div>";
 				return "<div class='table-cell'>" + value + "</div>";

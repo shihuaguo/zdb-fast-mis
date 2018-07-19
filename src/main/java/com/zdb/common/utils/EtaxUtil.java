@@ -321,6 +321,11 @@ public class EtaxUtil {
 			
 			//存款账户账号报告
 			JSONObject ckzhzh = JSONObject.parseObject(ckzhzhbg);
+			taxML = ckzhzh.getJSONObject("taxML").getJSONObject("body").getJSONObject("taxML");
+			JSONArray ckzhzhbgGridlb = taxML.getJSONObject("ckzhzhbgGrid").getJSONArray("ckzhzhbgGridlb");
+			if(logger.isInfoEnabled()) {
+				logger.info("存款账户账号报告={}", ckzhzhbgGridlb.toString());
+			}
 			
 			return R.ok().put("customerTax", customerTax);
 		} catch (Exception e) {

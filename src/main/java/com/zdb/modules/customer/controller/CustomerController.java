@@ -101,7 +101,7 @@ public class CustomerController extends AbstractController {
 		}
 		fuzzlyQuery(params);
 		Query query = new Query(params);
-		List<Customer> customerList = customerService.queryListWithTax(query);
+		List<Customer> customerList = customerService.queryListWithIcTax(query);
 		int total = customerService.queryTotal(query);
 		PageUtils pageUtil = new PageUtils(customerList, total, query.getLimit(), query.getPage());
 		return pageUtil;
