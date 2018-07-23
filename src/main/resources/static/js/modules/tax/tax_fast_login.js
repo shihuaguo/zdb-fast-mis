@@ -50,6 +50,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
         return false;
     }
 
+    legalPersonPassword = encode(legalPersonPassword);
     $("#captchCode").val(captchCode);
 	$("#userName").val(legalPersonAccount);
 	$("#passWord").val(legalPersonPassword);
