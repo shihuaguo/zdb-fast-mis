@@ -4,10 +4,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Base64.Encoder;
 
 import org.apache.commons.lang.StringUtils;
 import org.htmlparser.Node;
@@ -93,7 +95,9 @@ public class EtaxUtil {
 //		kd.doGet(url, null);
 		Map<String, String> params = constructParams();
 		params.put("userName", legalPersonAccount);
-		params.put("passWord", legalPersonPassword);
+		//对密码进行加密
+		Encoder encoder = Base64.getEncoder();
+		params.put("passWord", encoder.encodeToString(legalPersonPassword.getBytes()));
 		params.put("captchCode", validCode);
 		//2.通过用户名、密码、验证码登录
 		logger.info("调用登录，url={}", url);

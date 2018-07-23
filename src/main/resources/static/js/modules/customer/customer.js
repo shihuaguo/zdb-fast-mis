@@ -16,6 +16,33 @@ $(function () {
 			}},
 			{ label: '区域', name: 'region',index: "region",  width: 30,sortable:false},
 			{ label: '异常信息', name: 'customerIndCom.abnormalList',width: 40,sortable:false,formatter: function(value, options, row){
+				if(value){
+					var el = document.createElement('html');
+					//是否被移除
+					var isMoved = false;
+					try{
+						el.innerHTML = value;
+						var tbody = el.getElementsByTagName('tbody');
+						if(tbody && tbody.length > 0){
+							var trs = tbody[0].children;
+							if(trs && trs.length > 0){
+								for(var i = 0; i < trs.length; i++){
+									var tds = trs[i].children;
+									if(tds && tds.length >= 5 && tds[4].innerHTML){
+										isMoved = true;
+									}else {
+										isMoved = false;
+									}
+								}
+							}
+						}else {
+							return "暂无信息";
+						}
+					}catch(e){
+						console.log(e);
+					}
+					return isMoved ? "异常信息(移除)" : "<span style='color:red;'>异常信息</span>";
+				}
 				return value ? (value.indexOf('暂无信息') > -1 ? "暂无信息" : "<span style='color:red;'>异常信息</span>") : "-";
 			}},
 			{ label: '统一代码', name: 'taxIdNumber', index: "tax_id_number", width: 40,sortable:false,formatter: function(value, options, row){
