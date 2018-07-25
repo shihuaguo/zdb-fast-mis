@@ -54,30 +54,6 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
     $("#captchCode").val(captchCode);
 	$("#userName").val(legalPersonAccount);
 	$("#passWord").val(legalPersonPassword);
-    //var url = 'http://www.gzaic.gov.cn/gzaic/App/Login.html';
-    //$('#myform').submit();
-	
-	//获取用户的checkLoginState
-	var qybdid = null;
-	$.get(baseURL + 'customer/checkLoginState?customerId='+id, function(r){
-		if(r && r.code == 0){
-			console.log(r.data);
-			if(r.data == null || $.trim(r.data) == ''){
-				alert("客户信息没有同步checkLoginState,请重新同步");
-				return;
-			}
-			var nsrQysqVos = eval('(' + r.data + ')').nsrQysqVos;
-			for(var i = 0; i < nsrQysqVos.length; i++){
-				if(nsrQysqVos[i].zzNsrmc == customerName){
-					qybdid = nsrQysqVos[i].qybdid;
-					console.log("customerName=" + customerName + ", qybdid=" + qybdid);
-					break;
-				}
-			}
-		}else {
-			alert("获取客户checkLoginState信息失败");
-		}
-	});
 	
 	var urlPre = "http://www.etax-gd.gov.cn";
 	
@@ -155,101 +131,35 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
     	window.open(urlPre + "/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=1511852007328#none");
     }
     
-    if(qybdid != null){
+    //获取用户的checkLoginState
+	var qybdid = null;
+	$.get(baseURL + 'customer/checkLoginState?customerId='+id, function(r){
+		if(r && r.code == 0){
+			//console.log(r.data);
+			if(r.data == null || $.trim(r.data) == ''){
+				alert("客户信息没有同步checkLoginState,请重新同步");
+				return;
+			}
+			qybdid = null;
+			var nsrQysqVos = eval('(' + r.data + ')').nsrQysqVos;
+			for(var i = 0; i < nsrQysqVos.length; i++){
+				if(nsrQysqVos[i].zzNsrmc == customerName){
+					qybdid = nsrQysqVos[i].qybdid;
+					console.log("customerName=" + customerName + ", qybdid=" + qybdid);
+					break;
+				}
+			}
+			if(qybdid){
+				ssoLogin(checkLoginState, changeSf, openEtax);
+			}
+		}else {
+			alert("获取客户checkLoginState信息失败");
+		}
+	});
+    
+    /*if(qybdid != null){
     	ssoLogin(checkLoginState, changeSf, openEtax);
-    }
-    
-	/*//var urlPre = baseURL;
-	var urlPre = "";
-	//改为通过nginx代理去执行
-    var ssoLogin = function(callback,callback1,callback2){
-		var url = urlPre + '/etax/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1502697830856';
-		//登陆
-		jQuery.ajax({
-			type: "post",
-			async: false,
-			url: url,
-			data: jQuery('#upLoginForm').serialize(),
-			dataType: "html",
-			success: function(json){
-				console.log("ssoLogin,json=" + json);
-				if(json.indexOf("CAS登录成功") > 0){
-					if(callback && callback1 && callback2){
-						callback(callback1,callback2);
-					}
-				}else {
-					alert("登录税局失败");
-				}
-			},
-			error: function(xhr,error,e){
-				console.log("ssoLogin error,error=" + error + ",e=" + e);
-			}
-		});
-	}
-	
-	var checkLoginState = function(callback1,callback2){
-		//  登陆验证
-		var url = urlPre + '/etax/sso/auth/checkLoginState.do';
-		jQuery.ajax({
-			type: "post",
-			async: false,
-			url: url,
-			//data: jQuery('#upLoginForm').serialize(),
-			dataType: "json",
-			success: function(json){
-				console.log("checkLoginState,json=" + json);
-				if(json.flag == "ok"){
-					//找到正确的qybdid
-					var qybdid = null;
-					var nsrQysqVos = json.nsrQysqVos;
-					for(var i = 0; i < nsrQysqVos.length; i++){
-						if(nsrQysqVos[i].zzNsrmc == customerName){
-							qybdid = nsrQysqVos[i].qybdid;
-							console.log("customerName=" + customerName + ", qybdid=" + qybdid);
-							break;
-						}
-					}
-					if(callback1 && callback2 && qybdid != null){
-						callback1(callback2, qybdid);
-					}
-				}
-			},
-			error: function(xhr,error,e){
-				console.log("checkLoginState error,error=" + error + ",e=" + e);
-			}
-		});
-	}
-	
-	// 用户身份
-	var changeSf = function(callback, qybdid){
-		//  登陆验证
-		var url = urlPre + '/etax/sso/auth/changeQySf.do';
-		jQuery.ajax({
-			type: "post",
-			async: false,
-			url: url,
-			data: {"qybdid" : qybdid},
-			dataType: "json",
-			success: function(json){
-				console.log("changeSf,json=" + json);
-				if(json.flag == "ok"){
-					if(callback){
-						callback();
-					}
-				}
-			},
-			error: function(xhr,error,e){
-				console.log("changeSf error,error=" + error + ",e=" + e);
-			}
-		});
-	}
-    
-    var openEtax = function(){
-    	window.open("http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&ticket=ST-640015-lw5beAOZ5QR9krlJgTyV-gddzswj");
-    	//window.open("http://www.etax-gd.gov.cn/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=1511852007328#none");
-    }
-    
-    ssoLogin(checkLoginState, changeSf, openEtax);*/
+    }*/
 };
 
 $(function () {
