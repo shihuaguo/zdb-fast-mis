@@ -294,9 +294,15 @@ public class CalTaskController extends AbstractController {
 	@SysLog("修改任务事项")
 	@RequestMapping("/item/update")
 	@RequiresPermissions("cal:task:update")
-	public R updateTaskItem(CalTaskItem taskItem){
+	public R updateTaskItem(CalTaskItem taskItem, Boolean updateTaskId){
 		logger.info("修改任务事项,taskItem={}", JSON.toJSONString(taskItem));
 		Integer userId = getUserId().intValue();
+		
+		//检查是否需要修改taskId
+		logger.info("是否需要修改taskId={}", updateTaskId);
+		if(updateTaskId != null && !updateTaskId) {
+			taskItem.setTaskId(null);
+		}
 		//如果不是管理员,将状态修改为已完成,则提交审核
 		if(userId > 1 && !sysUserService.hasAdminRole(userId.longValue()) && TaskStatusEnum.FINISHED.getCode() == taskItem.getStatus()) {
 			//检查状态是否有修改
@@ -322,7 +328,7 @@ public class CalTaskController extends AbstractController {
 		}else {
 			ValidatorUtils.validateEntity(taskItem, AddGroup.class);
 			checkParam(taskItem);
-			taskItemService.update(taskItem);
+			return taskItemService.update(taskItem);
 		}
 		return R.ok();
 	}

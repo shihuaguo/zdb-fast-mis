@@ -139,7 +139,7 @@ function saveOrUpdateEvent(calEvent, jsEvent, view) {
 			    success: function(r){
 					if(r.code == 0){
 						layer.close(index);
-						layer.alert('操作成功', function(index1){
+						layer.alert('操作成功' + (r.msg ? '('+r.msg+')': ''), function(index1){
 							layer.close(index1);
 							refreshEvent();
 						});

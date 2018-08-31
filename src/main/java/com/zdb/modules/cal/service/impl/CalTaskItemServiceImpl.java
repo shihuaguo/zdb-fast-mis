@@ -61,6 +61,10 @@ public class CalTaskItemServiceImpl implements ICalTaskItemService {
 		int n = mapper.updateByPrimaryKeySelective(calTaskItem);
 		if(n > 0) {
 			Integer taskId = itemDb.getTaskId();
+			//检查是否修改了taskId
+			if(calTaskItem.getTaskId() != null && calTaskItem.getTaskId() != taskId.intValue()) {
+				r.put("msg", "修改了任务的taskId");
+			}
 			//仅当修改事项的状态,且状态和数据库不一致时
 			if(taskId != null && calTaskItem.getStatus() != null && calTaskItem.getStatus() != statusDb.intValue()) {
 				//是否需要联动修改任务的状态

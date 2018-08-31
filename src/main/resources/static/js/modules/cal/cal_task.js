@@ -257,7 +257,7 @@ $(function () {
                     successfunc: function (r) { 
                     	return reloadGridFunc(r);
                     },
-                    url: baseURL + "cal/task/item/update",
+                    url: baseURL + "cal/task/item/update?updateTaskId=false",
                     extraparam: {
                     	taskId: function () {
                     		return taskId;
