@@ -42,7 +42,9 @@
 	            AND t.status = #{status}
 	        </if>
 	        <if test="employeeId != null and employeeId != ''">
-	            AND t.employee_id = #{employeeId}
+	            AND (t.employee_id = #{employeeId} 
+	            		OR EXISTS(SELECT * FROM `cal_task_item` i WHERE i.`task_id`=t.`id` AND FIND_IN_SET(#{employeeId},i.`employee_ids`)>0)
+	            	)
 	        </if>
 	    </where>
   </sql>

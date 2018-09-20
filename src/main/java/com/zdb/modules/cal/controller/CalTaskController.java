@@ -1,10 +1,12 @@
 package com.zdb.modules.cal.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -279,12 +281,28 @@ public class CalTaskController extends AbstractController {
 	
 	//检查输入参数
 	private void checkParam(CalTaskItem taskItem) {
-		if(StringUtils.isNotBlank(taskItem.getEmployeeName())) {
-			SysUserEntity user = userService.queryByUserName(taskItem.getEmployeeName());
-			if(user == null) {
-				throw new RRException(taskItem.getEmployeeName() + "不存在");
-			}
-			taskItem.setEmployeeId(user.getUserId().intValue());
+		String names = taskItem.getEmployeeName();
+		if(StringUtils.isNotBlank(names)) {
+			String[] ss = names.split(",");
+			List<Integer> ids = Arrays.asList(ss).stream().filter(s -> {
+				return s != null && !s.trim().equals("");
+			}).map(s -> {
+				SysUserEntity user = userService.queryByUserName(s);
+				if(user == null) {
+					throw new RRException(s + "不存在");
+				}
+				return user.getUserId().intValue();
+			}).collect(Collectors.toList());
+			/*List<Integer> ids = new ArrayList<>();
+			for(int i = 0; i < ss.length; i++) {
+				SysUserEntity user = userService.queryByUserName(ss[i]);
+				if(user == null) {
+					throw new RRException(ss[i] + "不存在");
+				}
+				ids.add(user.getUserId().intValue());
+			}*/
+			taskItem.setEmployeeId(ids.get(0));
+			taskItem.setEmployeeIds(StringUtils.join(ids, ","));
 		}
 	}
 	

@@ -63,7 +63,7 @@ public class SysUserController extends AbstractController {
 	}
 	
 	/**
-	 * 所有用户列表
+	 * 所有用户列表(不包括禁用)
 	 */
 	@RequestMapping("/listAll")
 	@RequiresPermissions("sys:user:list")
@@ -74,7 +74,7 @@ public class SysUserController extends AbstractController {
 	}
 	
 	/**
-	 * 所有用户名称列表
+	 * 所有用户名称列表(不包括禁用)
 	 */
 	@RequestMapping("/nameList")
 	@RequiresPermissions("sys:user:list")

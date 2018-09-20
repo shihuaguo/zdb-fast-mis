@@ -12,6 +12,11 @@ import com.zdb.common.utils.excel.ExcelCell;
 import com.zdb.common.validator.group.AddGroup;
 import com.zdb.common.validator.group.UpdateGroup;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper=false)
 public class CalTaskItem {
 	
 	@ExcelCell(index=1,cname="ID")
@@ -42,6 +47,8 @@ public class CalTaskItem {
     private String place;
 
     private Integer employeeId;
+    
+    private String employeeIds;
 
     private Integer version;
 
@@ -82,124 +89,4 @@ public class CalTaskItem {
     public static List<EventObject> convertToEventObjectList(List<CalTaskItem> list) {
     	return list.stream().map(CalTaskItem::convertToEventObject).collect(Collectors.toList());
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
-    }
-
-    public Integer getTaskItemOrder() {
-        return taskItemOrder;
-    }
-
-    public void setTaskItemOrder(Integer taskItemOrder) {
-        this.taskItemOrder = taskItemOrder;
-    }
-
-    public String getTaskItemTitle() {
-        return taskItemTitle;
-    }
-
-    public void setTaskItemTitle(String taskItemTitle) {
-        this.taskItemTitle = taskItemTitle == null ? null : taskItemTitle.trim();
-    }
-
-    public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Date getHandleTime() {
-        return handleTime;
-    }
-
-    public void setHandleTime(Date handleTime) {
-        this.handleTime = handleTime;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place == null ? null : place.trim();
-    }
-
-    public Integer getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Integer employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
-	}
-
-	public String getTaskName() {
-		return taskName;
-	}
-
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
 }

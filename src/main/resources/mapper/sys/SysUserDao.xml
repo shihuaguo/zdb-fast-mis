@@ -74,6 +74,9 @@
 	
 	<select id="queryNameList" parameterType="map" resultType="String">
     	select username from sys_user t where t.username like #{term}
+    	<if test="status != null and status.trim() != ''">
+    		and status=#{status}
+    	</if>
   	</select>
 	
 	<insert id="save" parameterType="com.zdb.modules.sys.entity.SysUserEntity" useGeneratedKeys="true" keyProperty="userId">

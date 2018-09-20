@@ -12,6 +12,7 @@
     <result column="handle_time" jdbcType="TIMESTAMP" property="handleTime" />
     <result column="place" jdbcType="VARCHAR" property="place" />
     <result column="employee_id" jdbcType="INTEGER" property="employeeId" />
+    <result column="employee_ids" jdbcType="VARCHAR" property="employeeIds" />
     <result column="version" jdbcType="INTEGER" property="version" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -37,7 +38,7 @@
   <sql id="whereClause">
         <where>
 	        <if test="employeeId != null">
-            	AND t.employee_id = #{employeeId}
+            	AND (t.employee_id = #{employeeId} or FIND_IN_SET(#{employeeId},t.`employee_ids`)>0)
 	        </if>
 	        <if test="taskId != null">
 	            AND task_id = #{taskId}
@@ -56,8 +57,12 @@
   
   <select id="queryList" parameterType="map" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />,u.username as employee_name,ct.`task_name`
-    from cal_task_item t left join sys_user u on t.employee_id=u.user_id
+    <include refid="Base_Column_List" />
+    <!-- ,u.username as employee_name -->
+    ,(SELECT GROUP_CONCAT(u.`username`) FROM sys_user u WHERE FIND_IN_SET(u.`user_id`,t.`employee_ids`)>0) AS employee_name
+    ,ct.`task_name`
+    from cal_task_item t 
+    <!-- left join sys_user u on t.employee_id=u.user_id -->
     INNER JOIN `cal_task` ct ON t.`task_id`=ct.`id`
     <include refid="whereClause"></include>
     <choose>
@@ -132,6 +137,9 @@
       <if test="employeeId != null">
         employee_id,
       </if>
+      <if test="employeeIds != null">
+        employee_ids,
+      </if>
       <if test="version != null">
         version,
       </if>
@@ -173,6 +181,9 @@
       <if test="employeeId != null">
         #{employeeId,jdbcType=INTEGER},
       </if>
+      <if test="employeeIds != null">
+        #{employeeIds,jdbcType=VARCHAR},
+      </if>
       <if test="version != null">
         #{version,jdbcType=INTEGER},
       </if>
@@ -213,6 +224,9 @@
       </if>
       <if test="employeeId != null">
         employee_id = #{employeeId,jdbcType=INTEGER},
+      </if>
+      <if test="employeeIds != null">
+        employee_ids = #{employeeIds,jdbcType=VARCHAR},
       </if>
       <!-- <if test="version != null">
         version = #{version,jdbcType=INTEGER},

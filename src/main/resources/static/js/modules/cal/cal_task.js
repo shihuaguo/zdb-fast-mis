@@ -132,9 +132,29 @@ $(function () {
     					editoptions: {
     				        dataInit: function (elem) {
     				            $(elem).autocomplete({
-    				                source: baseURL + 'sys/user/nameList',
+    				            	//multiple: true, 
+    				            	//multipleSeparator: ",", 
+    				                //source: baseURL + 'sys/user/nameList?status=1',
+    				                source: function( request, response ) {
+    				                    $.getJSON(baseURL + 'sys/user/nameList?status=1', {
+    				                      term: extractLast( request.term )
+    				                    }, response );
+    				                  },
+    				                search: function() {
+    				                    // custom minLength
+    				                    var term = extractLast( this.value );
+    				                    if ( term.length < 1 ) {
+    				                      return false;
+    				                    }
+    				                  },
     				                select: function (event, ui) {
-    				                    $("#" + taskId + "0_employeeName").val(ui.item.value);
+    				                	var terms = split(this.value);
+    				                	terms.pop();
+    				                	terms.push( ui.item.value );
+    				                	terms.push( "" );
+    				                    this.value = terms.join( "," );
+    				                    return false;
+    				                    //$("#" + taskId + "0_employeeName").val(ui.item.value);
     				                }
     				            });
     				        }

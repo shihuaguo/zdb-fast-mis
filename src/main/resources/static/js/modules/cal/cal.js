@@ -277,9 +277,30 @@ $(function() {
     
     //员工输入框绑定自动完成
     $("#employeeName").autocomplete({
-        source: baseURL + 'sys/user/nameList',
+        /*source: baseURL + 'sys/user/nameList',
         select: function (event, ui) {
         	vm.taskItem.employeeName = ui.item.value;
+        }*/
+    	source: function( request, response ) {
+            $.getJSON(baseURL + 'sys/user/nameList?status=1', {
+              term: extractLast( request.term )
+            }, response );
+          },
+        search: function() {
+            // custom minLength
+            var term = extractLast( this.value );
+            if ( term.length < 1 ) {
+              return false;
+            }
+          },
+        select: function (event, ui) {
+        	var terms = split(this.value);
+        	terms.pop();
+        	terms.push( ui.item.value );
+        	terms.push( "" );
+            this.value = terms.join( "," );
+            vm.taskItem.employeeName = this.value;
+            return false;
         }
     });
     //任务输入框自动完成

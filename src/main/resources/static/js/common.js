@@ -208,3 +208,10 @@ function downloadFileByForm(url,params) {
     //form.append($("<input></input>").attr("type", "hidden").attr("name", "fileName").attr("value", fileName));
     form.appendTo('body').submit().remove();
 }
+
+function split( val ) {
+    return val.split( /,\s*/ );
+}
+function extractLast( term ) {
+	return split( term ).pop();
+}
