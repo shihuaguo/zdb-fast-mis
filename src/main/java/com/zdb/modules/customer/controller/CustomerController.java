@@ -374,7 +374,7 @@ public class CustomerController extends AbstractController {
 	public R syncTaxInfo(String customerId, String legalPersonAccount, String legalPersonPassword, String customerName, String validCode) {
 		logger.info("收到同步税务信息请求, customerId={},legalPersonAccount={}, legalPersonPassword={}, customerName={}, valideCode={}", 
 				customerId, legalPersonAccount, legalPersonPassword, customerName, validCode);
-		return EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode, kd);
+		return EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode/*, kd*/);
 	}
 	
 	///////////////////////////////////////////商事信息/////////////////////////////////////

@@ -1,13 +1,14 @@
 package com.zdb.modules.sys.entity;
 
-import com.zdb.common.validator.group.AddGroup;
-import com.zdb.common.validator.group.UpdateGroup;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+import com.zdb.common.validator.group.AddGroup;
+import com.zdb.common.validator.group.UpdateGroup;
 
 /**
  * 系统用户

@@ -1,17 +1,26 @@
 package com.zdb.common.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Base64.Encoder;
+import java.util.stream.Collectors;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Base64.Encoder;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.net.ssl.SSLException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
@@ -19,11 +28,25 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.web.reactive.function.client.ClientRequest.Builder;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.zdb.common.exception.RRException;
 import com.zdb.modules.customer.entity.CustomerTax;
+
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import reactor.core.publisher.Mono;
 
 /**
  * 从税局抓取信息的实用类
@@ -37,7 +60,10 @@ public class EtaxUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EtaxUtil.class);
 	
 	//税局基础地址
-	public static final String BASE_URL_etax = "http://www.etax-gd.gov.cn";
+	public static final String BASE_URL_etax = "https://www.etax-gd.gov.cn";
+	
+	//税局基础地址https
+	public static final String BASE_URL_etax_s = "https://www.etax-gd.gov.cn";
 	//登录地址
 	public static final String URL_login = BASE_URL_etax + "/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=";
 	//登录验证地址
@@ -52,7 +78,119 @@ public class EtaxUtil {
 	public static final String URL_changeQySf = BASE_URL_etax + "/sso/auth/changeQySf.do";
 	
 	//查询购票员信息
-	public static final String URL_queryGpycx = BASE_URL_etax + "/gsyw/service/fpyw/gpycx/queryGpycx?yxqq=&yxqz=";
+	public static final String URL_queryGpycx = BASE_URL_etax_s + "/gsyw/service/fpyw/gpycx/queryGpycx?yxqq=&yxqz=";
+	
+	//spring webflux
+	private static WebClient webClient;
+	
+	//private static MultiValueMap<String, ResponseCookie> cookies;
+	
+	private static class CookieHolder{
+		//key-cookie path value-have the same path's cookie
+		static Map<String, List<ResponseCookie>> cookieMap = new HashMap<>();
+		static void init() {
+			cookieMap.clear();
+		}
+		static List<ResponseCookie> getCookies(String path){
+			return Optional.ofNullable(cookieMap.get(path)).orElse(new ArrayList<>());
+		}
+		static void addCookies(MultiValueMap<String, ResponseCookie> cookies) {
+			cookies.forEach((s, list) ->{
+				list.forEach(rc -> {
+					List<ResponseCookie> cs = cookieMap.get(rc.getPath());
+					if(cs == null) {
+						cs = new ArrayList<>();
+						cookieMap.put(rc.getPath(), cs);
+					}
+					if(!cs.contains(rc)) {
+						cs.add(rc);
+					}
+				});
+			});
+		}
+	}
+	
+	private static WebClient getWebClient() {
+		if (webClient == null) {
+			SslContext sslContext;
+			try {
+				sslContext = SslContextBuilder.forClient().build();
+				webClient = WebClient.builder()
+						//.defaultHeader("Content-Type", "application/json;charset=UTF-8")
+						//.defaultHeader("Accept", "application/json;charset=UTF-8")
+						.filter((req, next) -> {
+							Builder builder = ClientRequest.from(req);
+							String uri = req.url().getPath();
+							String context = uri.substring(0, uri.substring(1).indexOf("/") + 2);
+							logger.info("request context={}", context);
+							// logger.info("CookieHolder's cookieMap={}", CookieHolder.cookieMap);
+							List<ResponseCookie> cookieList = CookieHolder.getCookies(context);
+							if (context.startsWith("/gsyw")) {
+								cookieList.addAll(CookieHolder.getCookies("/web-tycx/"));
+							}
+							cookieList.addAll(CookieHolder.getCookies("/"));
+							// 如果是获取购票员信息
+							if (context.startsWith("/gsyw")) {
+								//req.headers().setContentType(MediaType.APPLICATION_JSON_UTF8);
+								//req.headers().setAccept(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
+								cookieList = cookieList.stream().filter(rc -> rc.getName().equals("DZSWJ_TGC"))
+										.collect(Collectors.toList());
+							}
+
+							logger.info("uri = {}, cookieList={}", uri, cookieList);
+							cookieList.forEach(rc -> builder.cookie(rc.getName(), rc.getValue()));
+							return next.exchange(builder.build());
+						}).clientConnector(new ReactorClientHttpConnector(builder -> builder.sslContext(sslContext)))
+						.baseUrl(BASE_URL_etax_s).build();
+			} catch (SSLException e) {
+				logger.error("", e);
+			}
+		}
+		return webClient;
+	}
+	
+	protected static String doGet(String uri, Map<String, String> param) {
+//		UriBuilder ub = UriBuilder.
+		URIBuilder builder;
+		try {
+			builder = new URIBuilder(uri);
+			if(param != null) {
+				param.forEach((k,v) -> builder.addParameter(k, v));
+			}
+			WebClient webClient = getWebClient();
+			return webClient.get().uri(builder.build())
+					//.retrieve().bodyToMono(String.class).block();
+					.header("Content-Type", "application/json;charset=UTF-8")
+					.header("Accept", "application/json;charset=UTF-8")
+					.exchange()
+					.flatMap(res -> {
+						logger.info("cookies={}", res.cookies());
+						CookieHolder.addCookies(res.cookies());
+						return res.bodyToMono(String.class);
+					}).block();
+		} catch (URISyntaxException e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+	
+	protected static String doPost(String uri, Map<String, String> param) {
+		MultiValueMap<String, String> mvm = new LinkedMultiValueMap<>();
+		param.forEach((k,v) -> mvm.add(k, v));
+		return doPost(uri, mvm);
+	}
+	
+	protected static String doPost(String uri, MultiValueMap<String, String> param) {
+		return getWebClient().post().uri(uri).body(BodyInserters.fromFormData(param)).retrieve().onStatus(status -> {
+			if (status.is4xxClientError() || status.is5xxServerError()) {
+				return true;
+			}
+			return false;
+		}, ef -> {
+			logger.error("http post return:{}", ef.statusCode());
+			return Mono.error(new RRException(ef.statusCode().toString()));
+		}).bodyToMono(String.class).block();
+	}
 	
 	/**
 	 * 构造登录的其他信息
@@ -91,7 +229,7 @@ public class EtaxUtil {
 	 * @param kd
 	 * @return
 	 */
-	public static R syncTaxInfo(String customerName, String legalPersonAccount, String legalPersonPassword, String validCode, HttpClientUtilKA kd) {
+	public static R syncTaxInfo(String customerName, String legalPersonAccount, String legalPersonPassword, String validCode/*, HttpClientUtilKA kd*/) {
 		String url = URL_login + System.currentTimeMillis();
 		//1.模拟访问登录页面
 //		logger.info("模拟打开登录页面");
@@ -104,15 +242,17 @@ public class EtaxUtil {
 		params.put("captchCode", validCode);
 		//2.通过用户名、密码、验证码登录
 		logger.info("调用登录，url={}", url);
-		String res = kd.doGet(url, params);
+		//String res = kd.doGet(url, params);
+		CookieHolder.init();
+		String res = doGet(url, params);
 		logger.info("调用登录，返回结果={}", res);
-		return parseByLogin(customerName,res,kd);
+		return parseByLogin(customerName,res/*,kd*/);
 	}
 	
 	/**
 	 * 3.检查登录结果,如果成功,调用checkLoginState以获取纳税人信息
 	 */
-	public static R parseByLogin(String customerName, String res, HttpClientUtilKA kd) {
+	public static R parseByLogin(String customerName, String res/*, HttpClientUtilKA kd*/) {
 		Parser parser;
 		try {
 			parser = new Parser(res);
@@ -131,9 +271,10 @@ public class EtaxUtil {
 				if(body.indexOf("CAS登录成功") >= 0) {
 					logger.info("CAS登录成功");
 					logger.info("调用checkLoginState");
-					String checkLoginRes = kd.doGet(URL_check_login, null);
+					//String checkLoginRes = kd.doGet(URL_check_login, null);
+					String checkLoginRes = doGet(URL_check_login, null);
 					logger.info("调用checkLoginState返回={}", checkLoginRes);
-					return changeQySf(customerName, checkLoginRes, kd);
+					return changeQySf(customerName, checkLoginRes/*, kd*/);
 				}else {
 					return R.error("登录失败");
 				}
@@ -145,7 +286,7 @@ public class EtaxUtil {
 	}
 	
 	//4.从返回的纳税人信息中匹配客户名称,然后调用changeQySf.do切换身份
-	public static R changeQySf(String customerName, String checkLoginRes, HttpClientUtilKA kd) {
+	public static R changeQySf(String customerName, String checkLoginRes/*, HttpClientUtilKA kd*/) {
 		JSONObject obj = (JSONObject) JSONObject.parse(checkLoginRes);
 		//logger.info(obj.getClass().toString());
 		String flag = obj.get("flag").toString();
@@ -169,13 +310,14 @@ public class EtaxUtil {
 				Map<String, String> params = new HashMap<>();
 				params.put("qybdid", qybdid);
 				logger.info("调用changeQySf,url={},param={}", URL_changeQySf, params);
-				String changeQySfRes = kd.doGet(URL_changeQySf, params);
+				//String changeQySfRes = kd.doGet(URL_changeQySf, params);
+				String changeQySfRes = doGet(URL_changeQySf, params);
 				logger.info("调用changeQySf,返回={}", changeQySfRes);
 				obj = JSONObject.parseObject(changeQySfRes);
 				if("error".equals(obj.get("flag"))) {
 					return R.error("调用changeQySf返回错误");
 				}else {
-					return fetchNationalTaxInfo(kd, checkLoginRes, gsnsrsbh);
+					return fetchNationalTaxInfo(/*kd, */checkLoginRes, gsnsrsbh);
 				}
 			}else {
 				return R.error("从checkLoginState返回信息中匹配纳税人身份失败");
@@ -242,7 +384,7 @@ public class EtaxUtil {
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static R fetchNationalTaxInfo(HttpClientUtilKA kd, String checkLoginRes, String gsnsrsbh){
+	public static R fetchNationalTaxInfo(/*HttpClientUtilKA kd, */String checkLoginRes, String gsnsrsbh){
 		Map<String, String> params = new HashMap<>();
 		params.put("t", String.valueOf(System.currentTimeMillis()));
 		//params.put("bw", "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.nsrjcxx\",\"tid\":\" \",\"version\":\"\"},\"body\":{,\"gdlxbz\":\"GS\"}}}");
@@ -254,23 +396,27 @@ public class EtaxUtil {
 			//抓取国税信息
 			//url = URL_fetch+"?t="+System.currentTimeMillis()+"&bw=%7B%22taxML%22:%7B%22head%22:%7B%22gid%22:%22311085A116185FEFE053C2000A0A5B63%22,%22sid%22:%22yhscx.swdjcx.nsrjcxx%22,%22tid%22:%22+%22,%22version%22:%22%22%7D,%22body%22:%7B,%22gdlxbz%22:%22GS%22%7D%7D%7D";
 			url = buildFetchUrl("GS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
-			String gsres = kd.doGet(url, null);
+			String gsres = doGet(url, null);
 			logger.info("抓取国税信息，返回结果={}", gsres);
 			
 			//抓取地税信息
 			//url = URL_fetch+"?t="+System.currentTimeMillis()+"&bw=%7B%22taxML%22:%7B%22head%22:%7B%22gid%22:%22311085A116185FEFE053C2000A0A5B63%22,%22sid%22:%22yhscx.swdjcx.nsrjcxx%22,%22tid%22:%22+%22,%22version%22:%22%22%7D,%22body%22:%7B,%22gdlxbz%22:%22DS%22%7D%7D%7D";
 			url = buildFetchUrl("DS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
-			String dsres = kd.doGet(url, null);
+			String dsres = doGet(url, null);
 			logger.info("抓取地税信息，返回结果={}", dsres);
 			
 			//抓取购票员信息
 			url = URL_queryGpycx;
-			String gpyxx = kd.doPostJson(url, "{\"start\": 0, \"limit\": 10}");
+			//String gpyxx = kd.doPostJson(url, "{\"start\": 0, \"limit\": 10}");
+			MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+			formData.add("start", "0");
+			formData.add("limit", "10");
+			String gpyxx = doPost(url, formData);
 			logger.info("抓取购票员信息，返回结果={}", gpyxx);
 			
 			//存款账户账号报告
 			url = buildFetchUrl(null, null, "yhscx.swdjcx.ckzhzhbg");
-			String ckzhzhbg = kd.doGet(url, null);
+			String ckzhzhbg = doGet(url, null);
 			logger.info("抓取存款账户账号报告，返回结果={}", ckzhzhbg);
 			R r = parseGsDs(gsres, dsres, gpyxx, checkLoginRes, ckzhzhbg);
 			return r;

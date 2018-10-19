@@ -1,11 +1,12 @@
 package com.zdb.modules.sys.entity;
 
 
-import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 角色

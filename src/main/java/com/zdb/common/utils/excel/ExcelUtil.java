@@ -728,7 +728,7 @@ public class ExcelUtil {
 
             if (props != null) {
                 for (String prop : props) {
-                    sortCols.add(new BeanComparator<>(prop, typeComp));
+                    sortCols.add(new BeanComparator(prop, typeComp));
                 }
             }
             if (sortCols.size() > 0) {

@@ -1,9 +1,10 @@
 package com.zdb.modules.job.entity;
 
-import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 定时器

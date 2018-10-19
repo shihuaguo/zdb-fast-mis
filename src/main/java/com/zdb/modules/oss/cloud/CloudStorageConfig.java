@@ -1,14 +1,16 @@
 package com.zdb.modules.oss.cloud;
 
-import com.zdb.common.validator.group.AliyunGroup;
-import com.zdb.common.validator.group.QcloudGroup;
-import com.zdb.common.validator.group.QiniuGroup;
-import org.hibernate.validator.constraints.NotBlank;
+import java.io.Serializable;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import com.zdb.common.validator.group.AliyunGroup;
+import com.zdb.common.validator.group.QcloudGroup;
+import com.zdb.common.validator.group.QiniuGroup;
 
 /**
  * 云存储配置信息

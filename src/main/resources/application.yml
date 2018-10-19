@@ -6,7 +6,8 @@ server:
         min-spare-threads: 30
     port: 8081
     #打开注释，则通过【http://localhost/renren-fast】访问
-    context-path: /financial
+    servlet: 
+        context-path: /financial
 
 spring:
     # 环境 dev|test|pro
