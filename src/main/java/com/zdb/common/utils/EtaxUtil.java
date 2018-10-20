@@ -1,24 +1,12 @@
 package com.zdb.common.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.stream.Collectors;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.net.ssl.SSLException;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.zdb.common.exception.RRException;
+import com.zdb.modules.customer.entity.CustomerTax;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.htmlparser.Node;
@@ -28,7 +16,6 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.util.LinkedMultiValueMap;
@@ -37,16 +24,16 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientRequest.Builder;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.zdb.common.exception.RRException;
-import com.zdb.modules.customer.entity.CustomerTax;
-
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
 import reactor.core.publisher.Mono;
+
+import javax.net.ssl.SSLException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.Base64.Encoder;
+import java.util.stream.Collectors;
 
 /**
  * 从税局抓取信息的实用类
@@ -87,24 +74,22 @@ public class EtaxUtil {
 	
 	private static class CookieHolder{
 		//key-cookie path value-have the same path's cookie
-		static Map<String, List<ResponseCookie>> cookieMap = new HashMap<>();
+		static Map<String, Set<ResponseCookie>> cookieMap = new HashMap<>();
 		static void init() {
 			cookieMap.clear();
 		}
-		static List<ResponseCookie> getCookies(String path){
-			return Optional.ofNullable(cookieMap.get(path)).orElse(new ArrayList<>());
+		static Set<ResponseCookie> getCookies(String path){
+			return Optional.ofNullable(cookieMap.get(path)).orElse(new HashSet<>());
 		}
 		static void addCookies(MultiValueMap<String, ResponseCookie> cookies) {
 			cookies.forEach((s, list) ->{
 				list.forEach(rc -> {
-					List<ResponseCookie> cs = cookieMap.get(rc.getPath());
+					Set<ResponseCookie> cs = cookieMap.get(rc.getPath());
 					if(cs == null) {
-						cs = new ArrayList<>();
+						cs = new HashSet<>();
 						cookieMap.put(rc.getPath(), cs);
 					}
-					if(!cs.contains(rc)) {
-						cs.add(rc);
-					}
+					cs.add(rc);
 				});
 			});
 		}
@@ -116,25 +101,20 @@ public class EtaxUtil {
 			try {
 				sslContext = SslContextBuilder.forClient().build();
 				webClient = WebClient.builder()
-						//.defaultHeader("Content-Type", "application/json;charset=UTF-8")
-						//.defaultHeader("Accept", "application/json;charset=UTF-8")
 						.filter((req, next) -> {
 							Builder builder = ClientRequest.from(req);
 							String uri = req.url().getPath();
 							String context = uri.substring(0, uri.substring(1).indexOf("/") + 2);
 							logger.info("request context={}", context);
-							// logger.info("CookieHolder's cookieMap={}", CookieHolder.cookieMap);
-							List<ResponseCookie> cookieList = CookieHolder.getCookies(context);
+							Set<ResponseCookie> cookieList = CookieHolder.getCookies(context);
 							if (context.startsWith("/gsyw")) {
 								cookieList.addAll(CookieHolder.getCookies("/web-tycx/"));
 							}
 							cookieList.addAll(CookieHolder.getCookies("/"));
 							// 如果是获取购票员信息
 							if (context.startsWith("/gsyw")) {
-								//req.headers().setContentType(MediaType.APPLICATION_JSON_UTF8);
-								//req.headers().setAccept(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
 								cookieList = cookieList.stream().filter(rc -> rc.getName().equals("DZSWJ_TGC"))
-										.collect(Collectors.toList());
+										.collect(Collectors.toSet());
 							}
 
 							logger.info("uri = {}, cookieList={}", uri, cookieList);
@@ -226,7 +206,6 @@ public class EtaxUtil {
 	 * @param legalPersonAccount
 	 * @param legalPersonPassword
 	 * @param validCode
-	 * @param kd
 	 * @return
 	 */
 	public static R syncTaxInfo(String customerName, String legalPersonAccount, String legalPersonPassword, String validCode/*, HttpClientUtilKA kd*/) {
@@ -380,7 +359,8 @@ public class EtaxUtil {
 	
 	/**
 	 * 抓取国税信息
-	 * @param kd
+	 * @param checkLoginRes
+	 * @param gsnsrsbh
 	 * @return
 	 * @throws UnsupportedEncodingException 
 	 */
@@ -406,13 +386,14 @@ public class EtaxUtil {
 			logger.info("抓取地税信息，返回结果={}", dsres);
 			
 			//抓取购票员信息
-			url = URL_queryGpycx;
+			/*url = URL_queryGpycx;
 			//String gpyxx = kd.doPostJson(url, "{\"start\": 0, \"limit\": 10}");
 			MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 			formData.add("start", "0");
 			formData.add("limit", "10");
 			String gpyxx = doPost(url, formData);
-			logger.info("抓取购票员信息，返回结果={}", gpyxx);
+			logger.info("抓取购票员信息，返回结果={}", gpyxx);*/
+			String gpyxx = "";
 			
 			//存款账户账号报告
 			url = buildFetchUrl(null, null, "yhscx.swdjcx.ckzhzhbg");
@@ -461,7 +442,7 @@ public class EtaxUtil {
 			customerTax.setLocalTaxDpt(qtxx.getString("dszgsws"));
 			
 			//购票员信息
-			JSONObject gpyjs = JSONObject.parseObject(gpyxx);
+			/*JSONObject gpyjs = JSONObject.parseObject(gpyxx);
 			JSONArray gprarr = gpyjs.getJSONArray("data");
 			List<String> gprList = new ArrayList<>();
 			if(gprarr != null && !gprarr.isEmpty()) {
@@ -470,7 +451,7 @@ public class EtaxUtil {
 					gprList.add(jo.getString("gprxm"));
 				}
 				customerTax.setTicketAgent(StringUtils.join(gprList, ","));
-			}
+			}*/
 			
 			//存款账户账号报告
 			JSONObject ckzhzh = JSONObject.parseObject(ckzhzhbg);
