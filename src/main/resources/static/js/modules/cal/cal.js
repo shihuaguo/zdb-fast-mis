@@ -200,7 +200,7 @@ $(function() {
             },
             {
                 url: baseURL + "cal/task/event/list/0",
-                color: '#FFDCB9',    // an option!
+                color: '#ff38cb',    // an option!
                 textColor: 'black'  // an option!
             }
         ],
