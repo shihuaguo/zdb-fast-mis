@@ -1,26 +1,10 @@
 package com.zdb.common.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Base64.Encoder;
-import java.util.stream.Collectors;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.net.ssl.SSLException;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.zdb.modules.customer.entity.CustomerTax;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.TagNameFilter;
@@ -28,25 +12,12 @@ import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ClientRequest;
-import org.springframework.web.reactive.function.client.ClientRequest.Builder;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.zdb.common.exception.RRException;
-import com.zdb.modules.customer.entity.CustomerTax;
-
-import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
-import reactor.core.publisher.Mono;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.Base64.Encoder;
 
 /**
  * 从税局抓取信息的实用类
@@ -60,32 +31,30 @@ public class EtaxUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EtaxUtil.class);
 	
 	//税局基础地址
-	public static final String BASE_URL_etax = "https://www.etax-gd.gov.cn";
+	private static final String BASE_URL_etax = "https://www.etax-gd.gov.cn";
 	
 	//税局基础地址https
-	public static final String BASE_URL_etax_s = "https://www.etax-gd.gov.cn";
+	private static final String BASE_URL_etax_s = "https://www.etax-gd.gov.cn";
 	//登录地址
-	public static final String URL_login = BASE_URL_etax + "/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=";
+	private static final String URL_login = BASE_URL_etax + "/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=";
 	//登录验证地址
-	public static final String URL_check_login = BASE_URL_etax + "/sso/auth/checkLoginState.do";
+	private static final String URL_check_login = BASE_URL_etax + "/sso/auth/checkLoginState.do";
 	//验证码图片地址
 	public static final String URL_checkcode = BASE_URL_etax + "/sso/base/captcha.do?r=";
 	
 	//抓取国税地税信息的地址
-	public static final String URL_fetch = BASE_URL_etax + "/web-tycx/tycx/query.do";
+	private static final String URL_fetch = BASE_URL_etax + "/web-tycx/tycx/query.do";
 	
 	//切换纳税人身份
-	public static final String URL_changeQySf = BASE_URL_etax + "/sso/auth/changeQySf.do";
+	private static final String URL_changeQySf = BASE_URL_etax + "/sso/auth/changeQySf.do";
 	
 	//查询购票员信息
-	public static final String URL_queryGpycx = BASE_URL_etax_s + "/gsyw/service/fpyw/gpycx/queryGpycx?yxqq=&yxqz=";
+	private static final String URL_queryGpycx = BASE_URL_etax_s + "/gsyw/service/fpyw/gpycx/queryGpycx?yxqq=&yxqz=";
 	
 	//spring webflux
-	private static WebClient webClient;
+//	private static WebClient webClient;
 	
-	//private static MultiValueMap<String, ResponseCookie> cookies;
-	
-	private static class CookieHolder{
+	/*private static class CookieHolder{
 		//key-cookie path value-have the same path's cookie
 		static Map<String, List<ResponseCookie>> cookieMap = new HashMap<>();
 		static void init() {
@@ -190,11 +159,11 @@ public class EtaxUtil {
 			logger.error("http post return:{}", ef.statusCode());
 			return Mono.error(new RRException(ef.statusCode().toString()));
 		}).bodyToMono(String.class).block();
-	}
+	}*/
 	
 	/**
 	 * 构造登录的其他信息
-	 * @return
+	 * @return	map
 	 */
 	private static Map<String, String> constructParams() {
 		Map<String, String> params = new HashMap<>();
@@ -222,37 +191,37 @@ public class EtaxUtil {
 	 * 3.检查登录结果,如果成功,调用checkLoginState以获取纳税人信息
 	 * 4.从返回的纳税人信息中匹配客户名称,然后调用changeQySf.do切换身份
 	 * 5.调用URL_fetch地址抓取税务信息
-	 * @param customerName
-	 * @param legalPersonAccount
-	 * @param legalPersonPassword
-	 * @param validCode
-	 * @param kd
-	 * @return
+	 * @param customerName			customer name
+	 * @param legalPersonAccount	法人账号
+	 * @param legalPersonPassword	法人密码
+	 * @param validCode				验证码
+	 * @param kd					httpclientutil
+	 * @return						税局同步信息
 	 */
-	public static R syncTaxInfo(String customerName, String legalPersonAccount, String legalPersonPassword, String validCode/*, HttpClientUtilKA kd*/) {
+	public static R syncTaxInfo(String customerName, String legalPersonAccount, String legalPersonPassword, String validCode, HttpClientUtilKA kd) {
 		String url = URL_login + System.currentTimeMillis();
+
 		//1.模拟访问登录页面
-//		logger.info("模拟打开登录页面");
-//		kd.doGet(url, null);
 		Map<String, String> params = constructParams();
 		params.put("userName", legalPersonAccount);
 		//对密码进行加密
 		Encoder encoder = Base64.getEncoder();
 		params.put("passWord", encoder.encodeToString(legalPersonPassword.getBytes()));
 		params.put("captchCode", validCode);
+
 		//2.通过用户名、密码、验证码登录
 		logger.info("调用登录，url={}", url);
-		//String res = kd.doGet(url, params);
-		CookieHolder.init();
-		String res = doGet(url, params);
+		String res = kd.doGet(url, params);
+		//CookieHolder.init();
+		//String res = doGet(url, params);
 		logger.info("调用登录，返回结果={}", res);
-		return parseByLogin(customerName,res/*,kd*/);
+		return parseByLogin(customerName,res,kd);
 	}
 	
 	/**
 	 * 3.检查登录结果,如果成功,调用checkLoginState以获取纳税人信息
 	 */
-	public static R parseByLogin(String customerName, String res/*, HttpClientUtilKA kd*/) {
+	private static R parseByLogin(String customerName, String res, HttpClientUtilKA kd) {
 		Parser parser;
 		try {
 			parser = new Parser(res);
@@ -261,20 +230,20 @@ public class EtaxUtil {
 			String body = null;
 			if(nodes!=null) {
 				for (int i = 0; i < nodes.size(); i++) {
-					Node textnode = (Node) nodes.elementAt(i);
+					Node textnode = nodes.elementAt(i);
 					body = textnode.toPlainTextString();
 				}
 			}
 			if(body == null) {
-				return R.error("解析登录返回信息未错误");
+				return R.error("解析登录返回信息错误");
 			}else {
-				if(body.indexOf("CAS登录成功") >= 0) {
+				if(body.contains("CAS登录成功")) {
 					logger.info("CAS登录成功");
 					logger.info("调用checkLoginState");
-					//String checkLoginRes = kd.doGet(URL_check_login, null);
-					String checkLoginRes = doGet(URL_check_login, null);
+					String checkLoginRes = kd.doGet(URL_check_login, null);
+					//String checkLoginRes = doGet(URL_check_login, null);
 					logger.info("调用checkLoginState返回={}", checkLoginRes);
-					return changeQySf(customerName, checkLoginRes/*, kd*/);
+					return changeQySf(customerName, checkLoginRes, kd);
 				}else {
 					return R.error("登录失败");
 				}
@@ -286,9 +255,9 @@ public class EtaxUtil {
 	}
 	
 	//4.从返回的纳税人信息中匹配客户名称,然后调用changeQySf.do切换身份
-	public static R changeQySf(String customerName, String checkLoginRes/*, HttpClientUtilKA kd*/) {
+	private static R changeQySf(String customerName, String checkLoginRes, HttpClientUtilKA kd) {
 		JSONObject obj = (JSONObject) JSONObject.parse(checkLoginRes);
-		//logger.info(obj.getClass().toString());
+
 		String flag = obj.get("flag").toString();
 		if("ok".equals(flag)) {
 			logger.info("调用checkLoginState成功");
@@ -296,10 +265,10 @@ public class EtaxUtil {
 			//切换身份时需要用到的字段
 			String qybdid = null;
 			String gsnsrsbh = null;//纳税人识别号
-			for(int i = 0; i < nsrQysqVos.size(); i++) {
-				JSONObject obj1 = (JSONObject) nsrQysqVos.get(i);
+			for (Object nsrQysqVo : nsrQysqVos) {
+				JSONObject obj1 = (JSONObject) nsrQysqVo;
 				String zzNsrmc = obj1.getString("zzNsrmc");
-				if(customerName.equals(zzNsrmc)) {
+				if (customerName.equals(zzNsrmc)) {
 					qybdid = obj1.getString("qybdid");
 					gsnsrsbh = obj1.getString("gsnsrsbh");
 					logger.info("从checkLoginState返回信息中匹配纳税人身份成功,纳税人名称={},qybdid={},gsnsrsbh={}", zzNsrmc, qybdid, gsnsrsbh);
@@ -310,14 +279,14 @@ public class EtaxUtil {
 				Map<String, String> params = new HashMap<>();
 				params.put("qybdid", qybdid);
 				logger.info("调用changeQySf,url={},param={}", URL_changeQySf, params);
-				//String changeQySfRes = kd.doGet(URL_changeQySf, params);
-				String changeQySfRes = doGet(URL_changeQySf, params);
+				String changeQySfRes = kd.doGet(URL_changeQySf, params);
+				//String changeQySfRes = doGet(URL_changeQySf, params);
 				logger.info("调用changeQySf,返回={}", changeQySfRes);
 				obj = JSONObject.parseObject(changeQySfRes);
 				if("error".equals(obj.get("flag"))) {
 					return R.error("调用changeQySf返回错误");
 				}else {
-					return fetchNationalTaxInfo(/*kd, */checkLoginRes, gsnsrsbh);
+					return fetchNationalTaxInfo(kd, checkLoginRes, gsnsrsbh);
 				}
 			}else {
 				return R.error("从checkLoginState返回信息中匹配纳税人身份失败");
@@ -333,13 +302,11 @@ public class EtaxUtil {
 	 * 		"body":{,"gdlxbz":"GS","nsrsbh":"44010057995059X"}}}
 	 * @param gdlxbz GS或者DS
 	 * @param nsrsbh 纳税人识别号
-	 * @return
+	 * @return map
 	 */
-	public static Map<String, Object> buildFetchParams(String gdlxbz, String nsrsbh, String sid){
-		Map<String, Object> params = new HashMap<>();
+	private static Map<String, Object> buildFetchParams(String gdlxbz, String nsrsbh, String sid){
 		Map<String, String> head = new LinkedHashMap<>();
 		head.put("gid", "311085A116185FEFE053C2000A0A5B63");
-//		head.put("sid", "yhscx.swdjcx.nsrjcxx");
 		head.put("sid", sid);
 		head.put("tid", "+");
 		head.put("version", "");
@@ -359,11 +326,10 @@ public class EtaxUtil {
 		Map<String, Object> bw = new HashMap<>();
 		bw.put("taxML", taxML);
 		
-		params = bw;
-		return params;
+		return bw;
 	}
 	
-	public static String buildFetchUrl(String gdlxbz, String nsrsbh, String sid) throws UnsupportedEncodingException {
+	private static String buildFetchUrl(String gdlxbz, String nsrsbh, String sid) throws UnsupportedEncodingException {
 		StringBuilder sb = new StringBuilder();
 		sb.append(URL_fetch).append("?t=").append(System.currentTimeMillis());
 		//构建bw信息
@@ -371,55 +337,51 @@ public class EtaxUtil {
 		String bw = JSON.toJSONString(bwMap);
 		//对特殊字符进行urlencoder
 		bw = bw.replaceAll("\\{", URLEncoder.encode("{", "utf-8"));
-		bw = bw.replaceAll("\\}", URLEncoder.encode("}", "utf-8"));
+		bw = bw.replaceAll("}", URLEncoder.encode("}", "utf-8"));
 		bw = bw.replaceAll("\"", URLEncoder.encode("\"", "utf-8"));
 		sb.append("&bw=").append(bw);
-		String url = sb.toString();
-		return url;
+		return sb.toString();
 	}
 	
 	/**
 	 * 抓取国税信息
-	 * @param kd
-	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @param kd	http client utils
+	 * @return r
 	 */
-	public static R fetchNationalTaxInfo(/*HttpClientUtilKA kd, */String checkLoginRes, String gsnsrsbh){
-		Map<String, String> params = new HashMap<>();
-		params.put("t", String.valueOf(System.currentTimeMillis()));
-		//params.put("bw", "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.nsrjcxx\",\"tid\":\" \",\"version\":\"\"},\"body\":{,\"gdlxbz\":\"GS\"}}}");
-		
-		//存款账户账号报告查询
-		params.put("bw", "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.ckzhzhbg\",\"tid\":\" \",\"version\":\"\"},\"body\":{}}}");
+	private static R fetchNationalTaxInfo(HttpClientUtilKA kd, String checkLoginRes, String gsnsrsbh){
+//		Map<String, String> params = new HashMap<>();
+//		params.put("t", String.valueOf(System.currentTimeMillis()));
+//
+//		//存款账户账号报告查询
+//		params.put("bw", "{\"taxML\":{\"head\":{\"gid\":\"311085A116185FEFE053C2000A0A5B63\",\"sid\":\"yhscx.swdjcx.ckzhzhbg\",\"tid\":\" \",\"version\":\"\"},\"body\":{}}}");
 		String url;
 		try {
 			//抓取国税信息
 			//url = URL_fetch+"?t="+System.currentTimeMillis()+"&bw=%7B%22taxML%22:%7B%22head%22:%7B%22gid%22:%22311085A116185FEFE053C2000A0A5B63%22,%22sid%22:%22yhscx.swdjcx.nsrjcxx%22,%22tid%22:%22+%22,%22version%22:%22%22%7D,%22body%22:%7B,%22gdlxbz%22:%22GS%22%7D%7D%7D";
 			url = buildFetchUrl("GS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
-			String gsres = doGet(url, null);
+			String gsres = kd.doGet(url, null);
 			logger.info("抓取国税信息，返回结果={}", gsres);
 			
 			//抓取地税信息
 			//url = URL_fetch+"?t="+System.currentTimeMillis()+"&bw=%7B%22taxML%22:%7B%22head%22:%7B%22gid%22:%22311085A116185FEFE053C2000A0A5B63%22,%22sid%22:%22yhscx.swdjcx.nsrjcxx%22,%22tid%22:%22+%22,%22version%22:%22%22%7D,%22body%22:%7B,%22gdlxbz%22:%22DS%22%7D%7D%7D";
 			url = buildFetchUrl("DS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
-			String dsres = doGet(url, null);
+			String dsres = kd.doGet(url, null);
 			logger.info("抓取地税信息，返回结果={}", dsres);
 			
 			//抓取购票员信息
 			url = URL_queryGpycx;
-			//String gpyxx = kd.doPostJson(url, "{\"start\": 0, \"limit\": 10}");
-			MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-			formData.add("start", "0");
-			formData.add("limit", "10");
-			String gpyxx = doPost(url, formData);
+			String gpyxx = kd.doPostJson(url, "{\"start\": 0, \"limit\": 10}");
+//			MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+//			formData.add("start", "0");
+//			formData.add("limit", "10");
+//			String gpyxx = doPost(url, formData);
 			logger.info("抓取购票员信息，返回结果={}", gpyxx);
 			
 			//存款账户账号报告
 			url = buildFetchUrl(null, null, "yhscx.swdjcx.ckzhzhbg");
-			String ckzhzhbg = doGet(url, null);
+			String ckzhzhbg = kd.doGet(url, null);
 			logger.info("抓取存款账户账号报告，返回结果={}", ckzhzhbg);
-			R r = parseGsDs(gsres, dsres, gpyxx, checkLoginRes, ckzhzhbg);
-			return r;
+			return parseGsDs(gsres, dsres, gpyxx, checkLoginRes, ckzhzhbg);
 		} catch (Exception e) {
 			logger.error("", e);
 			return R.error(e.getMessage());
@@ -427,7 +389,7 @@ public class EtaxUtil {
 	}
 	
 	//解析国税和地税的返回结果
-	public static R parseGsDs(String gsres, String dsres, String gpyxx, String checkLoginRes, String ckzhzhbg) {
+	private static R parseGsDs(String gsres, String dsres, String gpyxx, String checkLoginRes, String ckzhzhbg) {
 		CustomerTax customerTax = new CustomerTax();
 		try {
 			//国税信息
@@ -451,6 +413,23 @@ public class EtaxUtil {
 			customerTax.setNationalTaxNumber(bgcxDJSwdjbxxVO.getString("nsrsbh"));		//纳税人识别号（社会信用代码）
 			JSONObject qtxx = bgcxswdjb.getJSONObject("qtxx");
 			customerTax.setNationalTaxDpt(qtxx.getString("gszgsws"));
+
+			//投资方信息
+			JSONObject tzxxlist = bgcxswdjb.getJSONObject("tzxxlist");
+			if(tzxxlist != null){
+				Object tzxxObj = tzxxlist.get("tzxx");
+				if(tzxxObj instanceof JSONArray){
+					JSONArray tzxx = (JSONArray)tzxxObj;
+					List<String> list = new ArrayList<>();
+					for(Object o : tzxx){
+						JSONObject jo = (JSONObject)o;
+						list.add(jo.get("tzfmc").toString());
+					}
+					customerTax.setInvestorInfo(StringUtils.join(list, ","));
+				}else if(tzxxObj instanceof JSONObject){
+					customerTax.setInvestorInfo(((JSONObject)tzxxObj).getString("tzfmc"));
+				}
+			}
 			
 			//地税信息
 			JSONObject ds = JSONObject.parseObject(dsres);
@@ -465,8 +444,8 @@ public class EtaxUtil {
 			JSONArray gprarr = gpyjs.getJSONArray("data");
 			List<String> gprList = new ArrayList<>();
 			if(gprarr != null && !gprarr.isEmpty()) {
-				for(int i = 0; i < gprarr.size(); i++) {
-					JSONObject jo = (JSONObject)gprarr.get(i);
+				for (Object aGprarr : gprarr) {
+					JSONObject jo = (JSONObject) aGprarr;
 					gprList.add(jo.getString("gprxm"));
 				}
 				customerTax.setTicketAgent(StringUtils.join(gprList, ","));

@@ -1,43 +1,8 @@
-/**
- * 
- */
 package com.zdb.modules.customer.controller;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.zdb.common.annotation.SysLog;
-import com.zdb.common.utils.Constant;
-import com.zdb.common.utils.CriUtil;
-import com.zdb.common.utils.DateUtils;
-import com.zdb.common.utils.EtaxUtil;
-import com.zdb.common.utils.GZpublicityUtil;
-import com.zdb.common.utils.HttpClientUtilKA;
-import com.zdb.common.utils.PageUtils;
-import com.zdb.common.utils.Query;
-import com.zdb.common.utils.R;
+import com.zdb.common.utils.*;
 import com.zdb.common.validator.ValidatorUtils;
 import com.zdb.common.validator.group.AddGroup;
 import com.zdb.common.validator.group.UpdateGroup;
@@ -49,6 +14,23 @@ import com.zdb.modules.customer.service.ICustomerService;
 import com.zdb.modules.customer.service.ICustomerTaxService;
 import com.zdb.modules.sys.controller.AbstractController;
 import com.zdb.modules.sys.service.SysUserService;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator
@@ -60,17 +42,21 @@ public class CustomerController extends AbstractController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 	
-	@Autowired
-	private ICustomerService customerService;
+	private final ICustomerService customerService;
 	
-	@Autowired
-	private ICustomerIcService customerIcService;
-	@Autowired
-	private ICustomerTaxService customerTaxService;
+	private final ICustomerIcService customerIcService;
+	private final ICustomerTaxService customerTaxService;
 	
+	private final SysUserService userService;
+
 	@Autowired
-	private SysUserService userService;
-	
+	public CustomerController(ICustomerService customerService, ICustomerIcService customerIcService, ICustomerTaxService customerTaxService, SysUserService userService) {
+		this.customerService = customerService;
+		this.customerIcService = customerIcService;
+		this.customerTaxService = customerTaxService;
+		this.userService = userService;
+	}
+
 	protected void fuzzlyQuery(Map<String, Object> params) {
 		String customerName = (String) params.get("customerName");
 		if(StringUtils.isNotBlank(customerName)) {
@@ -103,14 +89,13 @@ public class CustomerController extends AbstractController {
 		Query query = new Query(params);
 		List<Customer> customerList = customerService.queryListWithIcTax(query);
 		int total = customerService.queryTotal(query);
-		PageUtils pageUtil = new PageUtils(customerList, total, query.getLimit(), query.getPage());
-		return pageUtil;
+		return new PageUtils(customerList, total, query.getLimit(), query.getPage());
 	}
 	
 	/**
 	 * 导出到Excel
-	 * @param params
-	 * @param res
+	 * @param params page query params
+	 * @param res	 http servlet response
 	 */
 	@RequestMapping("/export")
 	@RequiresPermissions("customer:save")
@@ -161,8 +146,7 @@ public class CustomerController extends AbstractController {
 		if(term != null) {
 			params.put("term", "%" + term + "%");
 		}
-		List<String> customerList = customerService.queryNameList(params);
-		return customerList;
+		return customerService.queryNameList(params);
 	}
 	
 	/**
@@ -324,7 +308,7 @@ public class CustomerController extends AbstractController {
 		String fileUrl = kd.doDownload(GZpublicityUtil.URL_validecodeof_ic + random, null);
 		if(fileUrl != null) {
 			logger.info("将验证码图片从广州红盾网拉取到服务器成功");
-			try(InputStream is = new FileInputStream(fileUrl);){
+			try(InputStream is = new FileInputStream(fileUrl)){
 				IOUtils.copy(is, res.getOutputStream());
 			} catch (IOException e) {
 				logger.error("将验证码图片从广州红盾信息网拉取并发送到网页失败", e);
@@ -336,7 +320,7 @@ public class CustomerController extends AbstractController {
 	
 	/**
 	 * 从广州市工商行政管理局同步工商信息
-	 * @return
+	 * @return r
 	 */
 	@RequiresPermissions("customer:update")
 	@RequestMapping("/sync/ic")
@@ -355,7 +339,7 @@ public class CustomerController extends AbstractController {
 		String fileUrl = kd.doDownload(EtaxUtil.URL_checkcode + random, null);
 		if(fileUrl != null) {
 			logger.info("将验证码图片从税局拉取到服务器成功");
-			try(InputStream is = new FileInputStream(fileUrl);){
+			try(InputStream is = new FileInputStream(fileUrl)){
 				IOUtils.copy(is, res.getOutputStream());
 			} catch (IOException e) {
 				logger.error("将验证码图片从税局拉取并发送到网页失败", e);
@@ -367,14 +351,14 @@ public class CustomerController extends AbstractController {
 	
 	/**
 	 * 从税局同步税务信息
-	 * @return
+	 * @return r
 	 */
 	@RequiresPermissions("customer:update")
 	@RequestMapping("/sync/tax")
 	public R syncTaxInfo(String customerId, String legalPersonAccount, String legalPersonPassword, String customerName, String validCode) {
 		logger.info("收到同步税务信息请求, customerId={},legalPersonAccount={}, legalPersonPassword={}, customerName={}, valideCode={}", 
 				customerId, legalPersonAccount, legalPersonPassword, customerName, validCode);
-		return EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode/*, kd*/);
+		return EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode, kd);
 	}
 	
 	///////////////////////////////////////////商事信息/////////////////////////////////////
@@ -386,7 +370,7 @@ public class CustomerController extends AbstractController {
 	
 	/**
 	 * 从商事主体信息平台同步信息
-	 * @return
+	 * @return r
 	 */
 	@RequiresPermissions("customer:update")
 	@RequestMapping("/sync/cri")
