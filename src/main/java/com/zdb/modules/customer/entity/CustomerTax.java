@@ -81,6 +81,10 @@ public class CustomerTax implements Exportable{
     @ExcelCell(index=22,cname="法定代表人证件号码")
     private String fddbrzjhm;
     
+
+    @ExcelCell(index=23,cname="税收管理员")
+    private String swryxm;
+
     private String checkLoginState;
     
     private String ckzhzh;
@@ -327,5 +331,13 @@ public class CustomerTax implements Exportable{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSwryxm() {
+        return swryxm;
+    }
+
+    public void setSwryxm(String swryxm) {
+        this.swryxm = swryxm;
     }
 }

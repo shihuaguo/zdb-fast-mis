@@ -400,6 +400,7 @@ public class EtaxUtil {
             JSONObject taxML = gs.getJSONObject("taxML").getJSONObject("body").getJSONObject("taxML");
             JSONObject bgcxswdjb = taxML.getJSONObject("bgcxswdjb");
             JSONObject djztxx = bgcxswdjb.getJSONObject("djztxx");
+            JSONObject sgyxxVO = bgcxswdjb.getJSONObject("sgyxxVO");
             customerTax.setBsrxm(djztxx.getString("bsrxm"));                        //办税人姓名
             customerTax.setBsryddh(djztxx.getString("bsryddh"));                    //办税人电话
             customerTax.setBsrzjhm(djztxx.getString("bsrzjhm"));                    //办税人证件号码
@@ -416,6 +417,8 @@ public class EtaxUtil {
             customerTax.setNationalTaxNumber(bgcxDJSwdjbxxVO.getString("nsrsbh"));        //纳税人识别号（社会信用代码）
             JSONObject qtxx = bgcxswdjb.getJSONObject("qtxx");
             customerTax.setNationalTaxDpt(qtxx.getString("gszgsws"));
+
+            customerTax.setSwryxm(sgyxxVO.getString("swryxm"));
 
             //投资方信息
             JSONObject tzxxlist = bgcxswdjb.getJSONObject("tzxxlist");
