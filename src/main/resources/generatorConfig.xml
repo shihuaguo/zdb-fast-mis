@@ -9,28 +9,28 @@
 	    </commentGenerator>
 	
 	    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-	                    connectionURL="jdbc:mysql://39.108.168.209/test" 
-	                    userId="zhidaobao" password="QAZWSXEDC123456"/>
+	                    connectionURL="jdbc:mysql://47.106.202.94/test"
+	                    userId="zhidaobao" password="zhidaobao!123456@JJZN"/>
 	
 	    <javaModelGenerator targetPackage="com.zdb.modules.taxic.entity"
-	                        targetProject="zdb-fast-mis/src/main/java">
+	                        targetProject="src/main/java">
 	        <property name="enableSubPackages" value="true"/>
 	        <property name="trimStrings" value="true"/>
 	    </javaModelGenerator>
 	
 	    <sqlMapGenerator targetPackage="resources.mapper.taxic"
-	                     targetProject="zdb-fast-mis/src/main/resources">
+	                     targetProject="src/main">
 	        <property name="enableSubPackages" value="true"/>
 	    </sqlMapGenerator>
 	
 	    <javaClientGenerator targetPackage="com.zdb.modules.taxic.dao"
-	                         targetProject="zdb-fast-mis/src/main/java" type="XMLMAPPER">
+	                         targetProject="src/main/java" type="XMLMAPPER">
 	        <property name="enableSubPackages" value="true"/>
 	    </javaClientGenerator>
 	
 	  
 	 
-	  <table tableName="feedback_info" domainObjectName="FeedbackInfo"
+	  <table tableName="question" domainObjectName="Question"
 	         enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
 	         enableSelectByExample="false" selectByExampleQueryId="false">
 	  	<!--<property name="useActualColumnNames" value="true"/>-->

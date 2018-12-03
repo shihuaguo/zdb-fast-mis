@@ -61,9 +61,8 @@ public class FeedbackController extends AbstractController {
 		Query query = new Query(params);
 		List<FeedbackInfo> taskList = service.queryList(query);
 		int total = service.queryTotal(query);
-		
-		PageUtils pageUtil = new PageUtils(taskList, total, query.getLimit(), query.getPage());
-		return pageUtil;
+
+		return new PageUtils(taskList, total, query.getLimit(), query.getPage());
 	}
 	
 	/**

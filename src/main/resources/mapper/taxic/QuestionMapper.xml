@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zdb.modules.taxic.dao.QuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.zdb.modules.taxic.entity.Question" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.zdb.modules.taxic.entity.QuestionWithBLOBs" extends="BaseResultMap" >
+    <result column="content_summary" property="contentSummary" jdbcType="LONGVARCHAR" />
+    <result column="reply_solution" property="replySolution" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_by, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content_summary, reply_solution
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from question
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <sql id="whereClause">
+    <where>
+      <if test="content_summary != null and content_summary != ''">
+        AND (content_summary like concat('%',#{content_summary},'%')
+            or reply_solution like concat('%',#{content_summary},'%')
+        )
+      </if>
+    </where>
+  </sql>
+
+  <select id="queryList" parameterType="map" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />,<include refid="Blob_Column_List"/>
+    from question t
+    <include refid="whereClause" />
+    <choose>
+      <when test="sidx != null and sidx.trim() != ''">
+        order by ${sidx} ${order}
+      </when>
+      <otherwise>
+        order by t.id desc
+      </otherwise>
+    </choose>
+    <if test="offset != null and limit != null">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+  <select id="queryTotal" parameterType="map" resultType="java.lang.Integer">
+    select  count(*) from question t
+    <include refid="whereClause" />
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from question
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zdb.modules.taxic.entity.QuestionWithBLOBs" >
+    insert into question (id, create_by, create_time, 
+      update_time, content_summary, reply_solution
+      )
+    values (#{id,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{contentSummary,jdbcType=LONGVARCHAR}, #{replySolution,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zdb.modules.taxic.entity.QuestionWithBLOBs" >
+    insert into question
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="contentSummary != null" >
+        content_summary,
+      </if>
+      <if test="replySolution != null" >
+        reply_solution,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contentSummary != null" >
+        #{contentSummary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="replySolution != null" >
+        #{replySolution,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zdb.modules.taxic.entity.QuestionWithBLOBs" >
+    update question
+    <set >
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contentSummary != null" >
+        content_summary = #{contentSummary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="replySolution != null" >
+        reply_solution = #{replySolution,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zdb.modules.taxic.entity.QuestionWithBLOBs" >
+    update question
+    set create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content_summary = #{contentSummary,jdbcType=LONGVARCHAR},
+      reply_solution = #{replySolution,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zdb.modules.taxic.entity.Question" >
+    update question
+    set create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
