@@ -35,17 +35,17 @@ function refreshAuthCode(img){
 //法人账号登录
 function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 	var captchCode=$("#fr_captcha_"+id).val();
-	if (captchCode==''||captchCode==null){
+	if (!captchCode){
         alert("验证码不能为空");
         return false;
 	}
 
-    if (legalPersonAccount==''||legalPersonAccount==null){
+    if (!legalPersonAccount){
     	alert("法人账号不能为空");
         return false;
     }
 
-    if (legalPersonPassword==''||legalPersonPassword==null){
+    if (!legalPersonPassword){
     	alertr("法人密码信息数据库未找到,请核对");
         return false;
     }
@@ -55,7 +55,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 	$("#userName").val(legalPersonAccount);
 	$("#passWord").val(legalPersonPassword);
 	
-	var urlPre = "http://www.etax-gd.gov.cn";
+	var urlPre = "https://www.etax-gd.gov.cn";
 	
 	var ssoLogin = function(callback,callback1,callback2){
 		var url = urlPre + '/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1502697830856';
@@ -128,7 +128,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
     
     var openEtax = function(){
     	//window.open("http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&ticket=ST-640015-lw5beAOZ5QR9krlJgTyV-gddzswj");
-    	window.open(urlPre + "/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=1511852007328#none");
+    	window.open(urlPre + "/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=1511852007328#none");
     }
     
     //获取用户的checkLoginState

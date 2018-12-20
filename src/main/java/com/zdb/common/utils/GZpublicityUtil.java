@@ -36,17 +36,17 @@ import com.zdb.modules.customer.entity.CustomerIndustryCommerce;
 public class GZpublicityUtil {
 	private static final Logger logger = LoggerFactory.getLogger(GZpublicityUtil.class);
 	
-	public static final String BASE_URL_GZpublicity = "http://gsxt.gzaic.gov.cn/aiccips/GZpublicity";
+	private static final String BASE_URL_GZpublicity = "http://gsxt.gzaic.gov.cn/aiccips/GZpublicity";
 	
 	//获取工商登记信息验证码的url
 	public static final String URL_validecodeof_ic = BASE_URL_GZpublicity + "/getCode.html?random=";
 	//在广州市工商行政管理局验证验证码
-	public static final String URL_checkcodeof_ic = BASE_URL_GZpublicity + "/checkCodeGz.html?entName=&regNo=&text3=";
+	private static final String URL_checkcodeof_ic = BASE_URL_GZpublicity + "/checkCodeGz.html?entName=&regNo=&text3=";
 	
 	//获取工商登记信息的地址
-	public static final String URL_showentof_ic = BASE_URL_GZpublicity + "/showEnt.html";
+	private static final String URL_showentof_ic = BASE_URL_GZpublicity + "/showEnt.html";
 	
-	public static final String URL_loginfoof_ic = BASE_URL_GZpublicity + "/GZpublicityList.html";
+	private static final String URL_loginfoof_ic = BASE_URL_GZpublicity + "/GZpublicityList.html";
 	
 	
 	public static R syncIndAndComInfo(String socialReditOde, String validCode, HttpClientUtilKA kd) {
@@ -72,10 +72,10 @@ public class GZpublicityUtil {
 	
 	/**
 	 * 解析由页面"http://gsxt.gzaic.gov.cn/aiccips/GZpublicity/showEnt.html"返回的信息
-	 * @param res
-	 * @return
+	 * @param res res return by showEnt.html
+	 * @return result
 	 */
-	public static R parseByshowEnt(String res, HttpClientUtilKA kd) {
+	private static R parseByshowEnt(String res, HttpClientUtilKA kd) {
 		Parser parser;
 		try {
 			parser = new Parser(res);
@@ -84,7 +84,7 @@ public class GZpublicityUtil {
 			String icInfo = null;
 			if(nodes!=null) {
 				for (int i = 0; i < nodes.size(); i++) {
-					Node textnode = (Node) nodes.elementAt(i);
+					Node textnode = nodes.elementAt(i);
 					if(textnode instanceof LinkTag) {
 						LinkTag linkTag = (LinkTag)textnode;
 						String link = linkTag.getLink();
@@ -108,13 +108,19 @@ public class GZpublicityUtil {
 	/**
 	 * 解析由页面"http://gsxt.gzaic.gov.cn/aiccips/GZpublicity/GZpublicityList.html"返回的信息
 	 * 返回Customer和CustomerIndustryCommerce的信息
-	 * @param res
-	 * @return
+	 * @param res parameter
+	 * @return Customer和CustomerIndustryCommerce的信息
 	 */
-	public static R parseByGZpublicityList(String res) {
+	private static R parseByGZpublicityList(String res) {
 		Parser parser;
 		try {
-			parser = new Parser(res);
+			//增加调试信息
+			if(logger.isInfoEnabled()){
+				logger.info("showEnt.html返回信息:");
+				logger.info("substring(0, 10)={}, charAt(0)={}, charAt(0)=='<':{}", res.substring(0, 10), res.charAt(0), '<'==res.charAt(0));
+			}
+			//parser = new Parser(res);
+			parser = Parser.createParser(res, "utf-8");
 			HasAttributeFilter filter = new HasAttributeFilter("class", "trl_basic_ent");
 			NodeList nodes = parser.extractAllNodesThatMatch(filter); 
 			CustomerIndustryCommerce customerIc = null;
@@ -151,9 +157,9 @@ public class GZpublicityUtil {
 		                					customerIc.setStartDate(tcs[p+1].toPlainTextString());
 		                				}else if("注册资本".equals(plainText) && tcs.length > (p+1)) {
 		                					customerIc.setRegisterCapital(tcs[p+1].toPlainTextString());
-		                				}else if("注册资本".equals(plainText) && tcs.length > (p+1)) {
+		                				}/*else if("注册资本".equals(plainText) && tcs.length > (p+1)) {
 		                					customerIc.setRegisterCapital(tcs[p+1].toPlainTextString());
-		                				}else if("年度报告情况".equals(plainText) && tcs.length > (p+1)) {
+		                				}*/else if("年度报告情况".equals(plainText) && tcs.length > (p+1)) {
 		                					customerIc.setAnnualReport(tcs[p+1].toPlainTextString());
 		                				}else if("营业期限".equals(plainText) && tcs.length > (p+1)) {
 		                					String businessTerm = tcs[p+1].toPlainTextString();
