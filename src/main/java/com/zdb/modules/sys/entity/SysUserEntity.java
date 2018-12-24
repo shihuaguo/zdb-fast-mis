@@ -58,7 +58,11 @@ public class SysUserEntity implements Serializable {
 	 * 状态  0：禁用   1：正常
 	 */
 	private Integer status;
-	
+
+	private String wx_openid;			//微信用户的唯一标识
+	private String wx_session_key;		//微信用户的会话密钥
+	private String wx_unionid;			//用户在微信开放平台的唯一标识符。本字段在满足一定条件的情况下才返回。
+
 	/**
 	 * 角色ID列表
 	 */
@@ -208,5 +212,29 @@ public class SysUserEntity implements Serializable {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public String getWx_openid() {
+		return wx_openid;
+	}
+
+	public void setWx_openid(String wx_openid) {
+		this.wx_openid = wx_openid;
+	}
+
+	public String getWx_session_key() {
+		return wx_session_key;
+	}
+
+	public void setWx_session_key(String wx_session_key) {
+		this.wx_session_key = wx_session_key;
+	}
+
+	public String getWx_unionid() {
+		return wx_unionid;
+	}
+
+	public void setWx_unionid(String wx_unionid) {
+		this.wx_unionid = wx_unionid;
 	}
 }

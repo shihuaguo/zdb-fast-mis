@@ -71,6 +71,10 @@
 	<select id="queryByUserName" resultType="com.zdb.modules.sys.entity.SysUserEntity">
 		select * from sys_user where username = #{username}
 	</select>
+
+	<select id="queryByWxOpenId" resultType="com.zdb.modules.sys.entity.SysUserEntity">
+		select * from sys_user where wx_openid = #{wxOpenId}
+	</select>
 	
 	<select id="queryNameList" parameterType="map" resultType="String">
     	select username from sys_user t where t.username like #{term}
@@ -114,6 +118,8 @@
 			<if test="email != null">`email` = #{email}, </if>
 			<if test="mobile != null">`mobile` = #{mobile}, </if>
 			<if test="status != null">`status` = #{status}, </if>
+			<if test="wx_openid != null">`wx_openid` = #{wx_openid}, </if>
+			<if test="wx_session_key != null">`wx_session_key` = #{wx_session_key}, </if>
 		</set>
 		where user_id = #{userId} 
 		<if test="createUserId != null">

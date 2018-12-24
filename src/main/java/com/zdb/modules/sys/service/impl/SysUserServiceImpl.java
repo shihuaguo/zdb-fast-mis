@@ -54,7 +54,12 @@ public class SysUserServiceImpl implements SysUserService {
 	public SysUserEntity queryByUserName(String username) {
 		return sysUserDao.queryByUserName(username);
 	}
-	
+
+	@Override
+	public SysUserEntity queryByWxOpenId(String wxOpenId) {
+		return sysUserDao.queryByWxOpenId(wxOpenId);
+	}
+
 	@Override
 	public SysUserEntity queryObject(Long userId) {
 		return sysUserDao.queryObject(userId);
@@ -107,6 +112,10 @@ public class SysUserServiceImpl implements SysUserService {
 		
 		//保存用户与角色关系
 		sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
+	}
+
+	public void updateWxInfo(SysUserEntity user){
+		sysUserDao.update(user);
 	}
 
 	@Override

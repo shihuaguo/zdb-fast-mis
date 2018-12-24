@@ -39,4 +39,8 @@ spring:
                         
 ueditor:
     #upload-dir: /data/zdb/upload               
-    upload-dir: D:\workspace-zhidaobao\upload               
+    upload-dir: D:\workspace-zhidaobao\upload
+
+weixin:
+    appId: wx236424733c20b3b8
+    appSecret: 01f48140676fabae5726674bc740113c

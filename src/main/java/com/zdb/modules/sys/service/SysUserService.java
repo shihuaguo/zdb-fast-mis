@@ -30,7 +30,10 @@ public interface SysUserService {
 	 * 根据用户名，查询系统用户
 	 */
 	SysUserEntity queryByUserName(String username);
-	
+
+	//根据微信的openId查询用户
+	SysUserEntity queryByWxOpenId(String wxOpenId);
+
 	/**
 	 * 根据用户ID，查询用户
 	 * @param userId
@@ -62,6 +65,9 @@ public interface SysUserService {
 	 * 修改用户
 	 */
 	void update(SysUserEntity user);
+
+	//更新微信信息
+	void updateWxInfo(SysUserEntity user);
 	
 	/**
 	 * 删除用户
