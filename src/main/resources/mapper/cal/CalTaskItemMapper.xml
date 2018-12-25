@@ -64,7 +64,7 @@
     from cal_task_item t 
     <!-- left join sys_user u on t.employee_id=u.user_id -->
     INNER JOIN `cal_task` ct ON t.`task_id`=ct.`id`
-    <include refid="whereClause"></include>
+    <include refid="whereClause"/>
     <choose>
 		<when test="sidx != null and sidx.trim() != ''">
 			order by ${sidx} ${order}

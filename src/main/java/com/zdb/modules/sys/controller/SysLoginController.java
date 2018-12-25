@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -95,13 +93,13 @@ public class SysLoginController extends AbstractController {
         //如果没有输入用户名,采用静默方式登录
         if(StringUtils.isBlank(username)){
             user = sysUserService.queryByWxOpenId(openid);
-            if(user == null || StringUtils.isBlank(user.getWx_openid())
-                    || !Objects.equals(openid, user.getWx_openid())){
+            if(user == null || StringUtils.isBlank(user.getWxOpenid())
+                    || !Objects.equals(openid, user.getWxOpenid())){
                 return R.error("用户信息不正确");
             }
         }else {
-            user.setWx_openid(openid);
-            user.setWx_session_key(session_key);
+            user.setWxOpenid(openid);
+            user.setWxSessionKey(session_key);
             user.setPassword(null);
             sysUserService.updateWxInfo(user);
         }

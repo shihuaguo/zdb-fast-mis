@@ -94,9 +94,8 @@ public class CalTaskController extends AbstractController {
 		Query query = new Query(params);
 		List<CalTask> taskList = calTaskService.queryList(query);
 		int total = calTaskService.queryTotal(query);
-		
-		PageUtils pageUtil = new PageUtils(taskList, total, query.getLimit(), query.getPage());
-		return pageUtil;
+
+		return new PageUtils(taskList, total, query.getLimit(), query.getPage());
 	}
 	
 	/**
@@ -248,8 +247,7 @@ public class CalTaskController extends AbstractController {
 		Query query = new Query(params);
 		List<CalTaskItem> list = taskItemService.queryList(query);
 		int total = taskItemService.queryTotal(query);
-		PageUtils pageUtil = new PageUtils(list, total, query.getLimit(), query.getPage());
-		return pageUtil;
+		return new PageUtils(list, total, query.getLimit(), query.getPage());
 	}
 	
 	/**
@@ -284,7 +282,7 @@ public class CalTaskController extends AbstractController {
 		String names = taskItem.getEmployeeName();
 		if(StringUtils.isNotBlank(names)) {
 			String[] ss = names.split(",");
-			List<Integer> ids = Arrays.asList(ss).stream().filter(s -> {
+			List<Integer> ids = Arrays.stream(ss).filter(s -> {
 				return s != null && !s.trim().equals("");
 			}).map(s -> {
 				SysUserEntity user = userService.queryByUserName(s);
