@@ -50,7 +50,7 @@
 	            AND start_time <![CDATA[ >= ]]> #{start}
 	        </if>
 	        <if test="end != null">
-	           AND (end_time <![CDATA[ <= ]]> #{end} or end_time is null)
+	           AND (start_time <![CDATA[ <= ]]> #{end} or start_time is null)
 	        </if>
 	    </where>
   </sql>
