@@ -118,8 +118,8 @@
 			<if test="email != null">`email` = #{email}, </if>
 			<if test="mobile != null">`mobile` = #{mobile}, </if>
 			<if test="status != null">`status` = #{status}, </if>
-			<if test="wx_openid != null">`wx_openid` = #{wx_openid}, </if>
-			<if test="wx_session_key != null">`wx_session_key` = #{wx_session_key}, </if>
+			<if test="wxOpenid != null">`wx_openid` = #{wxOpenid}, </if>
+			<if test="wxSessionKey != null">`wx_session_key` = #{wxSessionKey}, </if>
 		</set>
 		where user_id = #{userId} 
 		<if test="createUserId != null">
