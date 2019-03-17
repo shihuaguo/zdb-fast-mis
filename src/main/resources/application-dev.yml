@@ -4,10 +4,12 @@ spring:
         driverClassName: com.mysql.jdbc.Driver
         druid:
             first:  #数据源1
+# 线上数据库             url: jdbc:mysql://47.106.202.94:3306/zdb_financial?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 url: jdbc:mysql://47.106.202.94:3306/test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: zhidaobao
                 password: zhidaobao!123456@JJZN
             second:  #数据源2
+# 线上数据库               url: jdbc:mysql://47.106.202.94:3306/zdb_financial?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 url: jdbc:mysql://47.106.202.94:3306/test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 username: zhidaobao
                 password: zhidaobao!123456@JJZN

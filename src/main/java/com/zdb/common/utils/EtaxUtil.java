@@ -364,12 +364,17 @@ public class EtaxUtil {
             url = buildFetchUrl("GS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
             String gsres = kd.doGet(url, null);
             logger.info("抓取国税信息，返回结果={}", gsres);
-
             //抓取地税信息
             //url = URL_fetch+"?t="+System.currentTimeMillis()+"&bw=%7B%22taxML%22:%7B%22head%22:%7B%22gid%22:%22311085A116185FEFE053C2000A0A5B63%22,%22sid%22:%22yhscx.swdjcx.nsrjcxx%22,%22tid%22:%22+%22,%22version%22:%22%22%7D,%22body%22:%7B,%22gdlxbz%22:%22DS%22%7D%7D%7D";
-            url = buildFetchUrl("DS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
-            String dsres = kd.doGet(url, null);
-            logger.info("抓取地税信息，返回结果={}", dsres);
+            String dsres = null ;
+            try {
+                url = buildFetchUrl("DS", gsnsrsbh, "yhscx.swdjcx.nsrjcxx");
+                dsres = kd.doGet(url, null);
+                logger.info("抓取地税信息，返回结果={}", dsres);
+            }catch (Exception e){
+                logger.error("抓取地税信息，请求报错：{}",e );
+            }
+
 
             //抓取购票员信息
             url = URL_queryGpycx;
@@ -386,7 +391,7 @@ public class EtaxUtil {
             logger.info("抓取存款账户账号报告，返回结果={}", ckzhzhbg);
             return parseGsDs(gsres, dsres, gpyxx, checkLoginRes, ckzhzhbg);
         } catch (Exception e) {
-            logger.error("", e);
+            logger.error("同步国税信息报错：{}", e);
             return R.error(e.getMessage());
         }
     }
@@ -436,14 +441,19 @@ public class EtaxUtil {
                     customerTax.setInvestorInfo(((JSONObject) tzxxObj).getString("tzfmc"));
                 }
             }
+            if (StringUtils.isNotBlank(dsres)){
+                //地税信息
+                JSONObject ds = JSONObject.parseObject(dsres);
+                taxML = ds.getJSONObject("taxML").getJSONObject("body").getJSONObject("taxML");
 
-            //地税信息
-            JSONObject ds = JSONObject.parseObject(dsres);
-            taxML = ds.getJSONObject("taxML").getJSONObject("body").getJSONObject("taxML");
-            bgcxswdjb = taxML.getJSONObject("bgcxswdjb");
+                bgcxswdjb = taxML.getJSONObject("bgcxswdjb");
+                if (null != bgcxswdjb){
+                    qtxx = bgcxswdjb.getJSONObject("qtxx");
+                    customerTax.setLocalTaxDpt(qtxx.getString("dszgsws"));
+                }
+            }
 
-            qtxx = bgcxswdjb.getJSONObject("qtxx");
-            customerTax.setLocalTaxDpt(qtxx.getString("dszgsws"));
+
 
             //购票员信息
             JSONObject gpyjs = JSONObject.parseObject(gpyxx);
