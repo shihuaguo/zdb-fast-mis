@@ -62,6 +62,10 @@ public class CustomerController extends AbstractController {
 		if(StringUtils.isNotBlank(customerName)) {
 			params.put("customerName", "%" + customerName + "%");
 		}
+		String customerNameOrNo = (String) params.get("customerNameOrNo");
+		if(StringUtils.isNotBlank(customerNameOrNo)) {
+			params.put("customerNameOrNo", "%" + customerNameOrNo + "%");
+		}
 	}
 
 	/**

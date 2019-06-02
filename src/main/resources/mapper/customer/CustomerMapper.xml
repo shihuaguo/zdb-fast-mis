@@ -128,6 +128,10 @@
   
   <sql id="whereClause">
         <where>
+          <if test="customerNameOrNo != null and customerNameOrNo != ''">
+            AND ( customer_name like #{customerNameOrNo}
+            OR customer_no like #{customerNameOrNo} )
+          </if>
 	        <if test="customerName != null and customerName != ''">
 	            AND customer_name like #{customerName}
 	        </if>
