@@ -1,12 +1,9 @@
-/**
- * 
- */
 package com.zdb.common.utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -78,7 +75,11 @@ public class GZpublicityUtil {
 	private static R parseByshowEnt(String res, HttpClientUtilKA kd) {
 		Parser parser;
 		try {
-			parser = new Parser(res);
+			char c = res.charAt(0);
+			if(c == '\uFEFF'){
+				res = res.substring(1);
+			}
+			parser = new Parser(res.trim());
 			LinkStringFilter filter = new LinkStringFilter(URL_loginfoof_ic);
 			NodeList nodes = parser.extractAllNodesThatMatch(filter); 
 			String icInfo = null;

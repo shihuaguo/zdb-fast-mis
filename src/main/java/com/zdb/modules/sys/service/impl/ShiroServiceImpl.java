@@ -8,7 +8,7 @@ import com.zdb.modules.sys.entity.SysMenuEntity;
 import com.zdb.modules.sys.entity.SysUserEntity;
 import com.zdb.modules.sys.entity.SysUserTokenEntity;
 import com.zdb.modules.sys.service.ShiroService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

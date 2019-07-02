@@ -1,7 +1,7 @@
 package com.zdb.common.validator;
 
 import com.zdb.common.exception.RRException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 数据校验

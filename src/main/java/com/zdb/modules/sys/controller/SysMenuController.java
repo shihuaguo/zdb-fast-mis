@@ -7,7 +7,7 @@ import com.zdb.common.utils.R;
 import com.zdb.modules.sys.entity.SysMenuEntity;
 import com.zdb.modules.sys.service.ShiroService;
 import com.zdb.modules.sys.service.SysMenuService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,14 +1,9 @@
-/**    
- * @filename RandomUtils.java     
- * @version www.mindai.com  
- * @date 2016年5月31日     
- */
 package com.zdb.common.utils;
 
-import java.util.Random;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import java.util.Random;
 
 /**
  * 随机生成数字或者字符串的工具类.

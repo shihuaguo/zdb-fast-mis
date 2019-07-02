@@ -2,7 +2,7 @@ package com.zdb.modules.sys.oauth2;
 
 import com.google.gson.Gson;
 import com.zdb.common.utils.R;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -27,11 +27,9 @@ public class OAuth2Filter extends AuthenticatingFilter {
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
         //获取请求token
         String token = getRequestToken((HttpServletRequest) request);
-
         if(StringUtils.isBlank(token)){
             return null;
         }
-
         return new OAuth2Token(token);
     }
 

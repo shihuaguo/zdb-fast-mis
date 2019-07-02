@@ -10,6 +10,7 @@ import com.zdb.common.validator.group.UpdateGroup;
 import com.zdb.modules.sys.controller.AbstractController;
 import com.zdb.modules.taxic.entity.QuestionWithBLOBs;
 import com.zdb.modules.taxic.service.IQuestionService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/taxic/question")
+@Slf4j
 public class QuestionController extends AbstractController {
 	
 	private final IQuestionService service;
@@ -46,7 +48,7 @@ public class QuestionController extends AbstractController {
 	}
 	
 	protected PageUtils queryList(Map<String, Object> params){
-		logger.info("查询问题列表,params={}", params);
+		log.info("查询问题列表,params={}", params);
 		Query query = new Query(params);
 		List<QuestionWithBLOBs> list = service.queryList(query);
 		int total = service.queryTotal(query);

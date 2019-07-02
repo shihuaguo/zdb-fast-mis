@@ -7,11 +7,9 @@ import com.zdb.modules.sys.entity.SysUserEntity;
 import com.zdb.modules.sys.service.SysRoleService;
 import com.zdb.modules.sys.service.SysUserRoleService;
 import com.zdb.modules.sys.service.SysUserService;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
-
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.zdb.modules.oss.cloud;
 
 import com.zdb.common.utils.DateUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
 import java.util.Date;

@@ -5,7 +5,7 @@ import com.zdb.modules.job.entity.ScheduleJobEntity;
 import com.zdb.modules.job.entity.ScheduleJobLogEntity;
 import com.zdb.modules.job.service.ScheduleJobLogService;
 import com.zdb.common.utils.SpringContextUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;

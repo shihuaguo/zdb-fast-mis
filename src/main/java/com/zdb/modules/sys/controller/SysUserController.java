@@ -1,18 +1,5 @@
 package com.zdb.modules.sys.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.zdb.common.annotation.SysLog;
 import com.zdb.common.utils.Constant;
 import com.zdb.common.utils.PageUtils;
@@ -25,6 +12,14 @@ import com.zdb.common.validator.group.UpdateGroup;
 import com.zdb.modules.sys.entity.SysUserEntity;
 import com.zdb.modules.sys.service.SysUserRoleService;
 import com.zdb.modules.sys.service.SysUserService;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 系统用户

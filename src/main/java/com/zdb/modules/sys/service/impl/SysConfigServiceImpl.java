@@ -6,7 +6,7 @@ import com.zdb.modules.sys.dao.SysConfigDao;
 import com.zdb.modules.sys.entity.SysConfigEntity;
 import com.zdb.modules.sys.redis.SysConfigRedis;
 import com.zdb.modules.sys.service.SysConfigService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

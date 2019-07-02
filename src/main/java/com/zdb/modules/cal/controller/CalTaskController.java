@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ import com.zdb.modules.sys.service.SysUserService;
  */
 @RestController
 @RequestMapping("/cal/task")
+@Slf4j
 public class CalTaskController extends AbstractController {
 	
 	@Autowired
@@ -83,7 +85,7 @@ public class CalTaskController extends AbstractController {
 	}
 	
 	protected PageUtils queryList(Map<String, Object> params){
-		logger.info("查询任务列表,params={}", params);
+		log.info("查询任务列表,params={}", params);
 		//查询列表数据
 		fuzzlyQuery(params);
 		Integer userId = getUserId().intValue();
@@ -100,8 +102,6 @@ public class CalTaskController extends AbstractController {
 	
 	/**
 	 * 导出到Excel
-	 * @param params
-	 * @param res
 	 */
 	@RequestMapping("/export")
 	@RequiresPermissions("cal:task:save")
@@ -238,7 +238,7 @@ public class CalTaskController extends AbstractController {
 	}
 	
 	private PageUtils queryTaskItemList(@RequestParam Map<String, Object> params) {
-		logger.info("根据任务获取事项,params={}", params);
+		log.info("根据任务获取事项,params={}", params);
 		Integer userId = getUserId().intValue();
 		//如果是超级管理员或者有管理员角色,则可以查看所有任务
 		if(userId > 1 && !sysUserService.hasAdminRole(userId.longValue())) {
@@ -252,8 +252,6 @@ public class CalTaskController extends AbstractController {
 	
 	/**
 	 * 导出到Excel
-	 * @param params
-	 * @param res
 	 */
 	@RequestMapping("/exportTaskItem")
 	@RequiresPermissions("cal:task:save")
@@ -311,11 +309,11 @@ public class CalTaskController extends AbstractController {
 	@RequestMapping("/item/update")
 	@RequiresPermissions("cal:task:update")
 	public R updateTaskItem(CalTaskItem taskItem, Boolean updateTaskId){
-		logger.info("修改任务事项,taskItem={}", JSON.toJSONString(taskItem));
+		log.info("修改任务事项,taskItem={}", JSON.toJSONString(taskItem));
 		Integer userId = getUserId().intValue();
 		
 		//检查是否需要修改taskId
-		logger.info("是否需要修改taskId={}", updateTaskId);
+		log.info("是否需要修改taskId={}", updateTaskId);
 		if(updateTaskId != null && !updateTaskId) {
 			taskItem.setTaskId(null);
 		}
@@ -324,7 +322,7 @@ public class CalTaskController extends AbstractController {
 			//检查状态是否有修改
 			CalTaskItem cti = taskItemService.queryObject(taskItem.getId());
 			if(cti.getStatus().intValue() == taskItem.getStatus()) {
-				logger.info("要修改的状态和数据库状态相同,status={}", cti.getStatus());
+				log.info("要修改的状态和数据库状态相同,status={}", cti.getStatus());
 			}else {
 				//检查是否有提交过
 				Map<String, Object> params = new HashMap<>();
@@ -409,7 +407,7 @@ public class CalTaskController extends AbstractController {
 	@RequestMapping("/verify_list")
 	@RequiresPermissions("cal:task:list")
 	public R verifyList(@RequestParam Map<String, Object> params){
-		logger.info("查询任务待审核列表, params={}", params);
+		log.info("查询任务待审核列表, params={}", params);
 		//查询列表数据
 		fuzzlyQuery(params);
 		Query query = new Query(params);
@@ -428,7 +426,7 @@ public class CalTaskController extends AbstractController {
 	@RequestMapping("/item/verify")
 	@RequiresPermissions("cal:task:verify")
 	public R verifyTaskItem(@RequestBody CalTaskVerify taskVerify){
-		logger.info("审批任务事项,参数={}", JSON.toJSONString(taskVerify));
+		log.info("审批任务事项,参数={}", JSON.toJSONString(taskVerify));
 		Integer userId = getUserId().intValue();
 		taskVerify.setVerifyUser(userId);
 		int n = taskItemService.verifyTaskItem(taskVerify);

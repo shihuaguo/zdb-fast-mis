@@ -1,17 +1,5 @@
 package com.zdb.modules.taxic.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.zdb.common.annotation.SysLog;
 import com.zdb.common.utils.PageUtils;
 import com.zdb.common.utils.Query;
@@ -22,6 +10,14 @@ import com.zdb.common.validator.group.UpdateGroup;
 import com.zdb.modules.sys.controller.AbstractController;
 import com.zdb.modules.taxic.entity.FeedbackInfo;
 import com.zdb.modules.taxic.service.ITaxIcService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 信息反馈Controller
@@ -32,11 +28,16 @@ import com.zdb.modules.taxic.service.ITaxIcService;
  */
 @RestController
 @RequestMapping("/taxic/feedback")
+@Slf4j
 public class FeedbackController extends AbstractController {
 	
+	private final ITaxIcService service;
+
 	@Autowired
-	private ITaxIcService service;
-	
+	public FeedbackController(ITaxIcService service) {
+		this.service = service;
+	}
+
 	protected void fuzzlyQuery(Map<String, Object> params) {
 		String feedbackInfo = (String) params.get("feedbackInfo");
 		if(StringUtils.isNotBlank(feedbackInfo)) {
@@ -55,7 +56,7 @@ public class FeedbackController extends AbstractController {
 	}
 	
 	protected PageUtils queryList(Map<String, Object> params){
-		logger.info("查询任务列表,params={}", params);
+		log.info("查询任务列表,params={}", params);
 		//查询列表数据
 		fuzzlyQuery(params);
 		Query query = new Query(params);

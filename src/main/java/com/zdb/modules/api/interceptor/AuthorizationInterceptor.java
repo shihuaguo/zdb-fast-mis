@@ -5,7 +5,7 @@ import com.zdb.common.exception.RRException;
 import com.zdb.modules.api.annotation.AuthIgnore;
 import com.zdb.modules.api.entity.TokenEntity;
 import com.zdb.modules.api.service.TokenService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;

@@ -7,7 +7,7 @@ import com.zdb.modules.sys.entity.SysUserEntity;
 import com.zdb.modules.sys.service.SysUserService;
 import com.zdb.modules.sys.service.SysUserTokenService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
