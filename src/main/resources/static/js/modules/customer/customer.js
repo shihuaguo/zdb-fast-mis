@@ -104,8 +104,7 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		q:{
-			customerName: null,
-			customerNo:null
+            customerNameOrNo: null,
 		},
 		showList: true,			//显示列表
 		isSyncIc: false,		//是否同步了工商信息
@@ -444,7 +443,8 @@ var vm = new Vue({
 				vm.showList = true;
 				var page = $("#jqGrid").jqGrid('getGridParam','page');
 				$("#jqGrid").jqGrid('setGridParam',{ 
-					postData:{'customerName': vm.q.customerName,'customerNo':vm.q.customerNo},
+
+                    postData:{'customerNameOrNo': vm.q.customerNameOrNo},
 					page:page
 				}).trigger("reloadGrid");
 			};
