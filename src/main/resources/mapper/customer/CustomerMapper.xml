@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="customer_type" jdbcType="VARCHAR" property="customerType" />
     <result column="region" jdbcType="VARCHAR" property="region" />
     <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
     <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
@@ -22,6 +23,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="customer_type" jdbcType="VARCHAR" property="customerType" />
     <result column="region" jdbcType="VARCHAR" property="region" />
     <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
     <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
@@ -43,6 +45,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="customer_type" jdbcType="VARCHAR" property="customerType" />
     <result column="region" jdbcType="VARCHAR" property="region" />
     <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
     <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
@@ -68,6 +71,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="customer_no" jdbcType="VARCHAR" property="customerNo" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
+    <result column="customer_type" jdbcType="VARCHAR" property="customerType" />
     <result column="region" jdbcType="VARCHAR" property="region" />
     <result column="tax_id_number" jdbcType="VARCHAR" property="taxIdNumber" />
     <result column="legal_person" jdbcType="VARCHAR" property="legalPerson" />
@@ -116,7 +120,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    id, customer_no, customer_name, region, tax_id_number, legal_person, legal_person_id, 
+    id, customer_no, customer_name, customer_type, region, tax_id_number, legal_person, legal_person_id,
     bank_name, bank_account, bank_phone, remark, status, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -132,28 +136,31 @@
             AND ( customer_name like #{customerNameOrNo}
             OR customer_no like #{customerNameOrNo} )
           </if>
-	        <if test="customerName != null and customerName != ''">
-	            AND customer_name like #{customerName}
-	        </if>
-	        <if test="customerNo != null and customerNo != ''">
-	            AND customer_no = #{customerNo}
-	        </if>
-	        <if test="status != null">
-	            AND status = #{status}
-	        </if>
-	        <if test="filterByUser != null and filterByUser != ''">
-	            AND t.id in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{userId})
-	        </if>
-	        <if test="c_filter != null and employee_id != null">
-	            <if test="employee_id > 0">
-		            <if test="c_filter == 1">
-		            	AND t.id in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{employee_id})
-		            </if>
-		            <if test="c_filter == 2">
-		            	AND t.id not in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{employee_id})
-		            </if>
-		        </if>
-	        </if>
+          <if test="customerName != null and customerName != ''">
+            AND customer_name like #{customerName}
+          </if>
+          <if test="customerType != null and customerType != ''">
+            AND customer_type = #{customerType}
+          </if>
+          <if test="customerNo != null and customerNo != ''">
+            AND customer_no = #{customerNo}
+          </if>
+          <if test="status != null">
+            AND status = #{status}
+          </if>
+          <if test="filterByUser != null and filterByUser != ''">
+            AND t.id in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{userId})
+          </if>
+          <if test="c_filter != null and employee_id != null">
+            <if test="employee_id > 0">
+              <if test="c_filter == 1">
+                AND t.id in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{employee_id})
+              </if>
+              <if test="c_filter == 2">
+                AND t.id not in (SELECT t.`customer_id` FROM `employee_customer` t WHERE t.`user_id`=#{employee_id})
+              </if>
+            </if>
+          </if>
 	    </where>
   </sql>
   
@@ -212,7 +219,7 @@
   </select>
   
   <select id="queryListWithTax" parameterType="map" resultMap="ResultMapWithTax">
-    SELECT t.id, t.customer_no, t.customer_name, t.region, t.tax_id_number, t.legal_person, t.legal_person_id, 
+    SELECT t.id, t.customer_no, t.customer_name, t.customer_type,t.region, t.tax_id_number, t.legal_person, t.legal_person_id,
     t.bank_name, t.bank_account, t.bank_phone, t.remark, t.create_time, t.update_time
     ,t1.`legal_person_account`,t1.`legal_person_password`
     ,t1.`local_tax_account`,t1.`local_tax_pwd`
@@ -237,7 +244,7 @@
   </select>
   
   <select id="queryListWithIcTax" parameterType="map" resultMap="ResultMapWithIcTax">
-    SELECT t.id, t.customer_no, t.customer_name, t.region, t.tax_id_number, t.legal_person, t.legal_person_id, 
+    SELECT t.id, t.customer_no, t.customer_name, t.customer_type,t.region, t.tax_id_number, t.legal_person, t.legal_person_id,
 	    t.bank_name, t.bank_account, t.bank_phone, t.remark, t.create_time, t.update_time,
 	    t1.social_redit_ode,t1.tax_id_number,t1.register_addr,t1.register_capital,t1.start_date,t1.business_term,
 	    t1.shareholder,t1.industry_commerce_account,t1.industry_commerce_pwd,t1.annual_report,
@@ -301,6 +308,9 @@
       <if test="customerName != null">
         customer_name,
       </if>
+      <if test="customerType != null">
+        customer_type,
+      </if>
       <if test="region != null">
         region,
       </if>
@@ -339,6 +349,9 @@
       <if test="customerName != null">
         #{customerName,jdbcType=VARCHAR},
       </if>
+      <if test="customerType != null">
+        #{customerType,jdbcType=VARCHAR},
+      </if>
       <if test="region != null">
         #{region,jdbcType=VARCHAR},
       </if>
@@ -376,6 +389,9 @@
       </if>
       <if test="customerName != null">
         customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null">
+        customer_type = #{customerType,jdbcType=VARCHAR},
       </if>
       <if test="region != null">
         region = #{region,jdbcType=VARCHAR},

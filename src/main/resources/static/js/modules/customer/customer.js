@@ -4,6 +4,7 @@ if(status == null){
 }
 
 $(function () {
+	//getCustomerTypes();
     $("#jqGrid").jqGrid({
         url: baseURL + 'customer/list?status='+status,
         datatype: "json",
@@ -14,6 +15,7 @@ $(function () {
 				//return "<div class='table-cell'>" + value + "</div>";
 				return "<div class='table-cell'>" + value + "</div>";
 			}},
+			{ label: '客户类别', name: 'customerType', index: "customer_type", width: 20},
 			{ label: '区域', name: 'region',index: "region",  width: 30,sortable:false},
 			{ label: '异常信息', name: 'customerIndCom.abnormalList',width: 40,sortable:false,formatter: function(value, options, row){
 				if(value){
@@ -105,6 +107,7 @@ var vm = new Vue({
 	data:{
 		q:{
             customerNameOrNo: null,
+			customerType:null
 		},
 		showList: true,			//显示列表
 		isSyncIc: false,		//是否同步了工商信息
@@ -115,6 +118,7 @@ var vm = new Vue({
 		customerTax:{},			//工商登记信息
 		customerCri:{},			//商事主体信息
 		customerList:{},
+		customerTypes:[],		//客户类型枚举
 		status:0
 	},
 	methods: {
@@ -444,7 +448,7 @@ var vm = new Vue({
 				var page = $("#jqGrid").jqGrid('getGridParam','page');
 				$("#jqGrid").jqGrid('setGridParam',{ 
 
-                    postData:{'customerNameOrNo': vm.q.customerNameOrNo},
+                    postData:vm.q,
 					page:page
 				}).trigger("reloadGrid");
 			};
@@ -454,6 +458,15 @@ var vm = new Vue({
 			}else {
 				toList();
 			}
+		},
+		getCustomerTypes: function(){
+			$.get(baseURL + 'sys/config/list', {'key':'customer_type','page':1,'limit':10}, function(r){
+				console.log(r);
+				if(r.code === 0 && r.page && r.page.list && r.page.list.length > 0){
+					var v = r.page.list[0].value;
+					vm.customerTypes = v.split(",");
+				}
+			});
 		},
 		exportExcel: function(){
 			//$.post(baseURL + "customer/export",{'customerName': vm.q.customerName,'customerNo':vm.q.customerNo,'page':1,'limit':1000},function(r){});
@@ -471,5 +484,19 @@ var vm = new Vue({
         }
 	}
 });
+
+vm.getCustomerTypes();
+
+//var customer_types = [];
+
+/*function getCustomerTypes(){
+	$.get(baseURL + 'sys/config/list', {'key':'customer_type','page':1,'limit':10}, function(r){
+		console.log(r);
+		if(r.code === 0 && r.page && r.page.list && r.page.list.length > 0){
+			var v = r.page.list[0].value;
+			customer_types = v.split(",");
+		}
+	});
+}*/
 
 vm.status = status;

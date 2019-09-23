@@ -36,6 +36,13 @@
 			<div class="form-group col-md-2">
 				<input type="text" class="form-control" v-model="q.customerNameOrNo" @keyup.enter="query" placeholder="客户名称/编号">
 			</div>
+            <div class="form-group col-md-1">
+                <select v-model="q.customerType" class="form-control">
+                    <option v-for="type in customerTypes" v-bind:value="type">
+                        {{ type}}
+                    </option>
+                </select>
+            </div>
 			<a v-if="hasPermission('customer:list')" class="btn btn-default" @click="query">查询</a>
 			<a v-if="hasPermission('customer:save') && status==0" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			<a v-if="hasPermission('customer:update') && status==0" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
@@ -74,6 +81,16 @@
 						   	<div class="col-sm-10">
 						      <input type="text" class="form-control" v-model="customer.customerName" placeholder="客户名称"/>
 						    </div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">客户类别</div>
+							<div class="col-sm-10">
+								<select v-model="customer.customerType" class="form-control">
+									<option v-for="type in customerTypes" v-bind:value="type">
+										{{ type }}
+									</option>
+								</select>
+							</div>
 						</div>
 						<div class="form-group">
 						   	<div class="col-sm-2 control-label">社会信用代码</div>
@@ -392,7 +409,7 @@
 </div>
 
 <script src="../../js/validation.js"></script>
-<script src="../../js/modules/customer/customer.js?v=20180719"></script>
+<script src="../../js/modules/customer/customer.js?v=20190923"></script>
 <script type="text/javascript">
 	//工商局的验证码url
 	var baseURLOfIc = baseURL + "customer/validCode/indAndCom?random=";

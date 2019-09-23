@@ -14,6 +14,9 @@ public class Customer implements Exportable{
     @ExcelCell(index=2,cname="客户名称")
     private String customerName;
 
+    @ExcelCell(index=2,cname="客户类型")
+    private String customerType;
+
     @ExcelCell(index=3,cname="区域")
     private String region;
 
@@ -79,6 +82,14 @@ public class Customer implements Exportable{
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName == null ? null : customerName.trim();
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 
     public String getRegion() {
