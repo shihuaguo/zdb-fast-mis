@@ -28,6 +28,11 @@
 <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
 <script src="../../js/common.js?v=20180201001"></script>
 <script src="../../js/enums.js"></script>
+<script src="../../js/base64.js?v=20171011"></script>
+	<!-- 此段必须要引入 t为小时级别的时间戳 -->
+	<link type="text/css" href="//g.alicdn.com/sd/ncpc/nc.css?t=1504708202648" rel="stylesheet"/>
+	<script type="text/javascript" src="//g.alicdn.com/sd/ncpc/nc.js?t=1504708202648"></script>
+	<!-- 引入结束 -->
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -235,16 +240,61 @@
 			<div class="col-md-6">
 	    		<div class="panel panel-default">
 					<div class="panel-heading">税务登记信息</div>
+
+					<!--登陆表单 -->
+					<form id="upLoginForm" style="display:none;"
+						  action="http://www.etax-gd.gov.cn/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1511852007328" method="post" target="hiddenFrame">
+						<input type="hidden" name="lt" value="LT-225432-ebJXgZ0Sr0saGBUKL6eC-gddzswj">
+						<input type="hidden" name="execution" value="4902c759-7c77-409e-9f51-6c844c7e6ba4_ZXlKaGJHY2lPaUpJVXpVeE1pSjkuYVRCNkwxZEdjR1JJTm1wWWRsWkVjRlIwVmtOU2RVYzNUSFJTU0VoalltWldjbkJGUWtJdmJXSldOV3BxTkVkMk5FaHJkMmhFVjNsbGMzVnFSa0p5ZGlzMmRtVmxTV29yUmk5alprUXpiMU53VlZSTE4zTTNjR2t4TUd4SFpYZHZURWR1WW5VMmIxUlZjVFJQVm5JeWNUUm1hMk5GWm1zeVRuRjBObVZ1UVdSblpFUnZiWFZLV21ocE5EZE9hMXBYYlRFelREWnVTMnhtYVVNeU5qRTNSRlZ1VG5CRVozZHFOazE2UVhJeGFtbDJNVEpDZVZnNGFHUnFTMDQ0Y0dsa2JsWnpWREJNVVVaUVpGQXZNWFZzZWpObGMzRklTMnBvTW5ONlZVeDBhbXhzZDNwbWJIZzFXR1pSY1VwQlYybHhSR2xpTlVNME1tMTJVblJwZEhoWllYYzFlbkpKV2pka2Nua3ZhbGczTWxodFZWUnlVR2h5TjFRNWVtcGtlVVZhY2tGMlMwOWpXVlpxTjJoaVVYWjRPVGxSYzFWTFltODBSa3RSVTA1T2MwNVBWRGhxUTB4eE5ISkdWQ3RKYTNrME5uTnJOV3g2V0c1R2VsVnNMMlp1U1VsWGFVdEdjMU0yYnpFdlUyWjBVa0pXUTI1VGIzcG9WVmsxT1VWUVNWbDRWMnBrWkdkS1dqZ3ljREJsUldsUE1IRlpXbXQwV1hKRVVEWXhjbGN2YWs5RlZIUjJaVFE0V0U5VlVrTTVNa3cwUWpkUFJ6Rm1Xa2d6U0ZkalRGTXJXbUptT1VGeGFsZE5kbVl2ZUVNd1ozTXJiM3BOUWxSU1JuSmhZMHMwT1ZGeU5XSkllSGhQZGxKVEwyUkdkWHBsTnpRclNtRnNiM2N2ZFROdWVVeEpiWFpwVWpGd2IzaG9lbUl2WkdzeFIwOTJXVVF2YUU1SFZrVldSVk5qYTFoT1ZtdHVaRk14TTJobk5VTk9TRVZCVm10aWNVOU1ObmhRUWtsRE4yazFOV0pZYlRKcVJtSkdORWR6T0ZsT1RITjBZa3htYlZOb2JsTm1XbGhvZFd4cU5GTXdVR2h4SzNoVFUyNWxNVFZsSzBaTEt6SjBOa0V4UzJaVWFITktWSEppZWpFMVZqTnJSMGhwYjJSMVpYUlFZa1EzTUVsemJraEtjRTFSWVhaSVdTdEZSM3BVWldZeVdFb3hhRnBxVTNGMFJIQm5kalZEZG5KT1UzRXZkalJhUW1sUGNYaE9RVzFoVkVVMVlWTjRjbE01TTFNelJHOW1USE5GV1U5UVJtUlZSMk42Vm05cWVuZGxSMkV5TDNSM1dHTjFNekkwZUhkclRXMXllRkJCT0dOWVVrMXNiMVJ4TjI1UWMySktkU3NyTjFoUFRqTktTRzFOWlZSamIzVkJWM2R2YlhkQ2JVdHlRMlp6VDB4cVRtUmxaek5CT0VWNlREazVOMXBaZUhKUFJuTkNjVTlNVEhwaE5sQjRSRlZyYlV0TVdWWjZOWFZ3VHpVcmIwTkdRMVkxT1ZoRmIza3dRa3RoYkhGdlZHTjFPV2N6YVZkcU1WUnRhWGx1YTJOT2QwaHFZbGxXWWs5d1lYTlNjSGhvYjJKUE4wUTFVVkExWldSRWFWbzBOM1YxZUVFNGIxaGpialZySzB4bFJITnRlV3R1WVdsNVpXdEJWVGRCUkVaUlExbFdWazFoTlhsTlZXYzFVazR2ZG5GbFpHRXZWMlZOVEdKTmVqWjNiMk4wUkdWbGRYcDJTVkFyVEZFME9ESkVkaXRyYW5OcVNWRnhOQzlRUVc5VVVXZElja3hLVG10c2J6TkljblpJZEhJM01HdzFWWGxGUkVSUU9IWmpZVkY0TkUxcVJHbEllRnB1VlVkSFVHaExTa0ZWZDBjd2EyUjFWM2x6U1U5S2MxSXllSFJoUmtGblNIUk5VbXRSWnpKWWJscHJNVmxKU1doNFlYaFpkMHRoYVZaelQzQkxWVFF4ZW5CWk9FUTRkbUpRUTNONlJHWnBVbUZRYjNCNmVUbFpNemMzZFdGRWNuUndVSFp5ZW5WVlprOHJUbk53TlROeVRISlplbE4xV21zNVpHbHVOV3BPWkVjcmNrUndUak13YjFwUmVDc3lNMHAwVlVvMldESkxiSHBOV1hOc1lVOUROVGQ2U3pkalpIaE9VV0U1YTJnd1ZHMHpWMDQ1Unl0NGJYVk1RbXhKYmtReFRXbHZTM05tVm5GT1ZteDRPRmx6Ym1wMGVHZE1TemgwTlU5aU5rWllPRkExU25Ndk0wSkhNVlZZVTIxSmFVTk1VaXR2U2xwaFdVMHJSRVpZT0hncmJXTkpiV3B1U2k5WFkzZ3lka1V5UTNvNVZYcFRRekEyVlhZek16UjRRVzAwYURGR1IweERXRGRPT0VSaUx6UmxRMVIyTWl0VGQwSXlaM1E0TlZrek1GWnBUMFp6TVZvNE9EWnlUbWhtUTFkblpVWnBkRlJJVTBSWFNGbDZVM3BzTlhwc05VUkVjbWhpYTFGSFREZFRNa3B2WTJOeFkyNXBZbUphYkN0c1JISnFNREZUTWpNMVVpdEpXRW81YVVGT1dXOUxRVEpFWm5ORVlVMHdVM0JSVW0wdldEUXhiMU5rTDJWSFUyOWtSbTVNVUhaaVVqUkJVVWRIUTNSQ1ZFaGtXRzg0VVdwQmJIWnlVR041T1ZoaGRHTlZNWE53UmtkNFNHUmxUMGxNVVZsQlZHZDBVMWRVYzJkeU9DOVNPVXBvTmxKQlEwSndPV1poZDNWemVVcEdjbmgyTjAxVFoxUldkVFpUYUVOVmVqZFJkbVJVTnl0clJ6SjVjbmQ0U1c1VU4wdFFZU3NyUm1NM0wxTXdXRzFwVlVaNVpVdGhOSHBzUVhNMUwza3pXVE0zTVN0UFYwMDFlVzlpZGpOalpVRTRZbXR0ZVdreVVXNVNWblppTWpGaFRGSkRRU3RTY1Vab05uWnRjV1pDTm1WSVYyZGFjMk5PZUZGa1JEZEdiR2hSZFhCUllWZGhkMGhGZEdaelJ6ZEliRkJLUkVOUlZIcDVPVk5TUldOU1ZXMXlTWEppVVZkMmEwdGFXalZUZEZGdWFtSlhiRE5ZWkhwVmN6VkVaMWt5TTA0dlMyUlRZbVV5VGtSMksxZFJOMmxVUVZsVE1HSlBkVVZRTnpOU1oybHJUa01yUjNKNVVsSlhXbmhFT1U1UFEzTk1jRFZxUmtGMWRubHNVbGczYTFka2RURmhiVXRDY1ZNeldEaGtZV0Y1Ynl0V2NVNXBka2hqT0RKRmQxTnlhVmhGZFVabE9UQkpiVzF3YkdJelF6Rm5OV1UyYjA1aGRtUnZZemRETjJoS09HYzRVMGt5T0dOdlNpdDZPRTVVVjBobmVtaE9SM2hRYjFCVFRtbHBNVGh4VDB4WlRUVTJlRE0xWkdSallrOUhjakkwUTNKVWIwa3lTbGhxSzBka1JWZFRaaXQ0ZVZKa1EwOHpTMUZFVkUwM09WaGlOa0l2ZUUxd1FsaFBhUzlWVEhOVE5HUXZWbmhQYUVkc1JrNHdLMjB2Tlc1U09GWktVazV0Y0ZCcmExcFZXRTlRYXlzNWMwWk5aMHRzTTJKTmMyWlNhRFZ6ZUV0bFdESlhkekp2VGxNMWJqVnFZMDlFWlRZNVZUZDFTRzFPVmpjcmRrRkRZVTVRVVhkNUwxSnpTbTU2YjNjME9WTkJRbmxVSzNoalMxUTNPRE5ZWVU5b1R5czFjbUYyVWtKSllXbHNkVnBhTVhFeWJFaHdhVVJyUVRneVJHbFlhVXgzYTBSMmRXUXhjbnBYVnpRemJ6aFhTMDFCYm5OcEwycDZTbTVrVEROUUwwNXVjV0kxUmpjdk9XUm1OVGR1WlZGemNFdEdkVWhHY3pod2FuVXhiRXBtVUcxRVFrZHFRa1pwYmtKcWFWa3dXWGxHTVdreWJGRm9NaTlIVFRnME9XODFZelJuU0VKc05VWmxjMEZyTDBkdVMzQlZSVzVVZUZOcWFubEtiRUl3UjNaRFRrSm5UWEZaYWpSU1RtZG1MMU1yT1dKUWNsQlZNa3RDVDBGUk4ybDNSMWh1WW5OcFpVSmpOV3BJTUZkRVpHUmhRWFpzUkhsWk1WWkthMlZ3VGpOTEwzZEdTV1U1V1dzeWJWRklkRTQwSzNJMFZuSklhWFJRUWpkMWJtaDBURGxzVGxNNGFreFliRWhzZFV4UVVUWnJiVzR3VVVOS1dqQlNXSFpHV0hkVFFqRk5TMkkzTWxOclJYWXhURGhUY2xacVRYWmtWbTk1VlRkUGNHbGlUVVp3WVhaMVNVbE9aVTEzVUZwR01qWlVVR1puV21nM2QxUkhZMWh2UTNwNVZHRmFaeXR5UVhsNlNtbDNiRGR1YUhWMmQweElhMm9yY1U5dGVVWTJjRVZoVGpnMFpteHBOWGh0WXk5TUswMVpiM0ZSV0ZkbFJXOVBZazFJTkVwMGNHOTJibEJLYWpJM1dGTlhaMmRqYm5sUU56UXJTRGMwVUVWR1ZuSTNabkV2T1ZKVGFDdElaVFF4U21JM04yTlhObmwwVURaT1MyMXdNM3BSU0RkcWFHRlhVRkU1ZG1wYUwwWlVVblV2U0VsUU1HUjFhR1UxTW1WcGJHSlpjbWRwZW1KeVF6aDNUVTFWZEZOUWFFUmtibTFGZGpBeVp6VlNlbWd6TVRoQlJrcHlZaXRyVFZSNFp6UkhNMDkzUlZCUk9IQnBiRUZPTm5kMWRrcDVVRTh5V21WSGEydE1kV00yVWxCR2FTdGlSelJRWlVsNk1FOVlhbGRuYW5keGMyOHZReTlXVFRKSFpWaGFVMVJrZEZSSFEwWjNSbEJzV21aTGFVRlJjekp0UTJGUmFtVTVZalZGVkhoS1RVMXhZMGRRZFhZMlEwMWxRMEo0VFZVM1JVZEVabk00YVVvM1YydEJPREZHZGxoTWFGazVlRlpwVGxsMmRTOUVaamhXVlUxd1VsaGpaa2xtUm5SeWVVVXpWR2h1V0RNeWNGVkRhR3gzZEdKc1J5ODJTVUZzVVhWYUwzazRlRFJXTlZKaGNuZE5WR1Z4U0dScU9FTnFTVVZPWkROTlQzbEhXRVZrV2l0Qk1EWjBSR3RQVG1KNGVuUmxRWEpCVVdGakx6aHZNMVprUTNneVEwbFFkbG93VGtoV1J5OVBhVzF3YjNWYWREVkZUazF3YkhsS1UxRllhMUpvUlUwclJsSnRiVUZqYmpSSlFYYzBPSGxuY1dSaGQweDZTVzlzWnpoVFpGUTNhVkJXVldkUlltRTBiMlZHUVhjM1FtNXVUVEJ4S3pNME56Tk5aemRaYkZSUE9ISldNR3NySzFwT2JsaEZWSFJ6U1ZSWlRHOTJVRGhTT0hKQ1UxVnZXR1psTlZOSlYyNWxPR1pqUFEuZVdxTURqeHhHMnNBVHVwdEVqUGJ3VmtrbVZPdTV5QjVORkhWYnpqOW1UM3Bza0lDdXJ1SHVrbFJvb2dpTFJkLWV1dVNyejRLVEthdFlVMnB0NV9xcVE=">
+						<input type="hidden" name="_eventId" value="submit">
+
+						<input type="hidden" name="_llqmc" value="Chrome">
+						<input type="hidden" name="_llqbb" value="79.0.3945.88">
+						<input type="hidden" name="_czxt" value="Windows">
+						<input type="hidden" name="_czxtbb" value="Windows 7">
+						<input type="hidden" name="_llqxx" value="mozilla/5.0 (windows nt 6.1; win64; x64) applewebkit/537.36 (khtml, like gecko) chrome/79.0.3945.88 safari/537.36">
+
+						<input type="hidden" id="loginType" name="loginType" value="0">
+						<input type="hidden" id="checkType" name="checkType" value="check_password">
+
+						<input type="hidden" id="csessionid" name="csessionid" value="">
+						<input type="hidden" id="sig" name="sig" value="">
+						<input type="hidden" id="token" name="token" value="">
+						<input type="hidden" id="scene" name="scene" value="login">
+						<input type="hidden" id="sjly" name="sjly" value="0">
+
+						<input type="hidden" id="codeType" name="codeType" value="Y">
+
+						<input type="hidden" name="authencationHandler" value="UsernamePasswordAuthencationHandler">
+						<!-- 证件登录登录 -->
+
+						<ul>
+							<li><input id="userName" style="display: none;" name="userName" type="text" class="txt bg1"
+									   placeholder="用户名" value=""></li>
+							<li><input id="passWord" style="display: none;" name="passWord" type="password" class="txt bg2"
+									   placeholder="密码" value=""></li>
+							<li><input id="captchCode" style="display: none;" name="captchCode" class="txt bg2" placeholder="验证码"
+									   value=""></li>
+							<li id="sjlyLi" style="display: none;">
+								<div>
+									<input name="sjly" type="radio" value="0" checked="checked" style="display: none;">
+									<input name="sjly" type="radio" value="2" style="margin-right: 5px;">国税
+									<input name="sjly" type="radio" value="4" style="margin-left: 20px;margin-right: 5px;">地税
+								</div>
+							</li>
+						</ul>
+
+					</form>
+
 					<form class="form-horizontal">
 						<div v-if="hasPermission('customer:save') && status==0" class="form-group">
-						   	<div class="col-sm-3 control-label">验证码</div>
-						   	<div class="col-sm-3">
-						      <img id="validImg1" src="#" style="width:100px;"/>
-						    </div>
-						    <div class="col-sm-3">
-						      <input type="text" class="form-control" id="validCode1" placeholder="请输入验证码"/>
-						    </div>
-						    <input type="button" class="btn btn-primary" @click="syncTax" value="同步"/>
+							<!-- 阿里云滑动验证码DIV start-->
+							<div class="ln m_t_18" id="aliyunCore" style="padding-top: 7px;width: 300px">
+								<div id="dom_id"></div>
+							</div>
+							<ul style="padding-top:0px">
+								<li  id="chooseCheckType" name="chooseCheckType" value="" style="display:none;font-weight:bold;color:#0b89cb;width:270px;text-align:right;font-size:13px;">使用动态验证码登录</li>
+							</ul>
 						</div>
 						<div class="form-group">
 						   	<div class="col-sm-3 control-label">编号</div>
@@ -442,6 +492,33 @@
 			}
 		});
 	});
+
+    <!-- 此段必须要引入 -->
+    var ieVersion = 11;
+    var  browerName ="chrome";
+    if(browerName!="IE" || ieVersion>=9){
+        var nc = new noCaptcha();
+        var nc_appkey = "FFFF0000000001771572";  // 应用标识,不可更改
+        var nc_scene = 'login';  //场景,不可更改
+        var nc_token = [nc_appkey, (new Date()).getTime(), Math.random()].join(':');
+        var nc_option = {
+            renderTo: '#dom_id',//渲染到该DOM ID指定的Div位置
+            appkey: nc_appkey,
+            scene: nc_scene,
+            token: nc_token,
+            trans: '{"name1":"code100"}',//测试用，特殊nc_appkey时才生效，正式上线时请务必要删除；code0:通过;code100:点击验证码;code200:图形验证码;code300:恶意请求拦截处理
+            callback: function (data) {// 校验成功回调
+                document.getElementById('csessionid').value = data.csessionid;
+                document.getElementById('sig').value = data.sig;
+                document.getElementById('token').value = nc_token;
+                document.getElementById('scene').value = nc_scene;
+                setTimeout(vm.syncTax(),1500);
+            }
+        };
+        nc.init(nc_option);
+    }
+    <!-- 引入结束 -->
+
 </script>
 </body>
 </html>

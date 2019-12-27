@@ -31,14 +31,41 @@ function getCookieKeys(){
 function refreshAuthCode(img){
 	img.attr('src','http://www.etax-gd.gov.cn/sso/base/captcha.do?r='+Math.random());
 }
+//阿里云滑动验证码-验证处理，完成后登陆到税务网
+function  aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName) {
+    <!-- 此段必须要引入 -->
+    var ieVersion = 11;
+    var  browerName ="chrome";
+    if(browerName!="IE" || ieVersion>=9){
+        var nc = new noCaptcha();
+        var nc_appkey = "FFFF0000000001771572";  // 应用标识,不可更改
+        var nc_scene = 'login';  //场景,不可更改
+        var nc_token = [nc_appkey, (new Date()).getTime(), Math.random()].join(':');
+        var nc_option = {
+            renderTo: '#dom_id',//渲染到该DOM ID指定的Div位置
+            appkey: nc_appkey,
+            scene: nc_scene,
+            token: nc_token,
+            trans: '{"name1":"code100"}',//测试用，特殊nc_appkey时才生效，正式上线时请务必要删除；code0:通过;code100:点击验证码;code200:图形验证码;code300:恶意请求拦截处理
+            callback: function (data) {// 校验成功回调
+                document.getElementById('csessionid').value = data.csessionid;
+                document.getElementById('sig').value = data.sig;
+                document.getElementById('token').value = nc_token;
+                document.getElementById('scene').value = nc_scene;
+                setTimeout(frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName),1500);
+            }
+        };
+        nc.init(nc_option);
 
+    }
+    <!-- 引入结束 -->
+}
+// 初始化 阿里云滑动验证码
+function  initAliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName){
+    aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName);
+}
 //法人账号登录
 function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
-	var captchCode=$("#fr_captcha_"+id).val();
-	if (!captchCode){
-        alert("验证码不能为空");
-        return false;
-	}
 
     if (!legalPersonAccount){
     	alert("法人账号不能为空");
@@ -56,12 +83,11 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 	$("#passWord").val(legalPersonPassword);
 	
 	var urlPre = "https://www.etax-gd.gov.cn";
-	
 	var ssoLogin = function(callback,callback1,callback2){
-		var url = urlPre + '/sso/login?service=http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1502697830856';
+		var url = urlPre + '/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1511852007328';
 		//登陆
 		jQuery.ajax({
-			type: "get",
+			type: "post",
 			async: false,
 			url: url,
 			data: jQuery('#upLoginForm').serialize(),
@@ -79,7 +105,6 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 			}
 		});
 	}
-	
 	var checkLoginState = function(callback1,callback2){
 		//  登陆验证
 		var url = urlPre + '/sso/auth/checkLoginState.do';
@@ -175,17 +200,7 @@ $(function () {
 			}},
 			{ label: '法人账号登录', name: 'validCode',width: 60,sortable:false, formatter: function(value, options, row){
 					var arr = [
-						"<img id='yzmimg_",
-						row.id,
-						"' ",
-						"src='http://www.etax-gd.gov.cn/sso/base/captcha.do?r='",
-						"width='70'",
-	                    "height='22' onclick='refreshAuthCode($(this))'>",
-	                    "<input id='fr_captcha_",
-	                    row.id,
-						"' ",
-	                    "type='text' style='width: 70px; height: 25px;' value='1' required>",
-	                    "<button onclick=\"frzhlogin(",
+	                    "<button onclick=\"initAliyunCaptchCode(",
 	                    row.id,",'",row.customerTax?row.customerTax.legalPersonAccount:null,"','",
 	                    		row.customerTax?row.customerTax.legalPersonPassword:null,"','",row.customerName,
 	                    "');\" ",

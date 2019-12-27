@@ -319,13 +319,9 @@ var vm = new Vue({
                 }
             })
 		},
+
+
 		syncTax: function(){
-			var validCode = $("#validCode1").val();
-			console.log(validCode);
-			if($.trim(validCode) == ""){
-				alert("请输入验证码");
-				return;
-			}
 			if($.trim(vm.customerTax.legalPersonAccount) == ""){
 				alert("请输入法人实名账号");
 				return;
@@ -338,10 +334,11 @@ var vm = new Vue({
 				alert("请输入客户名称");
 				return;
 			}
-			//查询工商登记信息的地址
+
+            //查询工商登记信息的地址
 			//var urlIc = "http://gsxt.gzaic.gov.cn/aiccips/GZpublicity/checkCodeGz.html?entName=&regNo=&text3=" + vm.customerIc.socialReditOde + "code=" + validCode;
 			var urlTax = baseURL + "customer/sync/tax?legalPersonAccount=" + vm.customerTax.legalPersonAccount 
-				+ "&validCode=" + validCode + "&legalPersonPassword="+vm.customerTax.legalPersonPassword+"&customerName=" + vm.customer.customerName;
+				 + "&legalPersonPassword="+vm.customerTax.legalPersonPassword+"&customerName=" + vm.customer.customerName;
 			urlTax = urlTax + "&customerId=" + vm.customer.id;
 			var index = onloading();
 			
