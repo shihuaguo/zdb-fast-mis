@@ -321,7 +321,15 @@ var vm = new Vue({
 		},
 
 
-		syncTax: function(){
+		syncTax: function(csessionid,sig,token,scene){
+			if($.trim(csessionid) == ""){
+				alert("滑动验证码csessionid不能为空");
+				return;
+			}
+			if($.trim(sig) == ""){
+				alert("滑动验证码签名不能为空");
+				return;
+			}
 			if($.trim(vm.customerTax.legalPersonAccount) == ""){
 				alert("请输入法人实名账号");
 				return;
@@ -338,7 +346,8 @@ var vm = new Vue({
             //查询工商登记信息的地址
 			//var urlIc = "http://gsxt.gzaic.gov.cn/aiccips/GZpublicity/checkCodeGz.html?entName=&regNo=&text3=" + vm.customerIc.socialReditOde + "code=" + validCode;
 			var urlTax = baseURL + "customer/sync/tax?legalPersonAccount=" + vm.customerTax.legalPersonAccount 
-				 + "&legalPersonPassword="+vm.customerTax.legalPersonPassword+"&customerName=" + vm.customer.customerName;
+				 + "&legalPersonPassword="+vm.customerTax.legalPersonPassword+"&customerName=" + vm.customer.customerName
+				 + "&csessionid="+csessionid+"&sig=" + sig+"&token=" + token+"&scene=" + scene;
 			urlTax = urlTax + "&customerId=" + vm.customer.id;
 			var index = onloading();
 			

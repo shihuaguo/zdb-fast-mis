@@ -343,10 +343,10 @@ public class CustomerController extends AbstractController {
 	 */
 	@RequiresPermissions("customer:update")
 	@RequestMapping("/sync/tax")
-	public R syncTaxInfo(String customerId, String legalPersonAccount, String legalPersonPassword, String customerName, String validCode) {
-		log.info("收到同步税务信息请求, customerId={},legalPersonAccount={}, legalPersonPassword={}, customerName={}, valideCode={}",
-				customerId, legalPersonAccount, legalPersonPassword, customerName, validCode);
-		return EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode, kd);
+	public R syncTaxInfo( String legalPersonAccount, String legalPersonPassword, String customerName, String validCode,String csessionid ,String sig , String token ,String scene, String customerId) {
+		log.info("收到同步税务信息请求, customerId={},legalPersonAccount={}, legalPersonPassword={}, customerName={}, valideCode={},csessionid={},sig={},token={},scene={}",
+				customerId, legalPersonAccount, legalPersonPassword, customerName, validCode,csessionid,sig,token,scene);
+		return EtaxUtil.syncTaxInfo(customerName, legalPersonAccount, legalPersonPassword, validCode,csessionid,sig,token,scene, kd);
 	}
 	
 	///////////////////////////////////////////商事信息/////////////////////////////////////
