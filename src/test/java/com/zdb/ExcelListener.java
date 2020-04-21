@@ -21,6 +21,9 @@ public class ExcelListener extends AnalysisEventListener {
     private List<Object> datas = new ArrayList<Object>();
     public void invoke(Object object, AnalysisContext context) {
         System.out.println("当前行："+context.getCurrentRowNum());
+        if (0 == context.getCurrentRowNum() ){
+            System.out.println("当前sheetName="+context.getCurrentSheet().getSheetName());
+        }
         System.out.println(object);
         datas.add(object);//数据存储到list，供批量处理，或后续自己业务逻辑处理。
         doSomething(object);//根据自己业务做处理
