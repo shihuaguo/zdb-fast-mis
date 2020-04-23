@@ -2,6 +2,10 @@ package com.zdb;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.fastjson.JSON;
+import com.zdb.modules.crawl.service.CrawlCompanyInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +18,11 @@ import java.util.List;
  * @author jipengfei
  * @date 2017/03/14
  */
+@Component
 public class ExcelListener extends AnalysisEventListener {
 
+    @Autowired
+    CrawlCompanyInfoService crawlCompanyInfoService ;
     //自定义用于暂时存储data。
     //可以通过实例获取该值
     private List<Object> datas = new ArrayList<Object>();
@@ -30,9 +37,13 @@ public class ExcelListener extends AnalysisEventListener {
     }
     private void doSomething(Object object) {
         //1、入库调用接口
+
     }
     public void doAfterAllAnalysed(AnalysisContext context) {
-       // datas.clear();//解析结束销毁不用的资源
+        System.out.println("解析结束销毁不用的资源"+datas.size());
+        String dataJson = JSON.toJSONString(datas) ;
+        System.out.println("dataJson = " + dataJson);
+        datas.clear();//解析结束销毁不用的资源
     }
     public List<Object> getDatas() {
         return datas;
