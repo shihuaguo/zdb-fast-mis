@@ -3,12 +3,13 @@ package com.zdb;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.zdb.modules.crawl.entity.CrawlCompanyInfo;
 import com.zdb.modules.crawl.service.CrawlCompanyInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /* 解析监听器，
  * 每解析一行会回调invoke()方法。
@@ -23,26 +24,34 @@ public class ExcelListener extends AnalysisEventListener {
 
     @Autowired
     CrawlCompanyInfoService crawlCompanyInfoService ;
+
     //自定义用于暂时存储data。
     //可以通过实例获取该值
     private List<Object> datas = new ArrayList<Object>();
+
     public void invoke(Object object, AnalysisContext context) {
-        System.out.println("当前行："+context.getCurrentRowNum());
-        if (0 == context.getCurrentRowNum() ){
-            System.out.println("当前sheetName="+context.getCurrentSheet().getSheetName());
-        }
-        System.out.println(object);
+        System.out.println("当前sheetName="+context.getCurrentSheet().getSheetName() +" 当前行："+context.getCurrentRowNum());
+//        System.out.println(object);
         datas.add(object);//数据存储到list，供批量处理，或后续自己业务逻辑处理。
         doSomething(object);//根据自己业务做处理
     }
     private void doSomething(Object object) {
         //1、入库调用接口
-
+//        String jsonObject = JSON.toJSONString(object) ;
+//        datas.add(jsonObject);
     }
     public void doAfterAllAnalysed(AnalysisContext context) {
         System.out.println("解析结束销毁不用的资源"+datas.size());
         String dataJson = JSON.toJSONString(datas) ;
         System.out.println("dataJson = " + dataJson);
+        CrawlCompanyInfo crawlCompanyInfo =
+                CrawlCompanyInfo.builder()
+                        .companyInfo(dataJson)
+                        .createTime(new Date())
+                        .updateTime(new Date())
+                        .flag(0)
+                        .build() ;
+//        crawlCompanyInfoService.insert(crawlCompanyInfo);
         datas.clear();//解析结束销毁不用的资源
     }
     public List<Object> getDatas() {

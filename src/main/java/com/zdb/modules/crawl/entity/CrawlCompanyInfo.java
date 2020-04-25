@@ -1,5 +1,8 @@
 package com.zdb.modules.crawl.entity;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.util.Date;
 import java.io.Serializable;
 
@@ -9,6 +12,8 @@ import java.io.Serializable;
  * @author makejava
  * @since 2020-04-23 23:02:35
  */
+@Data
+@Builder
 public class CrawlCompanyInfo implements Serializable {
     private static final long serialVersionUID = 697076651418531789L;
     /**
@@ -37,52 +42,5 @@ public class CrawlCompanyInfo implements Serializable {
     private Object flag;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCompanyInfo() {
-        return companyInfo;
-    }
-
-    public void setCompanyInfo(String companyInfo) {
-        this.companyInfo = companyInfo;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Object getFlag() {
-        return flag;
-    }
-
-    public void setFlag(Object flag) {
-        this.flag = flag;
-    }
 
 }
