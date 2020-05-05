@@ -14,6 +14,7 @@ import java.util.List;
  * @since 2020-04-23 23:02:36
  */
 @Mapper
+@Repository
 public interface CrawlCompanyInfoDao {
 
     /**

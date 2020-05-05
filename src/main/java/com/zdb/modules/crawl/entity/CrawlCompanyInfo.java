@@ -39,8 +39,11 @@ public class CrawlCompanyInfo implements Serializable {
     /**
     * 删除标识：0，否，1是
     */
-    private Object flag;
-
+    private Integer flag;
+    /**
+    * 导入唯一key
+    */
+    private String excelImportKey;
 
 
 }

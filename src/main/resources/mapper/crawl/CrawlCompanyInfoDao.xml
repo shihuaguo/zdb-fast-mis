@@ -9,13 +9,14 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="version" column="version" jdbcType="INTEGER"/>
-        <result property="flag" column="flag" jdbcType="OTHER"/>
+        <result property="flag" column="flag" jdbcType="INTEGER"/>
+        <result property="excelImportKey" column="excel_import_key" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="BaseResultMap">
         select
-          ID, company_info, create_time, update_time, version, flag
+          ID, company_info, create_time, update_time, version, flag ,excel_import_key
         from zdb_financial.crawl_company_info
         where ID = #{id}
     </select>
@@ -23,7 +24,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="BaseResultMap">
         select
-          ID, company_info, create_time, update_time, version, flag
+          ID, company_info, create_time, update_time, version, flag ,excel_import_key
         from zdb_financial.crawl_company_info
         limit #{offset}, #{limit}
     </select>
@@ -31,7 +32,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-          ID, company_info, create_time, update_time, version, flag
+          ID, company_info, create_time, update_time, version, flag,excel_import_key
         from zdb_financial.crawl_company_info
         <where>
             <if test="id != null">
@@ -52,13 +53,16 @@
             <if test="flag != null">
                 and flag = #{flag}
             </if>
+            <if test="excelImportKey != null and excelImportKey != ''">
+                and excel_import_key = #{excelImportKey}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into zdb_financial.crawl_company_info(company_info, create_time, update_time, version, flag)
-        values (#{companyInfo}, #{createTime}, #{updateTime}, #{version}, #{flag})
+        insert into zdb_financial.crawl_company_info(company_info, create_time, update_time, version, flag , excel_import_key)
+        values (#{companyInfo}, #{createTime}, #{updateTime}, #{version}, #{flag},#{excelImportKey})
     </insert>
 
     <!--通过主键修改数据-->
@@ -67,7 +71,7 @@
         <set>
             <if test="companyInfo != null and companyInfo != ''">
                 company_info = #{companyInfo},
-            </if>
+        </if>
             <if test="createTime != null">
                 create_time = #{createTime},
             </if>
@@ -79,6 +83,9 @@
             </if>
             <if test="flag != null">
                 flag = #{flag},
+            </if>
+            <if test="excelImportKey != null and excelImportKey != ''">
+                 excel_import_key = #{excelImportKey},
             </if>
         </set>
         where ID = #{id}
