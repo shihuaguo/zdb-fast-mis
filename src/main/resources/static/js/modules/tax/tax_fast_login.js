@@ -139,7 +139,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName,taxIdN
 
 	// 用户身份
 	var changeSf = function(callback){
-		//  登陆验证
+		//   用户身份
 		var url = urlPre + '/sso/auth/changeQySf.do';
 		jQuery.ajax({
 			type: "get",
