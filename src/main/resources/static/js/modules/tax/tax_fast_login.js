@@ -32,7 +32,7 @@ function refreshAuthCode(img){
 	img.attr('src','http://www.etax-gd.gov.cn/sso/base/captcha.do?r='+Math.random());
 }
 //阿里云滑动验证码-验证处理，完成后登陆到税务网
-function  aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName) {
+function  aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName,taxIdNumber) {
     <!-- 此段必须要引入 -->
     var ieVersion = 11;
     var  browerName ="chrome";
@@ -52,7 +52,7 @@ function  aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerNam
                 document.getElementById('sig').value = data.sig;
                 document.getElementById('token').value = nc_token;
                 document.getElementById('scene').value = nc_scene;
-                setTimeout(frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName),1500);
+                setTimeout(frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName,taxIdNumber),1500);
             }
         };
         nc.init(nc_option);
@@ -61,11 +61,12 @@ function  aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerNam
     <!-- 引入结束 -->
 }
 // 初始化 阿里云滑动验证码
-function  initAliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName){
-    aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName);
+function  initAliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName,taxIdNumber){
+
+    aliyunCaptchCode(id,legalPersonAccount,legalPersonPassword,customerName,taxIdNumber);
 }
 //法人账号登录
-function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
+function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName,taxIdNumber) {
 
     if (!legalPersonAccount){
     	alert("法人账号不能为空");
@@ -77,14 +78,21 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
         return false;
     }
 
+
     legalPersonPassword = encode(legalPersonPassword);
-    $("#captchCode").val(captchCode);
-	$("#userName").val(legalPersonAccount);
+    // $("#captchCode").val(captchCode);
+	$("#userNameOrSjhm").val(legalPersonAccount);
 	$("#passWord").val(legalPersonPassword);
-	
+	$("#shxydmOrsbh").val(taxIdNumber);
+
+    console.log($("#shxydmOrsbh").val());
+    console.log($("#userNameOrSjhm").val());
+    console.log($("#passWord").val());
+
+
 	var urlPre = "https://www.etax-gd.gov.cn";
 	var ssoLogin = function(callback,callback1,callback2){
-		var url = urlPre + '/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1511852007328';
+		var url = urlPre + '/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=1511852007328';
 		//登陆
 		jQuery.ajax({
 			type: "post",
@@ -95,6 +103,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 			jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
 			jsonpCallback:"flightHandler1",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
 			success: function(json){
+                console.log("ssoLogin success!");
 			},
 			complete: function(xhr) {
 				console.log("ssoLogin complete!");
@@ -117,6 +126,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 			jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
 			jsonpCallback:"flightHandler",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
 			success: function(json){
+                console.log("checkLoginState success!");
 			},
 			complete: function(xhr) {
 				console.log("checkLoginState complete!");
@@ -126,7 +136,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 			}
 		});
 	}
-	
+
 	// 用户身份
 	var changeSf = function(callback){
 		//  登陆验证
@@ -150,12 +160,11 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 			}
 		});
 	}
-    
+
     var openEtax = function(){
-    	//window.open("http://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&ticket=ST-640015-lw5beAOZ5QR9krlJgTyV-gddzswj");
     	window.open(urlPre + "/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=1511852007328#none");
     }
-    
+
     //获取用户的checkLoginState
 	var qybdid = null;
 	$.get(baseURL + 'customer/checkLoginState?customerId='+id, function(r){
@@ -181,7 +190,7 @@ function frzhlogin(id,legalPersonAccount,legalPersonPassword,customerName) {
 			alert("获取客户checkLoginState信息失败");
 		}
 	});
-    
+
     /*if(qybdid != null){
     	ssoLogin(checkLoginState, changeSf, openEtax);
     }*/
@@ -191,9 +200,10 @@ $(function () {
     $("#jqGrid").jqGrid({
         url: baseURL + 'customer/listWithTax',
         datatype: "json",
-        colModel: [	
+        colModel: [
         	{ label: 'ID', name: 'id', width: 20, key: true, sortable:true, hidden:true},
 			{ label: '编号', name: 'customerNo', index: "customer_no", width: 20,sortable:true},
+			{ label: '统一代码', name: 'taxIdNumber', index: "taxIdNumber", width: 40,sortable:true},
 			{ label: '客户名称', name: 'customerName', index: "customer_name", width: 60,sortable:false,formatter: function(value, options, row){
 				//return "<div class='table-cell'>" + value + "</div>";
 				return "<div class='table-cell'>" + value + "</div>";
@@ -201,9 +211,12 @@ $(function () {
 			{ label: '法人账号登录', name: 'validCode',width: 60,sortable:false, formatter: function(value, options, row){
 					var arr = [
 	                    "<button onclick=\"initAliyunCaptchCode(",
-	                    row.id,",'",row.customerTax?row.customerTax.legalPersonAccount:null,"','",
-	                    		row.customerTax?row.customerTax.legalPersonPassword:null,"','",row.customerName,
-	                    "');\" ",
+	                    row.id,",'",
+                        row.customerTax?row.customerTax.legalPersonAccount:null,"','",
+	                    row.customerTax?row.customerTax.legalPersonPassword:null,"','",
+                        row.customerName,"','",
+                        row.taxIdNumber,"'",
+	                    ");\" ",
 	                    "type='button' class='btn btn-default'>登录</button>"
 					];
 					return arr.join("");
@@ -217,8 +230,8 @@ $(function () {
         height: '100%',
         rowNum: 20,
 		rowList : [20,30,50],
-        rownumbers: true, 
-        rownumWidth: 25, 
+        rownumbers: true,
+        rownumWidth: 25,
         sortname: 'customer_no',
         sortorder: 'asc',
         autowidth:true,
@@ -231,13 +244,13 @@ $(function () {
             records: "page.totalCount"
         },
         prmNames : {
-            page:"page", 
-            rows:"limit", 
+            page:"page",
+            rows:"limit",
             order: "order"
         },
         gridComplete:function(){
         	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
         }
     });
 });
@@ -279,7 +292,7 @@ var vm = new Vue({
 		reload: function () {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
                 postData:{'customerNameOrNo': vm.q.customerNameOrNo},
                 page:page
             }).trigger("reloadGrid");

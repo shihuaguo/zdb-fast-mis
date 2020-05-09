@@ -173,51 +173,64 @@
 		<ul style="padding-top:0px">
 			<li  id="chooseCheckType" name="chooseCheckType" value="" style="display:none;font-weight:bold;color:#0b89cb;width:270px;text-align:right;font-size:13px;">使用动态验证码登录</li>
 		</ul>
-		<!-- 阿里云滑动验证码DIV end-->
 
+		<!-- 阿里云滑动验证码DIV end-->
+        <!-- 此段必须要引入 -->
+        <form id="hiddenForm" style="display:none;" action="https://www.etax-gd.gov.cn/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1511852007328" method="post">
+        </form>
+
+        <div id="_umfp" style="display:inline;width:1px;height:1px;overflow:hidden"></div>
 	    <!--登陆表单 -->
 	    <form id="upLoginForm" style="display:none;"
-	          action="http://www.etax-gd.gov.cn/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&amp;t=1511852007328" method="post" target="hiddenFrame">
-				<input type="hidden" name="lt" value="LT-225432-ebJXgZ0Sr0saGBUKL6eC-gddzswj">
-				<input type="hidden" name="execution" value="4902c759-7c77-409e-9f51-6c844c7e6ba4_ZXlKaGJHY2lPaUpJVXpVeE1pSjkuYVRCNkwxZEdjR1JJTm1wWWRsWkVjRlIwVmtOU2RVYzNUSFJTU0VoalltWldjbkJGUWtJdmJXSldOV3BxTkVkMk5FaHJkMmhFVjNsbGMzVnFSa0p5ZGlzMmRtVmxTV29yUmk5alprUXpiMU53VlZSTE4zTTNjR2t4TUd4SFpYZHZURWR1WW5VMmIxUlZjVFJQVm5JeWNUUm1hMk5GWm1zeVRuRjBObVZ1UVdSblpFUnZiWFZLV21ocE5EZE9hMXBYYlRFelREWnVTMnhtYVVNeU5qRTNSRlZ1VG5CRVozZHFOazE2UVhJeGFtbDJNVEpDZVZnNGFHUnFTMDQ0Y0dsa2JsWnpWREJNVVVaUVpGQXZNWFZzZWpObGMzRklTMnBvTW5ONlZVeDBhbXhzZDNwbWJIZzFXR1pSY1VwQlYybHhSR2xpTlVNME1tMTJVblJwZEhoWllYYzFlbkpKV2pka2Nua3ZhbGczTWxodFZWUnlVR2h5TjFRNWVtcGtlVVZhY2tGMlMwOWpXVlpxTjJoaVVYWjRPVGxSYzFWTFltODBSa3RSVTA1T2MwNVBWRGhxUTB4eE5ISkdWQ3RKYTNrME5uTnJOV3g2V0c1R2VsVnNMMlp1U1VsWGFVdEdjMU0yYnpFdlUyWjBVa0pXUTI1VGIzcG9WVmsxT1VWUVNWbDRWMnBrWkdkS1dqZ3ljREJsUldsUE1IRlpXbXQwV1hKRVVEWXhjbGN2YWs5RlZIUjJaVFE0V0U5VlVrTTVNa3cwUWpkUFJ6Rm1Xa2d6U0ZkalRGTXJXbUptT1VGeGFsZE5kbVl2ZUVNd1ozTXJiM3BOUWxSU1JuSmhZMHMwT1ZGeU5XSkllSGhQZGxKVEwyUkdkWHBsTnpRclNtRnNiM2N2ZFROdWVVeEpiWFpwVWpGd2IzaG9lbUl2WkdzeFIwOTJXVVF2YUU1SFZrVldSVk5qYTFoT1ZtdHVaRk14TTJobk5VTk9TRVZCVm10aWNVOU1ObmhRUWtsRE4yazFOV0pZYlRKcVJtSkdORWR6T0ZsT1RITjBZa3htYlZOb2JsTm1XbGhvZFd4cU5GTXdVR2h4SzNoVFUyNWxNVFZsSzBaTEt6SjBOa0V4UzJaVWFITktWSEppZWpFMVZqTnJSMGhwYjJSMVpYUlFZa1EzTUVsemJraEtjRTFSWVhaSVdTdEZSM3BVWldZeVdFb3hhRnBxVTNGMFJIQm5kalZEZG5KT1UzRXZkalJhUW1sUGNYaE9RVzFoVkVVMVlWTjRjbE01TTFNelJHOW1USE5GV1U5UVJtUlZSMk42Vm05cWVuZGxSMkV5TDNSM1dHTjFNekkwZUhkclRXMXllRkJCT0dOWVVrMXNiMVJ4TjI1UWMySktkU3NyTjFoUFRqTktTRzFOWlZSamIzVkJWM2R2YlhkQ2JVdHlRMlp6VDB4cVRtUmxaek5CT0VWNlREazVOMXBaZUhKUFJuTkNjVTlNVEhwaE5sQjRSRlZyYlV0TVdWWjZOWFZ3VHpVcmIwTkdRMVkxT1ZoRmIza3dRa3RoYkhGdlZHTjFPV2N6YVZkcU1WUnRhWGx1YTJOT2QwaHFZbGxXWWs5d1lYTlNjSGhvYjJKUE4wUTFVVkExWldSRWFWbzBOM1YxZUVFNGIxaGpialZySzB4bFJITnRlV3R1WVdsNVpXdEJWVGRCUkVaUlExbFdWazFoTlhsTlZXYzFVazR2ZG5GbFpHRXZWMlZOVEdKTmVqWjNiMk4wUkdWbGRYcDJTVkFyVEZFME9ESkVkaXRyYW5OcVNWRnhOQzlRUVc5VVVXZElja3hLVG10c2J6TkljblpJZEhJM01HdzFWWGxGUkVSUU9IWmpZVkY0TkUxcVJHbEllRnB1VlVkSFVHaExTa0ZWZDBjd2EyUjFWM2x6U1U5S2MxSXllSFJoUmtGblNIUk5VbXRSWnpKWWJscHJNVmxKU1doNFlYaFpkMHRoYVZaelQzQkxWVFF4ZW5CWk9FUTRkbUpRUTNONlJHWnBVbUZRYjNCNmVUbFpNemMzZFdGRWNuUndVSFp5ZW5WVlprOHJUbk53TlROeVRISlplbE4xV21zNVpHbHVOV3BPWkVjcmNrUndUak13YjFwUmVDc3lNMHAwVlVvMldESkxiSHBOV1hOc1lVOUROVGQ2U3pkalpIaE9VV0U1YTJnd1ZHMHpWMDQ1Unl0NGJYVk1RbXhKYmtReFRXbHZTM05tVm5GT1ZteDRPRmx6Ym1wMGVHZE1TemgwTlU5aU5rWllPRkExU25Ndk0wSkhNVlZZVTIxSmFVTk1VaXR2U2xwaFdVMHJSRVpZT0hncmJXTkpiV3B1U2k5WFkzZ3lka1V5UTNvNVZYcFRRekEyVlhZek16UjRRVzAwYURGR1IweERXRGRPT0VSaUx6UmxRMVIyTWl0VGQwSXlaM1E0TlZrek1GWnBUMFp6TVZvNE9EWnlUbWhtUTFkblpVWnBkRlJJVTBSWFNGbDZVM3BzTlhwc05VUkVjbWhpYTFGSFREZFRNa3B2WTJOeFkyNXBZbUphYkN0c1JISnFNREZUTWpNMVVpdEpXRW81YVVGT1dXOUxRVEpFWm5ORVlVMHdVM0JSVW0wdldEUXhiMU5rTDJWSFUyOWtSbTVNVUhaaVVqUkJVVWRIUTNSQ1ZFaGtXRzg0VVdwQmJIWnlVR041T1ZoaGRHTlZNWE53UmtkNFNHUmxUMGxNVVZsQlZHZDBVMWRVYzJkeU9DOVNPVXBvTmxKQlEwSndPV1poZDNWemVVcEdjbmgyTjAxVFoxUldkVFpUYUVOVmVqZFJkbVJVTnl0clJ6SjVjbmQ0U1c1VU4wdFFZU3NyUm1NM0wxTXdXRzFwVlVaNVpVdGhOSHBzUVhNMUwza3pXVE0zTVN0UFYwMDFlVzlpZGpOalpVRTRZbXR0ZVdreVVXNVNWblppTWpGaFRGSkRRU3RTY1Vab05uWnRjV1pDTm1WSVYyZGFjMk5PZUZGa1JEZEdiR2hSZFhCUllWZGhkMGhGZEdaelJ6ZEliRkJLUkVOUlZIcDVPVk5TUldOU1ZXMXlTWEppVVZkMmEwdGFXalZUZEZGdWFtSlhiRE5ZWkhwVmN6VkVaMWt5TTA0dlMyUlRZbVV5VGtSMksxZFJOMmxVUVZsVE1HSlBkVVZRTnpOU1oybHJUa01yUjNKNVVsSlhXbmhFT1U1UFEzTk1jRFZxUmtGMWRubHNVbGczYTFka2RURmhiVXRDY1ZNeldEaGtZV0Y1Ynl0V2NVNXBka2hqT0RKRmQxTnlhVmhGZFVabE9UQkpiVzF3YkdJelF6Rm5OV1UyYjA1aGRtUnZZemRETjJoS09HYzRVMGt5T0dOdlNpdDZPRTVVVjBobmVtaE9SM2hRYjFCVFRtbHBNVGh4VDB4WlRUVTJlRE0xWkdSallrOUhjakkwUTNKVWIwa3lTbGhxSzBka1JWZFRaaXQ0ZVZKa1EwOHpTMUZFVkUwM09WaGlOa0l2ZUUxd1FsaFBhUzlWVEhOVE5HUXZWbmhQYUVkc1JrNHdLMjB2Tlc1U09GWktVazV0Y0ZCcmExcFZXRTlRYXlzNWMwWk5aMHRzTTJKTmMyWlNhRFZ6ZUV0bFdESlhkekp2VGxNMWJqVnFZMDlFWlRZNVZUZDFTRzFPVmpjcmRrRkRZVTVRVVhkNUwxSnpTbTU2YjNjME9WTkJRbmxVSzNoalMxUTNPRE5ZWVU5b1R5czFjbUYyVWtKSllXbHNkVnBhTVhFeWJFaHdhVVJyUVRneVJHbFlhVXgzYTBSMmRXUXhjbnBYVnpRemJ6aFhTMDFCYm5OcEwycDZTbTVrVEROUUwwNXVjV0kxUmpjdk9XUm1OVGR1WlZGemNFdEdkVWhHY3pod2FuVXhiRXBtVUcxRVFrZHFRa1pwYmtKcWFWa3dXWGxHTVdreWJGRm9NaTlIVFRnME9XODFZelJuU0VKc05VWmxjMEZyTDBkdVMzQlZSVzVVZUZOcWFubEtiRUl3UjNaRFRrSm5UWEZaYWpSU1RtZG1MMU1yT1dKUWNsQlZNa3RDVDBGUk4ybDNSMWh1WW5OcFpVSmpOV3BJTUZkRVpHUmhRWFpzUkhsWk1WWkthMlZ3VGpOTEwzZEdTV1U1V1dzeWJWRklkRTQwSzNJMFZuSklhWFJRUWpkMWJtaDBURGxzVGxNNGFreFliRWhzZFV4UVVUWnJiVzR3VVVOS1dqQlNXSFpHV0hkVFFqRk5TMkkzTWxOclJYWXhURGhUY2xacVRYWmtWbTk1VlRkUGNHbGlUVVp3WVhaMVNVbE9aVTEzVUZwR01qWlVVR1puV21nM2QxUkhZMWh2UTNwNVZHRmFaeXR5UVhsNlNtbDNiRGR1YUhWMmQweElhMm9yY1U5dGVVWTJjRVZoVGpnMFpteHBOWGh0WXk5TUswMVpiM0ZSV0ZkbFJXOVBZazFJTkVwMGNHOTJibEJLYWpJM1dGTlhaMmRqYm5sUU56UXJTRGMwVUVWR1ZuSTNabkV2T1ZKVGFDdElaVFF4U21JM04yTlhObmwwVURaT1MyMXdNM3BSU0RkcWFHRlhVRkU1ZG1wYUwwWlVVblV2U0VsUU1HUjFhR1UxTW1WcGJHSlpjbWRwZW1KeVF6aDNUVTFWZEZOUWFFUmtibTFGZGpBeVp6VlNlbWd6TVRoQlJrcHlZaXRyVFZSNFp6UkhNMDkzUlZCUk9IQnBiRUZPTm5kMWRrcDVVRTh5V21WSGEydE1kV00yVWxCR2FTdGlSelJRWlVsNk1FOVlhbGRuYW5keGMyOHZReTlXVFRKSFpWaGFVMVJrZEZSSFEwWjNSbEJzV21aTGFVRlJjekp0UTJGUmFtVTVZalZGVkhoS1RVMXhZMGRRZFhZMlEwMWxRMEo0VFZVM1JVZEVabk00YVVvM1YydEJPREZHZGxoTWFGazVlRlpwVGxsMmRTOUVaamhXVlUxd1VsaGpaa2xtUm5SeWVVVXpWR2h1V0RNeWNGVkRhR3gzZEdKc1J5ODJTVUZzVVhWYUwzazRlRFJXTlZKaGNuZE5WR1Z4U0dScU9FTnFTVVZPWkROTlQzbEhXRVZrV2l0Qk1EWjBSR3RQVG1KNGVuUmxRWEpCVVdGakx6aHZNMVprUTNneVEwbFFkbG93VGtoV1J5OVBhVzF3YjNWYWREVkZUazF3YkhsS1UxRllhMUpvUlUwclJsSnRiVUZqYmpSSlFYYzBPSGxuY1dSaGQweDZTVzlzWnpoVFpGUTNhVkJXVldkUlltRTBiMlZHUVhjM1FtNXVUVEJ4S3pNME56Tk5aemRaYkZSUE9ISldNR3NySzFwT2JsaEZWSFJ6U1ZSWlRHOTJVRGhTT0hKQ1UxVnZXR1psTlZOSlYyNWxPR1pqUFEuZVdxTURqeHhHMnNBVHVwdEVqUGJ3VmtrbVZPdTV5QjVORkhWYnpqOW1UM3Bza0lDdXJ1SHVrbFJvb2dpTFJkLWV1dVNyejRLVEthdFlVMnB0NV9xcVE=">
-				<input type="hidden" name="_eventId" value="submit">
+	          action="https://www.etax-gd.gov.cn/sso/login?service=https://www.etax-gd.gov.cn/xxmh/html/index.html?bszmFrom=1&t=1511852007328" method="post" target="hiddenFrame">
+            <input type="hidden" name="lt" value="LT-186140-iYfKuB5bL2IMAje9jbcc-gddzswj">
+            <input type="hidden" name="execution" value="bv8tfmcwoptHnv2lt+/iqlS6DrpgdUdOli7Es6zuSa4ZISGDf4uX8Nx2xsy2f+iDrhzU1V8h6wxmPRJX0CsMPbJc0kUTBu+u+3rhrZyg8W5N7KGkYWqotKF0zCtuvcDSoLUp/5cwGzyYiaZofmGOS4GyRUKMGPI8iorEqoUHDF/WeSIcTQYIDYNm+8TKwljFUGM93WfWBqK/FX9NdVDqbwja3a6x8Ta5nf0gGKl1BrtJMs+FH6kpt4MWqG8Usl6BYeaD3J0K9awa3/hPx9ACz/TFKXtfmQhsPg1ELaSCsb7WtlbuIFO+rLv9XiWrBz6D1TNv2rgWHXDgzjM49J6Wx3vgUlr4CcTbz5aj4z/KTbCuwAClwTUgmPt1rQQvp4w8DQ3AJ/J0E5LKvXZnAqH1AdPnBwfxabL/q/5TMcxHzEVF9OsaUTC25M1XrTnFUeGx7qcP7pFtnMK3AY+3SpNJfcwDAapGiP8x/xhjC+CM6H8uNKmuoU6Q7Wdwvaoogtwfu+A1Qtem6I+uahkZSsP+y2HOcNYfSo9QUQkSU4fkh1XD9eRueJexTL+YZ4EgeDMwPMkwIR+J1PfdTTnvjKLXRmBvinBa1/XgTI4lg5FgUReEwQeQ8THy3QdD5IZacs8fbrEENYzjAKGQbdy2965Pk1N+RgH9/qGtAO1dAq/g9hyqpMRbjNCG9qBLTZVkEZ7+IL1VtaOaY1z5OxlfqtlJXtPxH5sXdJYan31uRp5Ztiy56Oe4ZlrNjHmH+utM+ZoVjJMgu3HhloCRndXNsSPap7HEQClzYvyi7dHwi43AusOxruvXE2thoftiJ8G25lddaPhaEnihxc4LasdOIL/B/XFJq0NQSsVjdr827bOeZyppEfRESteAsScJuJTzjHIPxj7R2FtNCsXZ4k5vlzlYQcZCvDiIjoWDzNwExkuE4q9Hckxmk7/GS/TOQBYQ+UBxagdwF+CQS9etFwu6U8NKXN2U6Tk8dJ7qhY3DtsRPJjSrPDbdFad72ICBze3GVfugiA8nt6OWQTQ6ewbf3uV9FlOhXF0JtDkjaT/qB25hpADFzWvPYY5x2t0Fnfx1Izz05MVX5ZKD+I8mKWLVLF1FtX+JJZ4DM4YTvTtXK3H9O4pXTv1/V4NiiaFST4I5rG924UB2sFBGq+Jb6TihyCMVq9X47M3a5pkkR4dRVgVJ9a4v6rsWMugGyLxfXG3VOQsAImm/R5L6CfFUm2ZND0hNdcDFRsrg2wouNwmmabd2KQhJ0Vum81Qe7HT27PMUoj1nM02Kh5yg3RHyPI/0DYWDpGX8KssgNy1VJRkPBTzcCQTBKKUnudvMfKmSWRcW5Lbx0uFLs95ynf+1FKx2aYwT7AUlTHlhjx31kbdaYhSHhKsT7Yh3cywAmr/QmbrzzyTFKwChq/tRH6qdYfWepRC2MfsCYx96fHtDyvBMzxlXQk8MBc3k9YnNc/duV9SQjZX8XHJF2Ud1ecF1K/FNcS0RRJLEFEVHMmv6u2CPHJT9eOZcSUdLk0Mb489gM9hckIQ/A7IT9ocRr+lYfB+ndQRWys6pNqpGrv1xbM+v1FifETyG2iBX2ctXIlvV9MyhuL5tQDAleETcAgLLO/+/jLjXIeD70W6FB1+Mq4s/GqbkAxA2K8cUQqHhb+4uQt8udExpYWymFwD03fv+GFKXcPWYlq+Pq9dxjtvDrQSwCh9T1xvv8eduJF/mGoDf2nh4j1PQKQTlp7mNYDPmyNgv0sdAZX53pWfe06oqtVLeH6/90zkqw5wzrrVXdOEA3PQVOpp0xeZ318rypZfpjDsv7COZs7iU0kknO/GNFur5qVdwbk/vcA2medx6pGpza1kbuPV6ATGpNzRPhLT8/mIN2S8wDhSlxccKOqMxPHwl/elBilyu0X29MG+bCra8EZRYBVCDYwMZh/u+UeSH7e6F3YhDZbUJO+fbGi44TDH6kAVMfZG1KeL2/s+kZziA839sBushhTHnYBlJndxnZ3a6bjmd+4GLGeMrl8xWb2pm4QO6fWMctnUvSObqLR9RVEnBZK5OVm8n9Elk9kb+h3nYCJVkkt3VjEa7B5cuqwoP+/3z9WZo3VsFAiob8qlZ76rtNknrMG9gyhZi8rg1tYwNKwW2QRHXI8IjE/KmP13n8Bzz/hZLnCJfIOU0Z/tUZQujUeRCbmVy2vlaFKyK4T3UvgcFAS+rk12X+CXUj+JQ3yGbCRV4Qb0VOEHJUhF2YKaJRkqknitLCyWZS/UFUZ5+GoQEFCa/9u+Y14kJwdOnbFQTYEFaebaqlIui7YMrJr0SiQD2S5CkHm7yKwBX+jdPr1F2M3YukkHmdAPVbaxG2QGkkg9jJF6yAIDFbtWYVjv8Tr5uK5zB1DWgSiq+aF0K12VmE/b0oUsnROmam4Du69ZSeW4L3CibEZFCdl0Da1JesxNFijC6YrG3iTIA1iGLufC1UFkAnAsEHYpaGbCHgpdUM965B3rIr4tTK2SQZHTrIrTrHY8NCteEQrpZYPYGqepGfrUsEDNKROMdUoCon6M+vBwOQJf+pWVuBNx0sD+Qt9QMotSfHnCt3dXZ4mZsRWKqiAIQgI8j+CKc3E3GDImdp3JnSwB7pBbOulvSKbCyJlHPF+hN+azb84fNIwnfjB8t0Fg3RjZwe51yx83J5ccXaR4OnYq6OuWXtcKDzIjeXn4XLFvjt6NhYI1dZJIQkVicg51J0r9w4ZRxBD0whJ2E2mqCkwXzBCfiiQ1e4gKptb/XB/cOzfmtPHEcY0Gnpzey7KFWNxDnAk+qUl8nD4LxGzNj6l/JYfBdEREJmLL+4UVtVRZM8oFOo0fefuOj22M4hGWaYe2y9RqatMNauUbKFWqCLkNVKRasVzAC0pQJg/vETtKoxyMqfFZ+wInRILiB9WevHndH0P4B7ViturcfzkH9HOqxgtXbyPUe6uuDGuxht18sFIgXfCJM7/FPObyaZjaz30jUPKmtywhBma3qxgeu5LKppjNlePgVJWiWsm++Z+Go6C0mt3wlQ1MoKPdIHjReHVRMkkbfZ1Qcr4VeNf5DZQQJiO7toBq7xpCtevTh5rGi5bATrpZIFVGW+OKt6jb74kXuPM0EFsZZt9sm1hq6JMXY9OCdETULOTzRQUSyO6oFrDty+z+62Bp4StfBgO7UYVt2pAlBpCNuBXXZe173EEiSQsjHYP8dwZI8feABnbSmPILuYHa3h3OrYE1uuqwdilqSUQqGA5U489EgsF9Pio+Emu8osYifOWyi1hXYH3lplxDQIz3Q04YleQB6izk/MF4oHWuerryxJxkc0/C+YCxdrWoLZ9bK1CtpgqV+xTvz8g+KZJ9IbkV7KZim7fdSOWzuxyn+xxYpG/Q6p/fIQ9yxjLz+T0fXNjRmvu3SGhnihjMlwNTuhFeCEsw71lE2Z+t3yTkVwSh2ni/S0xTRMZk4zCHJ2lXbIXYuz3jEPzEOuoOlHYaPSyj/6zAPWKrd629I2MGX1vYQx3S7kyuOehn2Ts6KIwwMVO05efl+3n8qxmElZzyTAbWmNP7Rcl9ye0DocW0YtutQKcKOuscSgWlu7KzoBcVhWLYQ+LvYd1UY2kc2z/ho0u+JIPZ/JLyuLR8joK3yPuhz7k8Cu+pC/73kNurvB7QipvKVHxTZA72S5xX0HQ9YFrplT1Yr6GTfejM5SJdxggTGQpEeo3cMNuVwKHCvCCErBwQzk0q1k5ppo6KqB5lYOJ4nCaQkK8FbtmeUMcpzeFX1a8uX29+eV77ZayrOnhTIuuL3y/XqPrE/1eMQjCj0Z2Pzk+y35e1ibfEha5EsWffBxhPqBYckWBg51RcbjsNT+fZwX1hJm+Aea1BAayyf/kaLfHGeSDr3c8Hil6z8b3dfysUx1eVyUsd+jNQ0acRb7OTIsbFigZ6O8nYhH7Hz1aC9DtTgY2oaG25Nqne7DVavSCFPk1KckB/StXfwtIH1X4iKl4Jt8oeAUyNzeGRUPAtQHoLDAaCMUbPiXxInkTti2zvPENTWQv6wPIZdvolF5iIZceugVTpIALLGN6YUdHiEcFT+zQy0GpyiBZ0cKd/OXzvrqPmGpEC4T85+z8dvy4FBs2JHCgR6sljhm90aYicI5U8XFEPZph2V9W42G13WwAikpU00bMmHuPPF24984SlCzgdRCJEYfsBGSA6zZ0lHLbktT7XUB95RLCYzeXs1H9Y16ksmwlZrJc1jdnPoYRDNsca3+6dikFUmfr6ztTEe8U5LA96lV9Y7B6k+EqkYFncf7yBkHtixcQrPKHzBogl8uO3pOmouNsNcGsTCP1TqIdBOS7FkWF3tk/ycPMbM/1oM9XKs8Oe7wcQ+AsXH/6qzWXW5ku5hQ2PP8Okwu19+v8UDeB6U6XH3wojtqYVrVecXFZKRIU7UyNWiWmG9w58Mp9gYCgoNtnwsn3sJpwi7gJsBOPlLZDU/WomXDm1O8x4rlYJvJnBMRafHXbmsor8lLejdGz+FiLHsPiS/ghNllgjymi+HBuBA0b/rhRy6kc/5WDQU+/lbNoO/SfpCSeXeVEakwWYGD3LqITyvZhapNkTN77P1t0c++RbFN+4spXQ4j/LwOoYav16YM9nyE4jYi1heltMS34SBzKsCd0Op6pg4HighFX/kdnY7jTA9u5ufwOdUURcKdtRxK16kwD7AFoxmj1Ux4sCHNjOqI8fdSPBXCubCGCn4kR0w+/l7M6mkWDgzjRpGY8s0S2JWT1g/cWZ9gaZrNGlcYtaaNzX7RscHIvr08GeYYkeqQws046X9g4RFPFGxrYNCPOBpiCy/Ib3DemM5xZ4Fu9r256xWErs4N/gM9ojuFBmSzZYx3Lp0APOhe12yGG0FQ0SJMMhGJEqO0SsyuKCGSssWxcIJOgBJE0llZNzxaBO2kKbBsUeIPPJckEQamyHZTGPQj+5f5oKLbFmKLs2iOp6tWM2gB3Nj2pzANY1kIA/az7Lt0c/vQD3X6vKBrdxdoZyE99JCkix10ivfadeXNXNeKwqw4acIDuOD+T2pxvd2WpEOe8V1Z2YJL2F+ZcCiAKhx0qT40MHHrWlP1GWmoxgmOq1ubHeUWyrcE/aqpoeTvceZ40skV5i71ymfuY38g+0ITwPbTGF9wEykynNOHqP+QAGng3k6pKFhwpoq+4vJfaNCgCGcvQOh1YwLofcTAXObOSpj4cfASLrVu26f82UP+nYKgA3YDaCdUO0IW5f2i1GaCuNyYq5hdpWTcEclROii/vlGx3pgJqQN08QGKqhN6KUGMszY93gfZSIC/1HzbQxvgSt/u/fXb8BlzfPyqfxt4ZLE/YWEeDwppXSLdwNrqVt57GxBDvKLExKSqfmfZS2VdnDzCUv4kTb/iRFE8RGIgirpBlLsfrnVg6szlJqHhLtkeJ/9jLAGyDVh08w9rRnbzspE/GcF7tLP8Nn7YvBAEKrxST51ZD+RTDzE+A4JOT5yf9dB1BUy+NU56Z0jSqswge6JXWNv08wW+Aa/4i7Wm2dShp4UlZxM+2yvQx9gvmchoyyiTWIcqGK2eCzQrkGrYH50w184lHgb5TrfhoZMgJK34qU9vYPK0MR2FU3w/N+4tMDK5qYENHtQfpy98eER95aCRY4fLzHK5hOz4qiCNbAnWGbYDjNa9xq7jXQS9JuRGZdbRX3JY3SIGwhW0EfDtvBNdR7N6zYUj1D0JYkbi9bCeQjD/M3wGHqjBp9LvXIjRMt/w9ooNaqDAAWA1tDmirtkT7ohf5TiegcMJ3P0sH07b3t+bltrzjOuPg5d1I9nwZ8R1XOXGPEAdtJOBrqawzzDdnAAOCVQLD0K41wA2Gdn/HHDHB5MYaQoejLah4zqPng998432sT3BYSX+wArxTrmrmUEHmwwa34OY4ELwU37auF5vGcLg/b4pFpZ7Qd0p4CWXIW4uGk00wdfMbwWQG60TmkkaJfppns6/3mU0x1sOe95wDTbv1NlzbZdZ87nLICKUx4MmP7Y2dbuIhblPFBHNHYqCMjwB4bfILWJB74kqXfZakFHtIJPzyDMegWMiUvxWObLVMBY3MvhrHVzm1rR0lPO8pi/eDHHPVcRSuzTjIfDBMepI2hqyo7lorddwbrqLqE6xdOnbQW1zHFMUsCv4vKvAKjZiY5sfRgH3ebe0ZjAW55P0JwF9yCbZ2Ep5h3RhpB9eSzpLLV53ToM5plnNWKNLx92DcrrP/EdlOW35tZUKXEQds5rCl3fvSWC/7McbmFZsoD7xcQ+CJ+3/bXDhh/1T7XXC3iQ0fQ6HAW+PhatRojHY9Iaxi9YwUfLAqN+oa99rujrh+jpfCQA7vRg52kL+mn4Q9l84BGKNM3ZWlZWA9Yq9kYD60I5fTaNHfn6GBKpRfw5QXlckWMOEO7GHUbURKcbjXEE4/vaHKLGMAQ3+D55NvJx3WWQ7k4jlbF5tBY9/GDzjKcjAyNw9tBt18DZABbDE0zBmeNQ4fj7by9u6W7bqOIa1rRKoIBDEtAiWLFr94IrTUO/B+SzN1Mh3rYbpkOacyzf8/xt2rxaCNpNFzd2JcS6aBdUrCDJXRdGJGyWHQMhB9QnuskRuVZRGuUn69181BuqCir2g1bxQRhY3i8M+f9KHi1rim4zv9eIZ8ASDpljg8rzGsbqqsczvU1vIAz0cAu0sGmN60ZFxXAXFIYvzMjj6tWZfEwsekxYbxmEHzMA6Z2V/1AJeME0qxX1jgA06ZLa48TDx4Zmmpc/LJz4WYb9+KVNTdqcMvUZMcMveopIx7w2sqkYAweHFkFcatdVC7SGquZKoxd2o257Gmn97M2C+Bl5GA4cFAPHN5eRTmLpGI7xn4I8V6rcahjLSJ74UP7EHjVHarvX8mNoy/GwezT3DpOLb48r0dgLHi8JHHzD5BGQzIbPpPv/kIE+fXPQv4YXIK6RYQ8QQb+yvVgnMY2kgkRzddP6yJh6IKReqmJjjFFQCvL82aB55Anl+RPsubzryCAF2oogecY3HEIN+6+e98/mTcKyKyirV6nolKvGqmxL2yIYvAPiRCsifL3iLbK6NXcEW0os2TTJplO7ok0M5loMmsl7fkwi7vq1cxmoE0O7XTH932PRoBuv1HGxi8WGn0Q1+/xKKG2dNHJuNLKHYwfXUlFVsgR5HHlA7vtx2rijxATBIIqObW3oEUqdrobmgJnD9C6Somd9qc742JPZG/qpFYUCmRTxN8eq7BeLkOOwW3/ADsdIO3asdSiTj+BgYqvLNd8MoCTemqPFUhR5XIlG+tQUtwsCm5JhIGb/ujZHvLJn4WT8J4Jydxwlikx8fuf/2cdvX5mBrR7gy996Jz+L+Ha5Jcq7Ua8anGsaC0jp5hCk35bEtncs14SzrtQcR1P/KW05YtTvSIzgALck6pIxjefuYfgUEbDn7g4Bg/dcsG6inFHr5Wk6eSW/XZ7PAjJtBOCk7cFNT8ub/lmPSDiv+Xqb2VQB3GbuKqqtneIeaSHxYUJjdsnKMv4XSNXTvY77EgifQd6kRE/QbrrxASvBrURT88WDdL7fARYOG98IsK1+kPw1BsdoqKXki6dJtsb2ZTrfbjFNXBFWLFqY8jIlpecncC0fZj3F4Gnvx/Keg/r0gJVl/Cw=">
+            <input type="hidden" name="_eventId" value="submit">
 
-				<input type="hidden" name="_llqmc" value="Chrome">
-				<input type="hidden" name="_llqbb" value="79.0.3945.88">
-				<input type="hidden" name="_czxt" value="Windows">
-				<input type="hidden" name="_czxtbb" value="Windows 7">
-				<input type="hidden" name="_llqxx" value="mozilla/5.0 (windows nt 6.1; win64; x64) applewebkit/537.36 (khtml, like gecko) chrome/79.0.3945.88 safari/537.36">
+            <input type="hidden" name="_llqmc" value="Chrome">
+            <input type="hidden" name="_llqbb" value="80.0.3987.149">
+            <input type="hidden" name="_czxt" value="Windows">
+            <input type="hidden" name="_czxtbb" value="Windows 7">
+            <input type="hidden" name="_llqxx" value="mozilla/5.0 (windows nt 6.1; win64; x64) applewebkit/537.36 (khtml, like gecko) chrome/80.0.3987.149 safari/537.36">
 
-				<input type="hidden" id="loginType" name="loginType" value="0">
-				<input type="hidden" id="checkType" name="checkType" value="check_password">
+            <input type="hidden" id="loginType" name="loginType" value="">
+            <input type="hidden" id="checkType" name="checkType" value="check_password">
+            <input type="hidden" id="loginModle" name="loginModle" value="qyLogin">
+            <input type="hidden" id="loginModleType" name="loginModleType" value="">
 
-				<input type="hidden" id="csessionid" name="csessionid" value="">
-				<input type="hidden" id="sig" name="sig" value="">
-				<input type="hidden" id="token" name="token" value="">
-				<input type="hidden" id="scene" name="scene" value="login">
-				<input type="hidden" id="sjly" name="sjly" value="0">
+            <input type="hidden" id="csessionid" name="csessionid">
+            <input type="hidden" id="sig" name="sig">
+            <input type="hidden" id="token" name="token" value="">
+            <input type="hidden" id="scene" name="scene">
+            <input type="hidden" id="sjly" name="sjly" value="0">
+            <input type="hidden" id="randNum" name="randNum">
 
-				<input type="hidden" id="codeType" name="codeType" value="Y">
+            <input type="hidden" id="codeType" name="codeType" value="Y">
 
-				<input type="hidden" name="authencationHandler" value="UsernamePasswordAuthencationHandler">
-				<!-- 证件登录登录 -->
+            <input type="hidden" name="authencationHandler" value="UsernamePasswordAuthencationHandler">
+            <ul id="person04" class="person" style="display:block;" data="6">
+                <li>
+                    <input id="shxydmOrsbh" name="shxydmOrsbh" type="text" class="txt bg1" placeholder="社会信用代码/识别号" value="" >
+                </li>
+            </ul>
+            <ul id="person01" class="person" style="display:block;" data="0">
+                <li>
+                    <input id="userNameOrSjhm" name="userNameOrSjhm" type="text" class="txt bg1" placeholder="用户名/实名手机号码" value="" >
+                </li>
 
-	        <ul>
-	            <li><input id="userName" style="display: none;" name="userName" type="text" class="txt bg1"
-	                       placeholder="用户名" value=""></li>
-	            <li><input id="passWord" style="display: none;" name="passWord" type="password" class="txt bg2"
-	                       placeholder="密码" value=""></li>
-	            <li><input id="captchCode" style="display: none;" name="captchCode" class="txt bg2" placeholder="验证码"
-	                       value=""></li>
-	            <li id="sjlyLi" style="display: none;">
-	                <div>
-	                    <input name="sjly" type="radio" value="0" checked="checked" style="display: none;">
-	                    <input name="sjly" type="radio" value="2" style="margin-right: 5px;">国税
-	                    <input name="sjly" type="radio" value="4" style="margin-left: 20px;margin-right: 5px;">地税
-	                </div>
-	            </li>
-	        </ul>
-	
+            </ul>
+            <ul id="passWordUL" style="padding-top:2px" class="m_t_22">
+                <li><input id="passWord" name="passWord" type="password" class="txt bg2" placeholder="用户密码" value="" autocomplete="off"></li>
+
+                <li id="sjlyLi" style="display: none;">
+                    <div>
+                        <input name="sjly" type="radio" value="0" checked="checked" style="display: none;">
+                        <input name="sjly" type="radio" value="2" style="margin-right: 5px;">国税
+                        <input name="sjly" type="radio" value="4" style="margin-left: 20px;margin-right: 5px;">地税
+                    </div>
+                </li>
+            </ul>
+
 	    </form>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
